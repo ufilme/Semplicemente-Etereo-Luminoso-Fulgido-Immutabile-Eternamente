@@ -15,13 +15,11 @@ export function TimeMachine() {
   }
 
   return (
-    <div className="tm">
-      <h3>Time Machine</h3>
+    <div id="tm" onClick={activateTimeMachine} className={state}>
+      <h3 id="tm-header">Time Machine</h3>
       <div>
-        <input type="date" />
-        <a onClick={activateTimeMachine} className={state}>
-          <TMClock />
-        </a>
+        <input type="date" title="tm-calendar" />
+        <TMClock />
       </div>
     </div>
   );
