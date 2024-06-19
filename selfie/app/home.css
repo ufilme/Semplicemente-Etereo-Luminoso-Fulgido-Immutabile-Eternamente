@@ -1,0 +1,28 @@
+.home {
+    display: grid;
+    column-gap: 1vw;
+    row-gap: 1vh;
+    grid-template-columns: 1fr 1fr;
+    padding: 20px 20px 0px 20px;
+}
+
+.home-view {
+    height: 30vh;
+    text-align: center;
+}
+
+#calendar.home-view {
+    background-color: rgba(118, 250, 255, 0.678);
+}
+
+#notes.home-view {
+    background-color: rgba(182, 255, 86, 0.863);
+}
+
+#tomato.home-view {
+    background-color: rgba(255, 100, 61, 0.747);
+}
+
+#projects.home-view {
+    background-color: rgba(165, 86, 255, 0.842);
+}
