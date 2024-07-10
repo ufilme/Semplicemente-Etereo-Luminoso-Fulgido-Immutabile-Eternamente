@@ -15,11 +15,11 @@ export function TimeMachine() {
   }
 
   return (
-    <div id="tm" onClick={activateTimeMachine} className={state}>
+    <div className={state + " bg-gray-200 flex justify-between items-center p-2"} id="tm">
       <h3 id="tm-header">Time Machine</h3>
-      <div>
-        <input type="date" title="tm-calendar" />
-        <TMClock />
+      <div className="flex justify-around items-center">
+        <input className="mr-2" type="date" title="tm-calendar" />
+        <div onClick={activateTimeMachine}><TMClock /></div>
       </div>
     </div>
   );

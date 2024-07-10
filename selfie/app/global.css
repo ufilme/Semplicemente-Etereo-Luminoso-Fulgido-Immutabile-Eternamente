@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
 #tm {
     display: flex;
     justify-content: space-between;
@@ -6,6 +11,7 @@
     height: 3vh;
     background: #d9d9d9;
 }
+    */
 
 #tm.tm-enabled {
     background: #e5ff00b6;
@@ -15,7 +21,9 @@
     fill: red;
 }
 
+/*
 #tm svg {
     vertical-align: bottom;
     padding-left: 1vw;
 }
+*/
