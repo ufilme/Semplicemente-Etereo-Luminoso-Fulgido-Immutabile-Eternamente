@@ -18,11 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body>
+    <html lang="it" className={inter.className}>
+      <body className="h-screen">
         {/* Layout UI */}
-        <TimeMachine />
-        <main>{children}</main>
+        <TimeMachine height="h-[4vh]" />
+        <main className="h-[96vh]">{children}</main>
       </body>
     </html>
   );

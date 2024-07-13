@@ -21,6 +21,10 @@
     fill: red;
 }
 
+.timer-display {
+    text-shadow: 6px 6px 4px rgb(127, 29, 29);
+}
+
 /*
 #tm svg {
     vertical-align: bottom;
