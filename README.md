@@ -1,16 +1,15 @@
 # Semplicemente-Etereo-Luminoso-Fulgido-Immutabile-Eternamente
 SELFIE - Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
 
-## Dev
-to start container
+## Development
 ```
-docker compose up -d database
+make dev
 ```
-to stop container
+## Production
 ```
-docker compose down
+make build
 ```
-Prod
+## Pulire
 ```
-docker compose up -d
+make clean
 ```
