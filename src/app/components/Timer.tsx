@@ -4,12 +4,16 @@ import React, { useState, useEffect, useRef } from "react";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [periodoStudio, setPeriodoStudio] = useState(true);   // true -> periodo di studio, false -> periodo di pausa
   const [elapsedTime, setElapsedTime] = useState(0);
   const startTimeRef = useRef(0);
 
   const [tStudio, settStudio] = useState(25);
+  const [tPausa, settPausa] = useState(5);
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
+  const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     let intervalId: undefined | ReturnType<typeof setInterval>;
@@ -24,8 +28,20 @@ export default function Timer() {
     };
   }, [isRunning]);
 
+  useEffect(() => {
+    if (periodoHeadingRef.current) {
+      if (!isRunning)
+        periodoHeadingRef.current.innerHTML = "Inizia lo studio!";
+      else if (periodoStudio)
+        periodoHeadingRef.current.innerHTML = "STUDIO";
+      else
+        periodoHeadingRef.current.innerHTML = "PAUSA";
+    }
+
+  }, [periodoStudio, isRunning]);
+
   function changeTStudio () {
-    if (!isRunning) {
+    if (!isRunning && !started) {
       let val = studioRef.current?.value;
       if (val != null && val != "") {
         settStudio(parseInt(val));
@@ -33,9 +49,23 @@ export default function Timer() {
     }
   }
 
+  function changeTPausa () {
+    if (!isRunning && !started) {
+      let val = studioRef.current?.value;
+      if (val != null && val != "") {
+        settPausa(parseInt(val));
+      }
+    }
+  }
+
   function start() {
     setIsRunning(true);
-    console.log("tStudio: " + tStudio);
+    setStarted(true);
+    if (periodoHeadingRef.current) {
+      periodoHeadingRef.current.innerHTML = "Periodo di studio";
+    }
+    //console.log("tStudio: " + tStudio);
+    //console.log("tPausa: " + tPausa);
     startTimeRef.current = Date.now() - elapsedTime;
   }
 
@@ -46,14 +76,25 @@ export default function Timer() {
   function reset() {
     setElapsedTime(0);
     setIsRunning(false);
-    let val = studioRef.current?.value;
-      if (val != null && val != "") {
-        settStudio(parseInt(val));
-      }
+    setStarted(false);
+
+    //console.log("isRunning: " + isRunning);
+    //console.log("started: " + started);
+
+    //changeTStudio();
+    let studioInput = studioRef.current?.value;
+    if (studioInput != null && studioInput != "") {
+      settStudio(parseInt(studioInput));
+    }
+
+    //changeTPausa();
+    let pausaInput = studioRef.current?.value;
+    if (pausaInput != null && pausaInput != "") {
+      settStudio(parseInt(pausaInput));
+    }
   }
 
   function formatTime() {
-    console.log("tStudio in formatTime(): " + tStudio);
     let leftTimeCSec = (tStudio * 60 * 1000 - elapsedTime) / 10;
     let leftTimeSec = (tStudio * 60 * 1000 - elapsedTime) / 1000;
     let minutes = Math.floor(leftTimeSec / 60);
@@ -68,11 +109,14 @@ export default function Timer() {
 
   return ( <div className="timer-container mx-auto items-center">
     <div className="timer w-fit rounded-3xl bg-red-400 p-6 flex flex-col gap-6 items-center shadow-xl shadow-black">
-        <div className="timer-display font-mono text-8xl font-bold text-white">{formatTime()}</div>
+        <div className="flex flex-col">
+          <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5);] rounded-lg grow-0 mx-16 px-2">Inizia lo studio!</h3>
+          <div className="timer-display font-mono text-8xl font-bold text-white text-center">{formatTime()}</div>
+        </div>
 
         <div className="timer-input-container flex flex-row justify-center gap-2 text-xl font-semibold">
         <input id="input-studio" onChange={changeTStudio} ref={studioRef} className="rounded-md text-center w-1/3" type="number" placeholder="Studio"></input>
-        <input id="input-pausa" ref={pausaRef} className="rounded-md text-center w-1/3" type="number" placeholder="Pausa"></input>
+        <input id="input-pausa" onChange={changeTPausa} ref={pausaRef} className="rounded-md text-center w-1/3" type="number" placeholder="Pausa"></input>
         </div>
 
         <div className="controls flex gap-4 text-3xl font-semibold">
