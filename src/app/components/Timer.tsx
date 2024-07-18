@@ -4,13 +4,14 @@ import React, { useState, useEffect, useRef } from "react";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
-  const [started, setStarted] = useState(false);
-  const [periodoStudio, setPeriodoStudio] = useState(true);   // true -> periodo di studio, false -> periodo di pausa
+  const started = useRef(false);
+  const periodoStudio = useRef(true);   // true -> periodo di studio, false -> periodo di pausa
   const [elapsedTime, setElapsedTime] = useState(0);
   const startTimeRef = useRef(0);
 
   const [tStudio, settStudio] = useState(25);
   const [tPausa, settPausa] = useState(5);
+
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
   const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -20,7 +21,7 @@ export default function Timer() {
     if (isRunning) {
       intervalId = setInterval(() => {
         setElapsedTime(Date.now() - startTimeRef.current);
-      }, 1);
+      }, 200);
     }
 
     return () => {
@@ -32,16 +33,16 @@ export default function Timer() {
     if (periodoHeadingRef.current) {
       if (!isRunning)
         periodoHeadingRef.current.innerHTML = "Inizia lo studio!";
-      else if (periodoStudio)
+      else if (periodoStudio.current)
         periodoHeadingRef.current.innerHTML = "STUDIO";
       else
         periodoHeadingRef.current.innerHTML = "PAUSA";
     }
 
-  }, [periodoStudio, isRunning]);
+  }, [periodoStudio.current, isRunning]);
 
   function changeTStudio () {
-    if (!isRunning && !started) {
+    if (!isRunning && !started.current) {
       let val = studioRef.current?.value;
       if (val != null && val != "") {
         settStudio(parseInt(val));
@@ -50,8 +51,8 @@ export default function Timer() {
   }
 
   function changeTPausa () {
-    if (!isRunning && !started) {
-      let val = studioRef.current?.value;
+    if (!isRunning && !started.current) {
+      let val = pausaRef.current?.value;
       if (val != null && val != "") {
         settPausa(parseInt(val));
       }
@@ -60,12 +61,12 @@ export default function Timer() {
 
   function start() {
     setIsRunning(true);
-    setStarted(true);
-    if (periodoHeadingRef.current) {
+    started.current = true;
+    /*if (periodoHeadingRef.current) {
       periodoHeadingRef.current.innerHTML = "Periodo di studio";
-    }
-    //console.log("tStudio: " + tStudio);
-    //console.log("tPausa: " + tPausa);
+    }*/
+    console.log("tStudio: " + tStudio);
+    console.log("tPausa: " + tPausa);
     startTimeRef.current = Date.now() - elapsedTime;
   }
 
@@ -76,7 +77,8 @@ export default function Timer() {
   function reset() {
     setElapsedTime(0);
     setIsRunning(false);
-    setStarted(false);
+    started.current = false;
+    periodoStudio.current = true;
 
     //console.log("isRunning: " + isRunning);
     //console.log("started: " + started);
@@ -90,20 +92,32 @@ export default function Timer() {
     //changeTPausa();
     let pausaInput = studioRef.current?.value;
     if (pausaInput != null && pausaInput != "") {
-      settStudio(parseInt(pausaInput));
+      settPausa(parseInt(pausaInput));
     }
   }
 
   function formatTime() {
-    let leftTimeCSec = (tStudio * 60 * 1000 - elapsedTime) / 10;
-    let leftTimeSec = (tStudio * 60 * 1000 - elapsedTime) / 1000;
+    let time = periodoStudio.current ? tStudio : tPausa;
+
+    //let leftTimeCSec = (tStudio * 60 * 1000 - elapsedTime) / 10;
+    let leftTimeSec = (time * 60 * 1000 - elapsedTime) / 1000;
+
+    if (leftTimeSec <= 0){
+      periodoStudio.current = !periodoStudio.current;
+      time = periodoStudio.current ? tStudio : tPausa;
+      setElapsedTime(0);
+      startTimeRef.current = Date.now();
+    }
+
+    console.log("Periodo attuale: " + periodoStudio.current ? "studio" : "pausa");
+
     let minutes = Math.floor(leftTimeSec / 60);
     let seconds = Math.floor(leftTimeSec % 60);
-    let cseconds = Math.floor(leftTimeCSec % 100);
+    //let cseconds = Math.floor(leftTimeCSec % 100);
 
     let sminutes = String(minutes).padStart(2, "0");
     let sseconds = String(seconds).padStart(2, "0");
-    let scseconds = String(cseconds).padStart(2, "0");
+    //let scseconds = String(cseconds).padStart(2, "0");
     return `${sminutes}:${sseconds}`;
   }
 
