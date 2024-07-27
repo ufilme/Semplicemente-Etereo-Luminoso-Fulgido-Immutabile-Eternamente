@@ -22,19 +22,3 @@ export function ViewPreview(props: {
     </div>
   );
 }
-
-ViewPreview.propTypes = {
-  viewbg: PropTypes.string,
-  hoverbg: PropTypes.string,
-  id: PropTypes.string,
-  title: PropTypes.string,
-  p: PropTypes.string,
-};
-
-ViewPreview.defaultProps = {
-  viewbg: "bg-gray-500",
-  hoverbg: "bg-gray-600",
-  id: "default-id",
-  title: "Title",
-  p: "Paragraph",
-};
