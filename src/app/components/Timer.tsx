@@ -11,12 +11,15 @@ export default function Timer() {
 
   const [tStudio, settStudio] = useState(30);
   const [tPausa, settPausa] = useState(5);
+  const [nCicli, setnCicli] = useState(5);
+  const nCicliCompletati = useRef(0);
   const [tTotale, settTotale] = useState(120);
 
   const [manualMode, setManualMode] = useState(true);
 
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
+  const cicliRef = useRef<HTMLInputElement>(null);
   const totaleRef = useRef<HTMLInputElement>(null);
   const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -67,6 +70,17 @@ export default function Timer() {
     }
   }
 
+  function changeNCicli () {
+    if (!isRunning && !started.current) {
+      let val = cicliRef.current?.value;
+      if (val != null && val != "") {
+        let n =  parseInt(val);
+        if (n > 0)
+          setnCicli(n);
+      }
+    }
+  }
+
   function changeTTotale () {
     if (!isRunning && !started.current) {
       let val = totaleRef.current?.value;
@@ -86,6 +100,7 @@ export default function Timer() {
     }*/
     console.log("tStudio: " + tStudio);
     console.log("tPausa: " + tPausa);
+    console.log("nCicli: " + nCicli);
     startTimeRef.current = Date.now() - elapsedTime;
   }
 
@@ -98,6 +113,7 @@ export default function Timer() {
     setIsRunning(false);
     started.current = false;
     periodoStudio.current = true;
+    nCicliCompletati.current = 0;
 
     //console.log("isRunning: " + isRunning);
     //console.log("started: " + started);
@@ -105,9 +121,9 @@ export default function Timer() {
     //changeTStudio();
     let studioInput = studioRef.current?.value;
     if (studioInput != null && studioInput != "") {
-        let t =  parseInt(studioInput);
-        if (t > 0)
-          settStudio(t);
+      let t =  parseInt(studioInput);
+      if (t > 0)
+        settStudio(t);
     }
 
     //changeTPausa();
@@ -118,12 +134,20 @@ export default function Timer() {
         settPausa(t);
     }
 
+    //changeNCicli();
+    let cicliInput = cicliRef.current?.value;
+    if (cicliInput != null && cicliInput != "") {
+      let n =  parseInt(cicliInput);
+      if (n > 0)
+        setnCicli(n);
+    }
+
     //changeTTotale();
     let totaleInput = totaleRef.current?.value;
     if (totaleInput != null && totaleInput != "") {
       let t =  parseInt(totaleInput);
       if (t > 0)
-        settPausa(t);
+        settTotale(t);
     }
   }
 
@@ -134,13 +158,25 @@ export default function Timer() {
     let leftTimeSec = (time * 60 * 1000 - elapsedTime) / 1000;
 
     if (leftTimeSec <= 0){
+      if (!periodoStudio.current) {
+        //eravamo in periodo di pausa ed è finito, quindi abbiamo completato un ciclo
+        nCicliCompletati.current++;
+        console.log("Cicli completati: " + nCicliCompletati.current);
+      }
+
       periodoStudio.current = !periodoStudio.current;
       time = periodoStudio.current ? tStudio : tPausa;
       setElapsedTime(0);
       startTimeRef.current = Date.now();
+
+      if (nCicliCompletati.current == nCicli){
+        //tutti i cicli completati, reset
+        console.log("FINE");
+        reset();
+      }
     }
 
-    console.log("Periodo attuale: " + periodoStudio.current ? "studio" : "pausa");
+    //console.log("Periodo attuale: " + periodoStudio.current ? "studio" : "pausa");
 
     let minutes = Math.floor(leftTimeSec / 60);
     let seconds = Math.floor(leftTimeSec % 60);
@@ -160,8 +196,9 @@ export default function Timer() {
     if (manualMode)
       return (
         <div className="timer-input-container flex flex-row justify-center gap-2 text-xl font-semibold">
-          <input id="input-studio" min="1" onChange={changeTStudio} ref={studioRef} className="rounded-md text-center w-1/3" type="number" placeholder="Studio"></input>
-          <input id="input-pausa" min="1" onChange={changeTPausa} ref={pausaRef} className="rounded-md text-center w-1/3" type="number" placeholder="Pausa"></input>
+          <input id="input-studio" min="1" onChange={changeTStudio} ref={studioRef} className="rounded-md text-center w-1/5" type="number" placeholder="Studio"></input>
+          <input id="input-pausa" min="1" onChange={changeTPausa} ref={pausaRef} className="rounded-md text-center w-1/5" type="number" placeholder="Pausa"></input>
+          <input id="input-cicli" min="1" onChange={changeNCicli} ref={cicliRef} className="rounded-md text-center w-1/5" type="number" placeholder="Cicli"></input>
         </div>
       );
     else
@@ -171,7 +208,7 @@ export default function Timer() {
   }
 
   return ( <div className="timer-container mx-auto items-center">
-    <div className="timer w-fit rounded-3xl bg-red-400 p-6 flex flex-col gap-6 items-center shadow-xl shadow-black">
+    <div className="timer w-[50vw] rounded-3xl bg-red-400 p-6 flex flex-col gap-6 items-center shadow-xl shadow-black">
         <div className="flex flex-col">
           <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg grow-0 mx-16 px-2">Inizia lo studio!</h3>
           <div className="timer-display font-mono text-8xl font-bold text-white text-center">{formatTime()}</div>
