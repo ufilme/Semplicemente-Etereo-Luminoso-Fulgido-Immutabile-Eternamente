@@ -35,10 +35,6 @@ export function TimeMachine(props: { height: string }) {
   );
 }
 
-TimeMachine.propTypes = {
-  height: PropTypes.string,
-};
-
 TimeMachine.defaultProps = {
   height: "h-[4vh]",
 };

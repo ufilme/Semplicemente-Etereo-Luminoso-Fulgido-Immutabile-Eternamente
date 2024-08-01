@@ -48,6 +48,10 @@ export default function Timer() {
 
   }, [periodoStudio.current, isRunning]);
 
+  useEffect(() => {
+    generatePomodoro();
+  }, [tTotale]);
+
   function changeTStudio () {
     if (!isRunning && !started.current) {
       let val = studioRef.current?.value;
@@ -89,6 +93,46 @@ export default function Timer() {
         if (t > 0)
           settTotale(t);
       }
+    }
+  }
+
+  //generate pomodoro times based on tTotale
+  function generatePomodoro() {
+    if (!manualMode){
+      let t = tTotale;
+      console.log(t)
+      t = Math.floor((t + 2) / 5) * 5;
+      t = t == 0 ? 5 : t;
+      console.log(t)
+      
+      const cycleDurations = [60, 30, 20, 10, 5];
+      const studyPeriods = [50, 25, 16, 8, 4];
+      const pausePeriods = [];
+      for (var i in cycleDurations){
+        pausePeriods.push(cycleDurations[i] - studyPeriods[i]);
+      }
+      let maxDivisor = -1;
+      
+      console.log(cycleDurations);
+      console.log(studyPeriods);
+      console.log(pausePeriods);
+      
+      for (var i in cycleDurations) {
+        if (t % cycleDurations[i] == 0) {
+          console.log("Key: " + i + ", value: " + cycleDurations[i]);
+          maxDivisor = parseInt(i);
+          break;
+        }
+      }
+      
+      console.log();
+      console.log("Numero di cicli: " + t / cycleDurations[maxDivisor]);
+      console.log("Tempo di studio: " + studyPeriods[maxDivisor]);
+      console.log("Tempo di pausa: " + pausePeriods[maxDivisor]);
+
+      settStudio(studyPeriods[maxDivisor]);
+      settPausa(pausePeriods[maxDivisor]);
+      setnCicli(t / cycleDurations[maxDivisor]);
     }
   }
 
@@ -203,7 +247,14 @@ export default function Timer() {
       );
     else
       return (
-        <input id="input-totale" min="1" onChange={changeTTotale} ref={totaleRef} className="rounded-md text-center w-fit timer-input-container text-xl font-semibold" type="number" placeholder="Tempo disponibile"></input>
+        <div className="timer-input-container text-xl font-semibold">
+          <input id="input-totale" min="1" onChange={changeTTotale} ref={totaleRef} className="mb-2 rounded-md text-center w-fit" type="number" placeholder="Tempo disponibile"></input>
+          <div className="flex flex-row justify-center gap-2 text-base">
+            <p id="output-studio" className="rounded-md text-center w-1/3">{"Studio: " + tStudio}</p>
+            <p id="output-pausa" className="rounded-md text-center w-1/3">{"Pausa: " + tPausa}</p>
+            <p id="output-cicli" className="rounded-md text-center w-1/3">{"Cicli: " + nCicli}</p>
+          </div>
+        </div>
       );
   }
 

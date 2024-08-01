@@ -20,11 +20,11 @@ main()
 
 export default function Home() {
   return (
-    <div>
-      <h1 className="mt-6 text-center text-4xl font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+    <div className="h-full">
+      <h1 className="h-1/4 flex items-center justify-center text-4xl font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>
-      <div className="home grid grid-cols-2 gap-4 mt-6 mx-8 h-[82vh]">
+      <div className="home grid grid-cols-2 gap-4 pb-8 mx-8 h-3/4">
         <Link href="/calendario">
           <ViewPreview
             viewbg="bg-amber-500"
