@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import pomodoro from "@/public/pomodoro.png";
+import zzz from "@/public/sleeping.png";
+import "@/app/pomodoro/animation.css";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
@@ -258,10 +261,56 @@ export default function Timer() {
       );
   }
 
+  function pomodoroAnimation() {
+    if (started.current) {
+      if (periodoStudio.current) {
+        //periodo di studio
+
+        if (isRunning) {
+          //timer in funzione
+          return (
+            <img src={pomodoro.src} alt="Pomodoro animation" id="pomodoro-study" className="w-10 h-10" />
+          )
+        }
+        else {
+          //timer fermo
+          return (
+            <img src={pomodoro.src} alt="Pomodoro animation" id="pomodoro-study-nrun" className="w-10 h-10" />
+          )
+        }
+      }
+      else {
+        //periodo di pausa
+
+        if (isRunning) {
+          //timer in funzione
+          return (
+            <div className="flex gap-2"> 
+               <img src={pomodoro.src} alt="Pomodoro" id="pomodoro-pause" className="w-10 h-10" />
+               <img src={zzz.src} alt="Pomodoro animation" id="zzz-pause" className="w-6 h-6" />
+             </div>
+           )
+        }
+        else {
+          //timer fermo
+          return (
+            <div className="flex gap-2"> 
+               <img src={pomodoro.src} alt="Pomodoro" id="pomodoro-pause-nrun" className="w-10 h-10" />
+               <img src={zzz.src} alt="Pomodoro animation" id="zzz-pause-nrun" className="w-6 h-6" />
+             </div>
+           )
+        }
+      }
+    }
+  }
+
   return ( <div className="timer-container mx-auto items-center">
     <div className="timer w-[50vw] rounded-3xl bg-red-400 p-6 flex flex-col gap-6 items-center shadow-xl shadow-black">
         <div className="flex flex-col">
-          <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg grow-0 mx-16 px-2">Inizia lo studio!</h3>
+          <div className="flex justify-center items-center gap-2">
+            <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg grow-0 px-2">Inizia lo studio!</h3>
+            {pomodoroAnimation()}
+          </div>
           <div className="timer-display font-mono text-8xl font-bold text-white text-center">{formatTime()}</div>
         </div>
 

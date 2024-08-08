@@ -1,0 +1,25 @@
+@keyframes rotation {
+    0%      {rotate:0deg;}
+    100%    {rotate:360deg;}
+}
+
+@keyframes jump {
+    0%      {top:-1em;}
+    50%     {top:1em;}
+    100%    {top:-1em;}
+}
+
+#pomodoro-study {
+    animation-name: rotation;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+#zzz-pause {
+    position: relative;
+    animation-name: jump;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+}
