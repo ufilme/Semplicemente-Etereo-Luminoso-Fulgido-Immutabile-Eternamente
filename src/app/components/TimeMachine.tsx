@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import TMClock from "@/public/Clock";
 import { useState } from "react";
 
 import PropTypes from "prop-types";
 
-export function TimeMachine(props: { height: string }) {
+export function TimeMachine({ height = "h-[4vh]" }) {
   const [state, setState] = useState("tm-disabled");
 
   function activateTimeMachine() {
@@ -19,7 +18,7 @@ export function TimeMachine(props: { height: string }) {
       className={
         state +
         " " +
-        props.height +
+        height +
         " bg-gray-200 flex justify-between items-center p-2"
       }
       id="tm"
@@ -35,6 +34,6 @@ export function TimeMachine(props: { height: string }) {
   );
 }
 
-TimeMachine.defaultProps = {
-  height: "h-[4vh]",
+TimeMachine.propTypes = {
+  height: PropTypes.string
 };
