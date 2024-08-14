@@ -13,7 +13,7 @@ export function ViewPreview(props: {
         props.viewbg +
         " " +
         props.hoverbg +
-        " home-view w-full h-full mb-6 flex flex-col justify-center items-center rounded-3xl"
+        " home-view w-full h-full mb-6 flex flex-col justify-center items-center text-center rounded-3xl"
       }
       id={props.id}
     >
