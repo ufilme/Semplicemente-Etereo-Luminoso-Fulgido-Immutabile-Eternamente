@@ -28,7 +28,7 @@ const data = [
     id: "4",
     title: "Titolo lungo più di 25 caratteri",
     body: "Nota con un titolo molto lungo, più di 25 caratteri, quindi viene tagliato nell'anteprima. Nota con un titolo molto lungo, più di 25 caratteri, quindi viene tagliato nell'anteprima. Nota con un titolo molto lungo, più di 25 caratteri, quindi viene tagliato nell'anteprima. Nota con un titolo molto lungo, più di 25 caratteri, quindi viene tagliato nell'anteprima. Nota con un titolo molto lungo, più di 25 caratteri, quindi viene tagliato nell'anteprima.",
-    date: new Date(2023, 10, 27, 9, 45)
+    date: new Date(2024, 10, 27, 9, 45)
   },
   {
     id: "5",
@@ -40,7 +40,7 @@ const data = [
     id: "6",
     title: "Ancora un'altra nota",
     body: "Scrivo scrivo, ma cosa scrivo, ciao. Neve neve neve, addio.",
-    date: new Date(2022, 9, 5, 23, 15)
+    date: new Date(2023, 9, 5, 23, 15)
   }
 ];
 

@@ -2,6 +2,8 @@ import { ViewPreview } from "@/app/components/ViewPreview";
 import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
 
+import note from "@/app/note/notes"
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -19,6 +21,35 @@ main()
   });
 
 export default function Home() {
+  function newestNote() {
+    let nota: {
+      id: string,
+      title: string
+      body: string
+      date: Date
+    };
+    nota =   {
+      id: "-1",
+      title: "Nessuna nota",
+      body: "Non ci sono ancora note",
+      date: new Date(0)
+    };
+    note.forEach(n => {
+                    if (n.date > nota.date)
+                      nota = n;
+                });
+
+    let title = nota.title.length > 18 ? nota.title.substring(0, 18) + "..." : nota.title;
+    let body = nota.body.length > 30 ? nota.body.substring(0, 30) + "..." : nota.body;
+
+    let year = nota.date.getFullYear();
+    let month = nota.date.getMonth() + 1;
+    let day = nota.date.getDate();
+    let editDate = year + "/" + month + "/" + day;
+
+    return title + " | " + body + " | " + editDate;
+  }
+
   return (
     <div className="h-full">
       <h1 className="h-1/4 flex items-center justify-center text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
@@ -40,7 +71,7 @@ export default function Home() {
             hoverbg="hover:bg-lime-600"
             id="notes"
             title="Note"
-            p="Ultima nota modificata"
+            p={newestNote()}
           />
         </Link>
         <Link href="/pomodoro">

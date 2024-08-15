@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
+
 import note from "@/app/note/notes"
 
 export default function ModificaNote({ params }: { params: { editId: string } }) {
@@ -30,6 +32,8 @@ export default function ModificaNote({ params }: { params: { editId: string } })
   const [body, setBody] = useState(b);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
+  let edit_nota = {id: params.editId, title: title, body: body, date: new Date()};
+
   function changeTitle () {
     let t = titleRef.current?.value;
     if (t != null)
@@ -42,13 +46,15 @@ export default function ModificaNote({ params }: { params: { editId: string } })
       setBody(b);
   }
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-
+  const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (title && body){
-      let uuid = crypto.randomUUID();
-      const new_nota = {id: uuid, title: title, body: body, date: new Date()};
-      console.log(new_nota);
+      //let uuid = crypto.randomUUID();
+      edit_nota = {id: params.editId, title: title, body: body, date: new Date()};
+      console.log(edit_nota);
+    }
+    else {
+      e.preventDefault();
+      alert("Inserire titolo e testo!");
     }
   }
   
@@ -60,6 +66,6 @@ export default function ModificaNote({ params }: { params: { editId: string } })
         <textarea onChange={changeBody} ref={bodyRef} className="h-full text-base placeholder-black bg-lime-500" value={body}></textarea>
       </form>
 
-      <button onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</button>
+      <Link href={{ pathname: "/note", query: {new_edit_nota: JSON.stringify(edit_nota)} }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
     </div>
 }
