@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import { TimeMachine } from "@/app/components/TimeMachine";
 import { Metadata } from "next";
-import "./global.css";
+import "@/app/global.css";
 
 const inter = Inter({
   subsets: ["latin"],
