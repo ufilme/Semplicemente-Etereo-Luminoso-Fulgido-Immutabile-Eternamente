@@ -9,9 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^5.16.2",
+    "mongodb": "^6.8.0",
     "next": "^14.2.4",
-    "prisma": "^5.16.2",
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
