@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SELFIE - Note",
+  title: "SELFIE - Pomodoro",
 };
 
 export default function RootLayout({
