@@ -4,8 +4,8 @@ import "../global.css";
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
+import { startOfWeek, getDay } from "date-fns";
+//import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import React, { useState } from "react";
 import { it } from "date-fns/locale";
@@ -19,10 +19,24 @@ const locales = {
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek,
+  startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }), // Lunedì come primo giorno della settimana
   getDay,
   locales,
 });
+
+const messages = {
+  allDay: "Tutti i giorni",
+  previous: "Precedente",
+  next: "Successivo",
+  today: "Oggi",
+  month: "Mese",
+  week: "Settimana",
+  day: "Giorno",
+  agenda: "Agenda",
+  date: "Data",
+  time: "Ora",
+  event: "Evento",
+};
 
 // Eventi di esempio
 let dummy_events: {
@@ -206,11 +220,14 @@ export default function MyCalendar() {
       <Calendar
         className="m-8 p-6 bg-white"
         localizer={localizer}
+        culture="it"
+        messages={messages}
         events={events}
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
         defaultView={view}
         view={view}
         date={date}
+        scrollToTime={new Date()}
         onView={(view) => setView(view)}
         onNavigate={(date) => {
           setDate(new Date(date));
