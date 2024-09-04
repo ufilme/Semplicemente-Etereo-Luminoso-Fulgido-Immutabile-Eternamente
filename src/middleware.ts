@@ -1,14 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { redirect } from 'next/navigation'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
+  const loginUrl = request.nextUrl.clone()
+  loginUrl.pathname = '/auth/login'
+  var autheticated = false
 
   if (!token) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(loginUrl);
   }
 
+  const apiUrl = request.nextUrl.clone()
+  apiUrl.pathname = "/api/auth/checkToken";
+  
+  const requestData = {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"token": token}),
+  };
+
+  const r = await fetch(apiUrl, requestData)
+
+  if (!r.ok) {
+    return NextResponse.redirect(loginUrl);
+  }
+  
   return NextResponse.next()
 }
 

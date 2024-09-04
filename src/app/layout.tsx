@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { TimeMachine } from "@/app/components/TimeMachine";
 import { Metadata } from "next";
+import { useState } from "react";
 import "@/app/global.css";
 
 const inter = Inter({
@@ -9,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SELFIE - Progetti",
+  title: "SELFIE",
 };
 
 export default function RootLayout({
@@ -17,11 +18,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="it" className={inter.className}>
-      <body className="h-screen bg-teal-700">
+      <body className="h-screen bg-sky-950">
         {/* Layout UI */}
-        <TimeMachine height="h-[4vh]" />
+        <TimeMachine height="h-[4vh]"/>
         <main className="h-[96vh]">{children}</main>
       </body>
     </html>

@@ -16,8 +16,10 @@ async function handleFormSubmit(event){
         fetch(apiUrl, requestData).then(
             (promise) => promise.json().then(
                 (response) => {
-                    if (!response.ok) {
-                        console.log(response)
+                    if (!promise.ok) {
+                        console.log(promise)
+                    } else {
+                        window.location.href = "/auth/login";
                     }
                 }
         ))
