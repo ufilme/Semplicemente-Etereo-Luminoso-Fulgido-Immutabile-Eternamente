@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notes } from "@/app/note/notes";
+import { IconContext } from "react-icons";
+import { FaRegCopy } from "react-icons/fa";
 
 export default function NoteItem(props: { note:  {
                                             id: string,
@@ -26,7 +28,14 @@ export default function NoteItem(props: { note:  {
 
   return (
     <div className="notes-item relative rounded-xl bg-lime-500 p-2">
-      <h5 className="text-sm text-white rounded px-1 bg-slate-900 w-fit mb-2">{props.note.category}</h5>
+      <div className="flex flex-row justify-between mb-2">
+        <h5 className="text-sm text-white rounded px-1 bg-slate-900 w-fit">{props.note.category}</h5>
+        <button onClick={() => {navigator.clipboard.writeText(body)}}>
+        <IconContext.Provider value={{  }}>
+            <FaRegCopy />
+          </IconContext.Provider>
+        </button>
+      </div>
       <h4 className="text-lg font-semibold">{title.length > 25 ? title.substring(0, 25) + "..." : title}</h4>
       <p className="text-base">{body.length > 60 ? body.substring(0, 60) + "..." : body}</p>
       <p className="text-sm mt-1 text-slate-700">{"Modifica: " + formatDate(props.note.date_edit)}</p>
