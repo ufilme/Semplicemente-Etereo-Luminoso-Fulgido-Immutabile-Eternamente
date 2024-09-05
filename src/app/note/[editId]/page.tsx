@@ -3,36 +3,41 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 
-import note from "@/app/note/notes"
+import { notes, categories } from "@/app/note/notes"
 
 export default function ModificaNote({ params }: { params: { editId: string } }) {
-  let nota:  {
+  let note:  {
     id: string,
     title: string
     body: string
-    date: Date
+    category: string
+    date_edit: Date
+    date_create: Date
   } | null;
   
-  nota = null;
-  for (let i in note) {
-    if (note[i].id == params.editId) {
-      nota = note[i];
+  note = null;
+  for (let i in notes) {
+    if (notes[i].id == params.editId) {
+      note = notes[i];
     }
   }
 
   let b = "Non ci sono note con id " + params.editId;
   let t = "Nota non trovata";
-  if (nota != null) {
-    t = nota.title;
-    b = nota.body;
+  let c = "null";
+  if (note != null) {
+    t = note.title;
+    b = note.body;
+    c = note.category;
   }
 
   const [title, setTitle] = useState(t);
   const titleRef = useRef<HTMLInputElement>(null);
   const [body, setBody] = useState(b);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const [category, setCategory] = useState(c);
 
-  let edit_nota = {id: params.editId, title: title, body: body, date: new Date()};
+  let edit_note = {id: params.editId, title: title, body: body, category: category, date_edit: new Date(), date_create: note?.date_create};
 
   function changeTitle () {
     let t = titleRef.current?.value;
@@ -46,11 +51,15 @@ export default function ModificaNote({ params }: { params: { editId: string } })
       setBody(b);
   }
 
+  function changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
+    setCategory(e.target.value);
+  }
+
   const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (title && body){
       //let uuid = crypto.randomUUID();
-      edit_nota = {id: params.editId, title: title, body: body, date: new Date()};
-      console.log(edit_nota);
+      edit_note = {id: params.editId, title: title, body: body, category: category, date_edit: new Date(), date_create: note?.date_edit};
+      console.log(edit_note);
     }
     else {
       e.preventDefault();
@@ -64,8 +73,21 @@ export default function ModificaNote({ params }: { params: { editId: string } })
       <form className="h-full mt-8 w-3/5 note-edit flex flex-col rounded-xl bg-lime-500 p-2">
         <input type="text" onChange={changeTitle} ref={titleRef} className="text-lg font-semibold placeholder-black bg-lime-500" value={title}/>
         <textarea onChange={changeBody} ref={bodyRef} className="h-full text-base placeholder-black bg-lime-500" value={body}></textarea>
+        <label htmlFor="category">Categoria:</label>
+        <select
+          id="category"
+          value={category}
+          onChange={changeCategory}
+          className="mt-1 bg-white p-2 rounded-md"
+        >
+          {categories.map((cat) => (
+            <option key={cat.name} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
       </form>
 
-      <Link href={{ pathname: "/note", query: {new_edit_nota: JSON.stringify(edit_nota)} }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
+      <Link href={{ pathname: "/note", query: {new_edit_nota: JSON.stringify(edit_note)} }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
     </div>
 }

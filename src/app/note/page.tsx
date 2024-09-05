@@ -7,7 +7,7 @@ import "../global.css";
 import { useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 
-import note from "@/app/note/notes"
+import { notes, categories } from "@/app/note/notes"
 
 export default function Note() {
   //let note = notePlaceholder;
@@ -20,51 +20,55 @@ export default function Note() {
         id: string,
         title: string
         body: string
-        date: Date
+        category: string
+        date_edit: Date
+        date_create: Date
       }
       new_n = JSON.parse(n);
-      new_n.date = new Date();
+      new_n.date_create = new Date();
+      new_n.date_edit = new_n.date_create;
 
       let exist = false;
       let modified = false;
-      note.forEach(n => {
+      notes.forEach(n => {
         if (n.id == new_n.id) {
           exist = true;
-          if (n.title != new_n.title || n.body != new_n.body)
+          if (n.title != new_n.title || n.body != new_n.body || n.category != new_n.category)
             modified = true;
         }
       })
       
       if (exist && modified) {
-        note.forEach(n => {
+        notes.forEach(n => {
           if (n.id == new_n.id) {
             n.title = new_n.title;
             n.body = new_n.body;
-            n.date = new Date();
+            n.date_edit = new Date();
+            n.category = new_n.category;
             console.log("Nota aggiornata")
           }
         })
       }
       else if (!exist) {
         console.log("pre push");
-        console.log(note);
-        note.push(new_n);
+        console.log(notes);
+        notes.push(new_n);
         console.log("post push");
       }
 
-      console.log(note);
+      console.log(notes);
     }
     else
       console.log("Nessuna nota");
 
     //console.log(note);
-    note.sort(function(a, b) {
-      if (a.date > b.date)
+    notes.sort(function(a, b) {
+      if (a.date_edit > b.date_edit)
         return -1;
       else
         return 0;
     });
-    return note.map((nota) => <NoteItem nota={nota} key={nota.id} />);
+    return notes.map((note) => <NoteItem note={note} key={note.id} />);
   }
 
   return <div className="flex flex-col h-full bg-lime-800">
