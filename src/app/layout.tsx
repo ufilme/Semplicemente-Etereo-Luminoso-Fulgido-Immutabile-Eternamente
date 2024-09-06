@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className="h-screen bg-sky-950">
         {/* Layout UI */}
         <TimeMachine height="h-[4vh]"/>
-        <main className="h-[96vh]">{children}</main>
+        <main className="">{children}</main>
       </body>
     </html>
   );
