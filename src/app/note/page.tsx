@@ -13,6 +13,13 @@ export default function Note() {
   //let note = notePlaceholder;
   const noteParams = useSearchParams();
 
+  const orders = [
+    "Alfabetico",
+    "Lunghezza",
+    "Modifica"
+  ]
+  const [order, setOrder] = useState(orders[0]);
+
   function noteItems () {
     let n = noteParams.get("new_edit_nota");
     if (n != null){
@@ -62,13 +69,24 @@ export default function Note() {
       console.log("Nessuna nota");
 
     //console.log(note);
-    notes.sort(function(a, b) {
-      if (a.date_edit > b.date_edit)
-        return -1;
-      else
-        return 0;
-    });
+    switch (order) {
+      case "Alfabetico":
+        notes.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "Lunghezza":
+        notes.sort((a, b) => a.body.length - b.body.length);
+        break;
+      case "Modifica":
+        notes.sort((a, b) => b.date_edit.getTime() - a.date_edit.getTime());
+        break;
+      default:
+        break;
+    }
     return notes.map((note) => <NoteItem note={note} key={note.id} />);
+  }
+
+  function changeOrder(e: React.ChangeEvent<HTMLSelectElement>) {
+    setOrder(e.target.value);
   }
 
   return <div className="flex flex-col h-full bg-lime-800">
@@ -78,6 +96,24 @@ export default function Note() {
         {noteItems()}
       </div>
 
-      <Link href="/note/new" className="text-lg text-white rounded-lg mx-auto my-4 px-2 py-1 bg-sky-600 hover:bg-sky-900">Aggiungi nota</Link>
+      <div className="my-4 mx-auto flex gap-2 items-center">
+        <Link href="/note/new" className="text-lg text-white rounded-lg px-2 py-1 bg-sky-500 hover:bg-sky-800">Aggiungi nota</Link>
+        <div className="flex gap-1 rounded-lg px-1 py-1 bg-indigo-500">
+          <label htmlFor="order" className="text-lg text-white">Ordine:</label>
+          <select
+            id="order"
+            value={order}
+            onChange={changeOrder}
+            className="text-lg rounded"
+          >
+            {orders.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
     </div>
 }
