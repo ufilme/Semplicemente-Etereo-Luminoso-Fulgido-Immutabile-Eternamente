@@ -114,14 +114,15 @@ export default function Timer() {
       for (var i in cycleDurations){
         pausePeriods.push(cycleDurations[i] - studyPeriods[i]);
       }
-      let maxDivisor = -1;
+      let maxDivisor = cycleDurations.length - 1;
       
       console.log(cycleDurations);
       console.log(studyPeriods);
       console.log(pausePeriods);
       
+      console.log(cycleDurations.length);
       for (var i in cycleDurations) {
-        if (t % cycleDurations[i] == 0) {
+        if (t % cycleDurations[i] == 0 && t >= (2 * cycleDurations[i])) {
           console.log("Key: " + i + ", value: " + cycleDurations[i]);
           maxDivisor = parseInt(i);
           break;
