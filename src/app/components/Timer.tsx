@@ -240,6 +240,11 @@ export default function Timer() {
     setManualMode(!manualMode);
   }
 
+  function skipPeriod() {
+    let time = periodoStudio.current ? tStudio : tPausa;
+    startTimeRef.current = Date.now() - time * 60 * 1000;
+  }
+
   function timerInput() {
     if (manualMode)
       return (
@@ -323,8 +328,9 @@ export default function Timer() {
             <button onClick={reset} className="reset-btn bg-sky-500 hover:bg-sky-700 text-white p-2 rounded-xl">Reset</button>
         </div>
     </div>
-    <div>
-      <h3 className="text-center text-xl font-semibold text-gray-200 mt-10">
+    <div className="mx-auto w-fit">
+      <h3 className="flex flex-col gap-3 items-center text-center text-xl font-semibold text-gray-200 mt-10">
+        <button onClick={skipPeriod} className="rounded-xl bg-red-950 hover:bg-black px-4 py-2">Salta periodo</button>
         <button onClick={toggleManualMode} className="rounded-xl bg-[rgba(0,60,100,0.7)] hover:bg-[rgba(0,30,49,0.7)] px-4 py-2">Modalità {manualMode ? "manuale" : "automatica"}</button>
       </h3>
     </div>
