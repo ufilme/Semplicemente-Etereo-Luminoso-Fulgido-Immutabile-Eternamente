@@ -1,11 +1,15 @@
 let username, password;
 
-function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=None";
-  }
+function createCookie(name, value, days) {
+    console.log(document.cookie)
+    var expires = '', date = new Date();
+    if (days) {
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toGMTString();
+    }
+    document.cookie = name + '=' + value + expires + '; path=/';
+    console.log(document.cookie)
+}
 
 function handleFormSubmit(event){
     event.preventDefault()
@@ -20,13 +24,14 @@ function handleFormSubmit(event){
             body: JSON.stringify({"username": username, "password": password}),
         };
     
+        console.log("caca")
         fetch(apiUrl, requestData).then(
             (promise) => promise.json().then(
                 (response) => {
                     if (!promise.ok) {
                         console.log(promise)
                     } else {
-                        setCookie("token", response, 365)
+                        createCookie("token", response, 365)
                         window.location.href = "/";
                     }
                 }

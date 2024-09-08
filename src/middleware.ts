@@ -5,7 +5,6 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
   const loginUrl = request.nextUrl.clone()
   loginUrl.pathname = '/auth/login'
-  var autheticated = false
 
   if (!token) {
     return NextResponse.redirect(loginUrl);
