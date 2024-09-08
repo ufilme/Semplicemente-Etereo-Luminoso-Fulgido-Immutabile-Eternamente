@@ -245,6 +245,20 @@ export default function Timer() {
     startTimeRef.current = Date.now() - time * 60 * 1000;
   }
 
+  function restartCycle () {
+    //reset tempo trascorso
+    startTimeRef.current = Date.now();
+    //reset periodo a periodo di studio
+    periodoStudio.current = true;
+  }
+
+  function endCycle () {
+    //set tempo finito
+    startTimeRef.current = Date.now() - tPausa * 60 * 1000;
+    //set periodo a periodo di pausa
+    periodoStudio.current = false;
+  }
+
   function timerInput() {
     if (manualMode)
       return (
@@ -327,10 +341,14 @@ export default function Timer() {
             <button onClick={stop} className="stop-btn bg-red-700 hover:bg-red-900 text-white p-2 rounded-xl">Stop</button>
             <button onClick={reset} className="reset-btn bg-sky-500 hover:bg-sky-700 text-white p-2 rounded-xl">Reset</button>
         </div>
+        <div className="controls-period flex flex-col gap-2 font-semibold text-white">
+          <button onClick={skipPeriod} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Salta periodo</button>
+          <button onClick={restartCycle} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Ricomincia ciclo</button>
+          <button onClick={endCycle} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Fine ciclo</button>
+        </div>
     </div>
     <div className="mx-auto w-fit">
       <h3 className="flex flex-col gap-3 items-center text-center text-xl font-semibold text-gray-200 mt-10">
-        <button onClick={skipPeriod} className="rounded-xl bg-red-950 hover:bg-black px-4 py-2">Salta periodo</button>
         <button onClick={toggleManualMode} className="rounded-xl bg-[rgba(0,60,100,0.7)] hover:bg-[rgba(0,30,49,0.7)] px-4 py-2">Modalità {manualMode ? "manuale" : "automatica"}</button>
       </h3>
     </div>
