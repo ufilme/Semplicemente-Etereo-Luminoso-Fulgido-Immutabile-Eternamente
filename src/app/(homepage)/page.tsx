@@ -1,57 +1,44 @@
 import { ViewPreview } from "@/app/components/ViewPreview";
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
 
-import note from "@/app/note/notes"
-
-const prisma = new PrismaClient();
-
-async function main() {
-  const allUsers = await prisma.test.findMany();
-  console.log(allUsers);
-}
-
-main()
-  .catch(async (e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+import { notes } from "@/app/note/notes"
 
 export default function Home() {
   function newestNote() {
-    let nota: {
+    let note: {
       id: string,
       title: string
       body: string
-      date: Date
+      category: string
+      date_edit: Date
+      date_create: Date
     };
-    nota =   {
+    note =   {
       id: "-1",
       title: "Nessuna nota",
       body: "Non ci sono ancora note",
-      date: new Date(0)
+      category: "Altro",
+      date_edit: new Date(0),
+      date_create: new Date(0)
     };
-    note.forEach(n => {
-                    if (n.date > nota.date)
-                      nota = n;
+    notes.forEach(n => {
+                    if (n.date_edit > note.date_edit)
+                      note = n;
                 });
 
-    let title = nota.title.length > 18 ? nota.title.substring(0, 18) + "..." : nota.title;
-    let body = nota.body.length > 30 ? nota.body.substring(0, 30) + "..." : nota.body;
+    let title = note.title.length > 18 ? note.title.substring(0, 18) + "..." : note.title;
+    let body = note.body.length > 30 ? note.body.substring(0, 30) + "..." : note.body;
 
-    let year = nota.date.getFullYear();
-    let month = nota.date.getMonth() + 1;
-    let day = nota.date.getDate();
+    let year = note.date_edit.getFullYear();
+    let month = note.date_edit.getMonth() + 1;
+    let day = note.date_edit.getDate();
     let editDate = year + "/" + month + "/" + day;
 
     return title + " | " + body + " | " + editDate;
   }
 
   return (
-    <div className="h-full">
+    <div className="h-[96vh]">
       <h1 className="h-1/4 flex items-center justify-center text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>
