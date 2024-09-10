@@ -3,45 +3,49 @@ import React, { useState } from "react";
 interface EventCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) => void;
+  onAdd: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
 }
 
 const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
+  const now = new Date();
+  const later = new Date();
+  later.setHours(later.getHours() + 1);
+
   const [newEvent, setNewEvent] = useState({
     title: "",
-    start: new Date(),
-    end: new Date(),
+    start: now,
+    end: later,
     allDay: false,
     id: "",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   });
+
+  const [repeatEvent, setRepeatEvent] = useState(false); // Stato per controllare la ripetizione
+  const [repeatEvery, setRepeatEvery] = useState(1); // Ogni quanti giorni o settimane ripetere
+  const [repeatUnit, setRepeatUnit] = useState<"days" | "weeks">("weeks"); // Unità (giorni o settimane)
+  const [repeatUntilDate, setRepeatUntilDate] = useState<Date | null>(null); // Data di fine ripetizione
+  const [repeatOccurrences, setRepeatOccurrences] = useState<number>(1); // Numero di ripetizioni
+  const [useOccurrences, setUseOccurrences] = useState(true); // Stato per scegliere tra numero di ripetizioni o data
 
   if (!isOpen) return null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     if (name === "start" || name === "end") {
       const datePart = new Date(value);
       const timePart = newEvent[name as "start" | "end"];
-
       if (timePart) {
         datePart.setHours(timePart.getHours());
         datePart.setMinutes(timePart.getMinutes());
       }
-
       setNewEvent({ ...newEvent, [name]: datePart });
     } else if (name === "startTime" || name === "endTime") {
       const [hours, minutes] = value.split(":").map(Number);
       const datePart = newEvent[name === "startTime" ? "start" : "end"];
-
       if (datePart) {
         datePart.setHours(hours);
         datePart.setMinutes(minutes);
-
-        if (name === "endTime" && newEvent.start && datePart < newEvent.start) {
-          alert("L'orario di fine non può essere antecedente all'orario di inizio!");
-          return;
-        }
-
         setNewEvent({ ...newEvent, [name === "startTime" ? "start" : "end"]: datePart });
       }
     } else {
@@ -49,30 +53,76 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
     }
   };
 
+  const calculateRepetitions = (startDate: Date, endDate: Date, repeatEvery: number): number => {
+    // Calcola la differenza in millisecondi tra le due date
+    endDate.setHours(0,0,0,0);
+    startDate.setHours(0,0,0,0);
+    const diffInMs = endDate.getTime() - startDate.getTime();
+  
+    // Converti la differenza in giorni
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+  
+    // Calcola il numero di ripetizioni come intero
+    const repetitions = Math.floor(diffInDays / repeatEvery) + 1;
+  
+    console.log("Ripetizioni: " + repetitions);
+    return repetitions;
+  }
+
   const handleSave = () => {
     if (!newEvent.title) {
       alert("Inserire titolo!");
       return;
     }
-
     if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) {
       alert("La data e ora di fine non può essere antecedente a quella di inizio!");
       return;
     }
+    if (repeatEvent && !useOccurrences && repeatUntilDate === null){
+      alert("Imposta una data di fine ripetizione!");
+      return;
+    }
 
-    setNewEvent({ ...newEvent, id: crypto.randomUUID() });
+    if (repeatEvent) {
+      let frequency = repeatEvery;
+      if (repeatUnit == "weeks")
+        frequency = frequency * 7;
+
+      let repeatN = repeatOccurrences;
+
+      if (!useOccurrences) {
+        repeatN = calculateRepetitions(newEvent.start, repeatUntilDate!, frequency);
+      }
+
+      setNewEvent({ ...newEvent, repetitionCount: repeatN });
+      setNewEvent({ ...newEvent, repetitionEvery: frequency });
+    }
     const eventToAdd = newEvent;
+    eventToAdd.id = crypto.randomUUID();
+
     onAdd(eventToAdd);
     onClose();
 
     // Resetta newEvent per un nuovo inserimento
+    const now = new Date();
+    const later = new Date();
+    later.setHours(later.getHours() + 1);
     setNewEvent({
       title: "",
-      start: new Date(),
-      end: new Date(),
+      start: now,
+      end: later,
       allDay: false,
       id: "",
+      repetitionEvery: 7,
+      repetitionCount: 1,
     });
+
+    // Resetta la ripetizione
+    setRepeatEvent(false);
+    setRepeatEvery(1);
+    setRepeatUnit("weeks");
+    setRepeatUntilDate(null);
+    setRepeatOccurrences(1);
   };
 
   const formatDate = (date: Date | null) => {
@@ -130,7 +180,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           onChange={handleInputChange}
           className="border rounded mb-2 p-1 w-full"
         />
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="mr-2">Tutto il giorno:</label>
           <input
             type="checkbox"
@@ -139,6 +189,79 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
             onChange={(e) => setNewEvent({ ...newEvent, allDay: e.target.checked })}
           />
         </div>
+
+        {/* Ripetizione Evento */}
+        <div className="mb-4">
+          <label className="mr-2">Ripetizione:</label>
+          <input
+            type="checkbox"
+            checked={repeatEvent}
+            onChange={(e) => setRepeatEvent(e.target.checked)}
+          />
+        </div>
+
+        {repeatEvent && (
+          <div className="mb-4">
+            <label className="block mb-2">Ripeti ogni:</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="1"
+                value={repeatEvery}
+                onChange={(e) => setRepeatEvery(Number(e.target.value))}
+                className="border rounded p-1 max-w-16"
+              />
+              <select
+                value={repeatUnit}
+                onChange={(e) => setRepeatUnit(e.target.value as "days" | "weeks")}
+                className="border rounded p-1"
+              >
+                <option value="days">Giorni</option>
+                <option value="weeks">Settimane</option>
+              </select>
+            </div>
+
+            <div className="mt-4">
+              <label className="block mb-2">Fino a:</label>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  name="repeatOption"
+                  checked={useOccurrences}
+                  onChange={() => setUseOccurrences(true)}
+                />
+                <label className="ml-2">Numero di occorrenze</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={repeatOccurrences || ""}
+                  onChange={(e) => setRepeatOccurrences(Number(e.target.value))}
+                  disabled={!useOccurrences}
+                  className="border rounded mb-2 p-1 ml-4"
+                  style={{ width: "100px" }}
+                />
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  name="repeatOption"
+                  checked={!useOccurrences}
+                  onChange={() => setUseOccurrences(false)}
+                />
+                <label className="ml-2">Fino alla data</label>
+                <input
+                  type="date"
+                  value={formatDate(repeatUntilDate)}
+                  onChange={(e) => setRepeatUntilDate(new Date(e.target.value))}
+                  disabled={useOccurrences}
+                  className="border rounded mb-2 p-1 ml-4"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-end mt-4">
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"

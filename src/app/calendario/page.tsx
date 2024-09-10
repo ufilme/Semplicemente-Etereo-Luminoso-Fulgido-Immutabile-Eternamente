@@ -101,9 +101,44 @@ export default function MyCalendar() {
   const [view, setView] = useState<Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA>(Views.WEEK);
   const [date, setDate] = useState(new Date());
 
-  function handleAddEvent(newEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
-    //newEvent.id = crypto.randomUUID();
-    setEvents([...events, newEvent]);
+  function handleAddEvent(newEvent:
+    { title: string;
+      start: Date | null;
+      end: Date | null;
+      allDay: boolean;
+      id: string;
+      repetitionEvery: number;
+      repetitionCount: number;
+    }) {
+      
+    const eventsToAdd = [];
+
+    // Aggiungi l'evento iniziale
+    eventsToAdd.push(newEvent);
+
+    // Se l'evento si ripete più di una volta
+    if (newEvent.repetitionCount > 1) {
+      const startDate = newEvent.start;
+      const endDate = newEvent.end;
+
+      // Crea le ripetizioni
+      for (let i = 1; i < newEvent.repetitionCount; i++) {
+        const repeatedStartDate = new Date(startDate!);
+        repeatedStartDate.setDate(repeatedStartDate.getDate() + i * newEvent.repetitionEvery);
+
+        const repeatedEndDate = new Date(endDate!);
+        repeatedEndDate.setDate(repeatedEndDate.getDate() + i * newEvent.repetitionEvery);
+
+        // Aggiungi l'evento ripetuto
+        eventsToAdd.push({
+          ...newEvent,
+          start: repeatedStartDate,
+          end: repeatedEndDate,
+        });
+      }
+    }
+    
+    setEvents([...events, ...eventsToAdd]);
   }
 
   // Funzione per gestire l'apertura del modal
