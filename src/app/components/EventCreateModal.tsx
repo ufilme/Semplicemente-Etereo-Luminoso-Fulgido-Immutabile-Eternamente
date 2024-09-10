@@ -61,7 +61,18 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
     }
 
     setNewEvent({ ...newEvent, id: crypto.randomUUID() });
-    onAdd(newEvent);
+    const eventToAdd = newEvent;
+    onAdd(eventToAdd);
+    onClose();
+
+    // Resetta newEvent per un nuovo inserimento
+    setNewEvent({
+      title: "",
+      start: new Date(),
+      end: new Date(),
+      allDay: false,
+      id: "",
+    });
   };
 
   const formatDate = (date: Date | null) => {

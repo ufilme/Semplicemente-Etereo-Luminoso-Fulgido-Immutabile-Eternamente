@@ -98,63 +98,13 @@ export default function MyCalendar() {
   const [eventCreateModalOpen, setEventCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [view, setView] = useState<
-    typeof Views.DAY | typeof Views.WEEK | typeof Views.WORK_WEEK | typeof Views.MONTH | typeof Views.AGENDA
-  >(Views.WEEK);
+  const [view, setView] = useState<Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA>(Views.WEEK);
   const [date, setDate] = useState(new Date());
 
   function handleAddEvent(newEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
-    /*if (!newEvent.title) {
-      alert("Inserire titolo!");
-      return;
-    }
-
-    if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) {
-      alert("La data e ora di fine non può essere antecedente a quella di inizio!");
-      return;
-    }*/
-
-    //setNewEvent({ ...newEvent, id: crypto.randomUUID() });
-    newEvent.id = crypto.randomUUID();
+    //newEvent.id = crypto.randomUUID();
     setEvents([...events, newEvent]);
-
-    handleCloseEventCreateModal();
   }
-
-  /*
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-
-    if (name === "start" || name === "end") {
-      const datePart = new Date(value);
-      const timePart = newEvent[name as "start" | "end"];
-
-      if (timePart) {
-        datePart.setHours(timePart.getHours());
-        datePart.setMinutes(timePart.getMinutes());
-      }
-
-      setNewEvent({ ...newEvent, [name]: datePart });
-    } else if (name === "startTime" || name === "endTime") {
-      const [hours, minutes] = value.split(":").map(Number);
-      const datePart = newEvent[name === "startTime" ? "start" : "end"];
-
-      if (datePart) {
-        datePart.setHours(hours);
-        datePart.setMinutes(minutes);
-
-        if (name === "endTime" && newEvent.start && datePart < newEvent.start) {
-          alert("L'orario di fine non può essere antecedente all'orario di inizio!");
-          return;
-        }
-
-        setNewEvent({ ...newEvent, [name === "startTime" ? "start" : "end"]: datePart });
-      }
-    } else {
-      setNewEvent({ ...newEvent, [name]: value });
-    }
-  }
-  */
 
   // Funzione per gestire l'apertura del modal
   function handleEventClick(event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
@@ -185,23 +135,6 @@ export default function MyCalendar() {
     handleCloseModal();
   }
 
-  // Funzione helper per formattare la data
-  function formatDate(date: Date | null): string {
-    if (!date) return "";
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  // Funzione helper per formattare l'ora
-  function formatTime(date: Date | null): string {
-    if (!date) return "";
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
-  }
-
   return (
     <div className="min-h-[96vh] bg-amber-600">
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
@@ -228,8 +161,8 @@ export default function MyCalendar() {
         view={view}
         date={date}
         scrollToTime={new Date()}
-        onView={(view) => setView(view)}
-        onNavigate={(date) => {
+        onView={(view: Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA ) => setView(view)}
+        onNavigate={(date: Date) => {
           setDate(new Date(date));
         }}
         onSelectEvent={handleEventClick} // Gestore del clic per gli eventi

@@ -199,7 +199,7 @@ export default function Timer() {
     }
   }
 
-  function formatTime() {
+  function handleTime() {
     let time = periodoStudio.current ? tStudio : tPausa;
 
     //let leftTimeCSec = (tStudio * 60 * 1000 - elapsedTime) / 10;
@@ -221,6 +221,9 @@ export default function Timer() {
         //tutti i cicli completati, reset
         console.log("FINE");
         reset();
+      }
+      else {
+        alert("Inizio nuovo ciclo!");
       }
     }
 
@@ -331,7 +334,7 @@ export default function Timer() {
             <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg grow-0 px-2">Inizia lo studio!</h3>
             {pomodoroAnimation()}
           </div>
-          <div className="timer-display font-mono text-8xl font-bold text-white text-center">{formatTime()}</div>
+          <div className="timer-display font-mono text-8xl font-bold text-white text-center">{handleTime()}</div>
         </div>
 
         {timerInput()}
