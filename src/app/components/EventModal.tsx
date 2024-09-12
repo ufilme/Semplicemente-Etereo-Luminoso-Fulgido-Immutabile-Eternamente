@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { FaLocationDot } from "react-icons/fa6";
 
 interface EventModalProps {
   isOpen: boolean;
-  event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string; } | null;
+  event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; } | null;
   onClose: () => void;
-  onDelete: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) => void;
-  onUpdate: (updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) => void; // Aggiunto prop onUpdate
+  onDelete: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
+  onUpdate: (updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
 }
 
 const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelete, onUpdate }) => {
@@ -102,6 +103,17 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
           }}
           className="border rounded mb-2 p-1 w-full"
         />
+        <div className="flex items-center gap-2 mb-2">
+          <FaLocationDot className="h-8"/>
+          <input
+            type="text"
+            name="location"
+            value={editableEvent.location}
+            onChange={handleInputChange}
+            className="border rounded p-1 w-full"
+            placeholder="Luogo"
+          />
+        </div>
         <div className="mb-4">
           <label className="mr-2">Tutto il giorno:</label>
           <input

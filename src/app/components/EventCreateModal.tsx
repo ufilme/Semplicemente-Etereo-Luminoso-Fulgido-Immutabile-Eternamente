@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { FaLocationDot } from "react-icons/fa6";
 
 interface EventCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
+  onAdd: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
 }
 
 const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
@@ -16,6 +17,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
     start: now,
     end: later,
     allDay: false,
+    location: "",
     id: "",
     repetitionEvery: 7,
     repetitionCount: 1,
@@ -40,7 +42,8 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
         datePart.setMinutes(timePart.getMinutes());
       }
       setNewEvent({ ...newEvent, [name]: datePart });
-    } else if (name === "startTime" || name === "endTime") {
+    }
+    else if (name === "startTime" || name === "endTime") {
       const [hours, minutes] = value.split(":").map(Number);
       const datePart = newEvent[name === "startTime" ? "start" : "end"];
       if (datePart) {
@@ -48,7 +51,8 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
         datePart.setMinutes(minutes);
         setNewEvent({ ...newEvent, [name === "startTime" ? "start" : "end"]: datePart });
       }
-    } else {
+    }
+    else {
       setNewEvent({ ...newEvent, [name]: value });
     }
   };
@@ -112,6 +116,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
       start: now,
       end: later,
       allDay: false,
+      location: "",
       id: "",
       repetitionEvery: 7,
       repetitionCount: 1,
@@ -180,6 +185,17 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           onChange={handleInputChange}
           className="border rounded mb-2 p-1 w-full"
         />
+        <div className="flex items-center gap-2 mb-2">
+          <FaLocationDot className="h-8"/>
+          <input
+            type="text"
+            name="location"
+            value={newEvent.location}
+            onChange={handleInputChange}
+            className="border rounded p-1 w-full"
+            placeholder="Luogo"
+          />
+        </div>
         <div className="mb-2">
           <label className="mr-2">Tutto il giorno:</label>
           <input

@@ -44,7 +44,10 @@ let dummy_events: {
   start: Date | null;
   end: Date | null;
   allDay: boolean;
+  location: string;
   id: string;
+  repetitionEvery: number;
+  repetitionCount: number;
 }[];
 
 dummy_events = [
@@ -53,35 +56,50 @@ dummy_events = [
     start: new Date(2024, 7, 30, 10, 0), // 30 Agosto 2024, 10:00
     end: new Date(2024, 7, 30, 11, 0), // 30 Agosto 2024, 11:00
     allDay: false,
+    location: "Teams",
     id: "de8c0c9c-c9ba-4046-9b4f-b8b0e7504af8",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   },
   {
     title: "Project Deadline",
     start: new Date(2024, 7, 31, 17, 0), // 31 Agosto 2024, 17:00
     end: new Date(2024, 7, 31, 18, 0), // 31 Agosto 2024, 18:00
     allDay: false,
+    location: "",
     id: "71b29ee7-373f-494d-9081-41d70876a565",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   },
   {
     title: "Client Call",
     start: new Date(2024, 7, 5, 14, 0), // 5 Agosto 2024, 14:00
     end: new Date(2024, 7, 6, 15, 0), // 6 Agosto 2024, 15:00
     allDay: false,
+    location: "",
     id: "e69e9448-766c-4fbe-b49a-988ff493c025",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   },
   {
     title: "Company Workshop",
     start: new Date(2024, 7, 2, 9, 0), // 2 Agosto 2024, 09:00
     end: new Date(2024, 7, 2, 12, 0), // 2 Agosto 2024, 12:00
     allDay: false,
+    location: "Room 404",
     id: "f4100c25-c0dd-4d50-8c15-8ff887060edb",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   },
   {
     title: "Holiday",
     start: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
     end: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
     allDay: true,
+    location: "Home",
     id: "b772b347-e524-4829-85ef-645570a08c96",
+    repetitionEvery: 7,
+    repetitionCount: 1,
   },
 ];
 
@@ -94,7 +112,7 @@ export default function MyCalendar() {
     id: string;
   }>({ title: "", start: new Date(), end: new Date(), allDay: false, id: "" });*/
   const [events, setEvents] = useState(dummy_events);
-  const [selectedEvent, setSelectedEvent] = useState<{ title: string; start: Date | null; end: Date | null; allDay: boolean; id: string } | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<{ title: string; start: Date | null; end: Date | null; allDay: boolean; location:string; id: string; repetitionEvery: number; repetitionCount: number; } | null>(null);
   const [eventCreateModalOpen, setEventCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -106,6 +124,7 @@ export default function MyCalendar() {
       start: Date | null;
       end: Date | null;
       allDay: boolean;
+      location: string;
       id: string;
       repetitionEvery: number;
       repetitionCount: number;
@@ -142,7 +161,7 @@ export default function MyCalendar() {
   }
 
   // Funzione per gestire l'apertura del modal
-  function handleEventClick(event: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
+  function handleEventClick(event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) {
     setSelectedEvent(event);
     setModalOpen(true);
   }
@@ -165,7 +184,7 @@ export default function MyCalendar() {
   }
 
   // Funzione per aggiornare un evento esistente
-  function handleUpdateEvent(updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
+  function handleUpdateEvent(updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number }) {
     setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
     handleCloseModal();
   }
