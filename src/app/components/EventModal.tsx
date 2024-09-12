@@ -44,11 +44,31 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
   };
 
   const handleSave = () => {
-    if (!editableEvent.title) {
+    const eventToSave = editableEvent;
+
+    if (!eventToSave.title) {
       alert("Il titolo non può essere vuoto!");
       return;
     }
-    onUpdate(editableEvent); // Chiama la funzione di aggiornamento con l'evento modificato
+    if (!eventToSave.start) {
+      alert("Inserire inizio!");
+      return;
+    }
+    if (!eventToSave.allDay && !eventToSave.end) {
+      alert("Inserire fine!");
+      return;
+    }
+    if (eventToSave.allDay === true) {
+      //set end date later than start date not to trigger end >= start check
+      const endDate = new Date(editableEvent.start!);
+      endDate.setHours(endDate.getHours() + 1);
+      eventToSave.end = endDate;
+    }
+    if (eventToSave.start && eventToSave.end && eventToSave.end < eventToSave.start) {
+      alert("La data e ora di fine non può essere antecedente a quella di inizio!");
+      return;
+    }
+    onUpdate(eventToSave); // Chiama la funzione di aggiornamento con l'evento modificato
   };
 
   return (
@@ -70,39 +90,43 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
           onChange={(e) => setEditableEvent({ ...editableEvent, start: new Date(e.target.value) })}
           className="border rounded mb-2 p-1 w-full"
         />
-        <input
-          type="time"
-          name="startTime"
-          value={formatTime(editableEvent.start)}
-          onChange={(e) => {
-            const [hours, minutes] = e.target.value.split(":").map(Number);
-            const newStart = new Date(editableEvent.start!);
-            newStart.setHours(hours);
-            newStart.setMinutes(minutes);
-            setEditableEvent({ ...editableEvent, start: newStart });
-          }}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="date"
-          name="end"
-          value={formatDate(editableEvent.end)}
-          onChange={(e) => setEditableEvent({ ...editableEvent, end: new Date(e.target.value) })}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="time"
-          name="endTime"
-          value={formatTime(editableEvent.end)}
-          onChange={(e) => {
-            const [hours, minutes] = e.target.value.split(":").map(Number);
-            const newEnd = new Date(editableEvent.end!);
-            newEnd.setHours(hours);
-            newEnd.setMinutes(minutes);
-            setEditableEvent({ ...editableEvent, end: newEnd });
-          }}
-          className="border rounded mb-2 p-1 w-full"
-        />
+        {!editableEvent.allDay && (
+          <>
+            <input
+              type="time"
+              name="startTime"
+              value={formatTime(editableEvent.start)}
+              onChange={(e) => {
+                const [hours, minutes] = e.target.value.split(":").map(Number);
+                const newStart = new Date(editableEvent.start!);
+                newStart.setHours(hours);
+                newStart.setMinutes(minutes);
+                setEditableEvent({ ...editableEvent, start: newStart });
+              }}
+              className="border rounded mb-2 p-1 w-full"
+            />
+            <input
+              type="date"
+              name="end"
+              value={formatDate(editableEvent.end)}
+              onChange={(e) => setEditableEvent({ ...editableEvent, end: new Date(e.target.value) })}
+              className="border rounded mb-2 p-1 w-full"
+            />
+            <input
+              type="time"
+              name="endTime"
+              value={formatTime(editableEvent.end)}
+              onChange={(e) => {
+                const [hours, minutes] = e.target.value.split(":").map(Number);
+                const newEnd = new Date(editableEvent.end!);
+                newEnd.setHours(hours);
+                newEnd.setMinutes(minutes);
+                setEditableEvent({ ...editableEvent, end: newEnd });
+              }}
+              className="border rounded mb-2 p-1 w-full"
+            />
+          </>
+        )}
         <div className="flex items-center gap-2 mb-2">
           <FaLocationDot className="h-8"/>
           <input

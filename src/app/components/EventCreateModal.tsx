@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { render } from "react-dom";
 import { FaLocationDot } from "react-icons/fa6";
 
 interface EventCreateModalProps {
@@ -74,11 +75,20 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
   }
 
   const handleSave = () => {
-    if (!newEvent.title) {
+    const eventToAdd = newEvent;
+
+    if (eventToAdd.allDay === true) {
+      //set end date later than start date not to trigger end >= start check
+      const endDate = new Date(newEvent.start);
+      endDate.setHours(endDate.getHours() + 1);
+      eventToAdd.end = endDate;
+    }
+
+    if (!eventToAdd.title) {
       alert("Inserire titolo!");
       return;
     }
-    if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) {
+    if (eventToAdd.start && eventToAdd.end && eventToAdd.end < eventToAdd.start) {
       alert("La data e ora di fine non può essere antecedente a quella di inizio!");
       return;
     }
@@ -95,13 +105,14 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
       let repeatN = repeatOccurrences;
 
       if (!useOccurrences) {
-        repeatN = calculateRepetitions(newEvent.start, repeatUntilDate!, frequency);
+        repeatN = calculateRepetitions(eventToAdd.start, repeatUntilDate!, frequency);
       }
 
-      setNewEvent({ ...newEvent, repetitionCount: repeatN });
-      setNewEvent({ ...newEvent, repetitionEvery: frequency });
+      eventToAdd.repetitionCount = repeatN;
+      eventToAdd.repetitionEvery = frequency;
+      //setNewEvent({ ...newEvent, repetitionCount: repeatN });
+      //setNewEvent({ ...newEvent, repetitionEvery: frequency });
     }
-    const eventToAdd = newEvent;
     eventToAdd.id = crypto.randomUUID();
 
     onAdd(eventToAdd);
@@ -164,27 +175,31 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           onChange={handleInputChange}
           className="border rounded mb-2 p-1 w-full"
         />
-        <input
-          type="time"
-          name="startTime"
-          value={formatTime(newEvent.start)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="date"
-          name="end"
-          value={formatDate(newEvent.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="time"
-          name="endTime"
-          value={formatTime(newEvent.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
+        {!newEvent.allDay && (
+          <>
+            <input
+              type="time"
+              name="startTime"
+              value={formatTime(newEvent.start)}
+              onChange={handleInputChange}
+              className="border rounded mb-2 p-1 w-full"
+            />
+            <input
+              type="date"
+              name="end"
+              value={formatDate(newEvent.end)}
+              onChange={handleInputChange}
+              className="border rounded mb-2 p-1 w-full"
+            />
+            <input
+              type="time"
+              name="endTime"
+              value={formatTime(newEvent.end)}
+              onChange={handleInputChange}
+              className="border rounded mb-2 p-1 w-full"
+            />
+          </>
+        )}
         <div className="flex items-center gap-2 mb-2">
           <FaLocationDot className="h-8"/>
           <input
