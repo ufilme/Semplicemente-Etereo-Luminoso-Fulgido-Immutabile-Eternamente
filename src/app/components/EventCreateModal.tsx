@@ -77,16 +77,23 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
   const handleSave = () => {
     const eventToAdd = newEvent;
 
+    if (!eventToAdd.title) {
+      alert("Inserire titolo!");
+      return;
+    }
+    if (!eventToAdd.start) {
+      alert("Inserire inizio!");
+      return;
+    }
+    if (!eventToAdd.allDay && !eventToAdd.end) {
+      alert("Inserire fine!");
+      return;
+    }
     if (eventToAdd.allDay === true) {
       //set end date later than start date not to trigger end >= start check
       const endDate = new Date(newEvent.start);
       endDate.setHours(endDate.getHours() + 1);
       eventToAdd.end = endDate;
-    }
-
-    if (!eventToAdd.title) {
-      alert("Inserire titolo!");
-      return;
     }
     if (eventToAdd.start && eventToAdd.end && eventToAdd.end < eventToAdd.start) {
       alert("La data e ora di fine non può essere antecedente a quella di inizio!");
