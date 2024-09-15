@@ -1,4 +1,6 @@
-import clientPromise from "@/lib/db";
+import connectDB from "@/lib/db";
+import userModel from "@/models/User";
+import noteModel from "@/models/Note";
 import { NextResponse } from 'next/server';
 
 export async function POST(req: NextResponse) {
@@ -9,25 +11,27 @@ export async function POST(req: NextResponse) {
           return NextResponse.json("Creds required", { status: 400 });
         }
 
-        const client = await clientPromise;
-        const db = client.db("selfie");
-        const user = await db
-            .collection("user")
-            .find({
+        await connectDB();
+        const user = await userModel
+            .findOne({
                 username: creds.username
             })
-            .toArray()
-        
-        console.log("backend:", user)
 
-        if (user.length === 1){
+        if (user !== null){
             return NextResponse.json("Unauthorized", { status: 401 });
         }
 
-        await db.collection("user").insertOne({
+        const newUser = new userModel({
             username: creds.username,
             password: creds.password
         })
+
+        const newNote = new noteModel({
+            userid: newUser._id
+        })
+
+        await newUser.save()
+        await newNote.save()
     
         return NextResponse.json(creds, { status: 200 });
     } catch (error) {
