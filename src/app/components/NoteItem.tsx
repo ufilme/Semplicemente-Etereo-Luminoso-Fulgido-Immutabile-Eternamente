@@ -15,6 +15,8 @@ export default function NoteItem(props: { note:  {
   let title = props.note.title;
   let body = props.note.body;
   let id = props.note.id;
+  let date_edit = new Date(props.note.date_edit);
+  let date_create = new Date(props.note.date_create);
 
   function formatDate (date: Date) {
     let year = date.getFullYear();
@@ -38,8 +40,8 @@ export default function NoteItem(props: { note:  {
       </div>
       <h4 className="text-lg font-semibold">{title.length > 25 ? title.substring(0, 25) + "..." : title}</h4>
       <p className="text-base">{body.length > 60 ? body.substring(0, 60) + "..." : body}</p>
-      <p className="text-sm mt-1 text-slate-700">{"Modifica: " + formatDate(props.note.date_edit)}</p>
-      <p className="text-sm mb-8 text-slate-700">{"Creazione: " + formatDate(props.note.date_create)}</p>
+      <p className="text-sm mt-1 text-slate-700">{"Modifica: " + formatDate(date_edit)}</p>
+      <p className="text-sm mb-8 text-slate-700">{"Creazione: " + formatDate(date_create)}</p>
       <div className="absolute bottom-0 flex gap-1">
         <Link href={"/note/" + id} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Modifica</Link>
         <button onClick={() => null} className="text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>

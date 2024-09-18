@@ -76,7 +76,9 @@ export async function PATCH(req: NextResponse) {
                 userid: token.value, "notes.id": reqData.id
             },
             { 
-                "$set": reqData
+                "$set": {
+                    "notes.$": reqData
+                }
             }
             )
     

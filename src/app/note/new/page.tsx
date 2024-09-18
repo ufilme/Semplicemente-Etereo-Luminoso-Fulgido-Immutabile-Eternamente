@@ -34,12 +34,31 @@ export default function CreaNote() {
     if (title && body){
       //let uuid = crypto.randomUUID();
       new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date()};
-      console.log(new_nota);
+      // console.log(new_nota);
+      addNote(new_nota)
     }
     else {
       e.preventDefault();
       alert("Inserire titolo e testo!");
     }
+  }
+
+  const addNote = async (note) => {
+    try {
+      const response = await fetch(
+        '/api/data/notes',
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(note),
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
   return <div className="flex flex-col items-center h-full bg-lime-800">
@@ -63,6 +82,6 @@ export default function CreaNote() {
         </select>
       </form>
 
-      <Link href={{ pathname: "/note", query: {new_edit_nota: JSON.stringify(new_nota)} }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
+      <Link href={{ pathname: "/note" }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
     </div>
 }

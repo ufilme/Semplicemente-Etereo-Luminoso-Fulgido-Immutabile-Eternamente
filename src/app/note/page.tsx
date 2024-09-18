@@ -1,18 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import React from "react";
 
 import NoteItem from "@/app/components/NoteItem";
 import "../global.css";
-import { useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-
-import { notes, categories } from "@/app/note/notes"
+import { useState, useEffect } from "react";
 
 export default function Note() {
-  //let note = notePlaceholder;
-  const noteParams = useSearchParams();
-
+  const [notes, setNotes] = useState([]);
+  const [fetched, setFetched] = useState(false)
   const orders = [
     "Alfabetico",
     "Lunghezza",
@@ -20,72 +17,34 @@ export default function Note() {
   ]
   const [order, setOrder] = useState(orders[0]);
 
-  function noteItems () {
-    let n = noteParams.get("new_edit_nota");
-    if (n != null){
-      let new_n:  {
-        id: string,
-        title: string
-        body: string
-        category: string
-        date_edit: Date
-        date_create: Date
-      }
-      new_n = JSON.parse(n);
-      new_n.date_create = new Date();
-      new_n.date_edit = new_n.date_create;
-
-      let exist = false;
-      let modified = false;
-      notes.forEach(n => {
-        if (n.id == new_n.id) {
-          exist = true;
-          if (n.title != new_n.title || n.body != new_n.body || n.category != new_n.category)
-            modified = true;
+  useEffect(() => {
+    if (!fetched){
+      setFetched(true)
+      fetch('/api/data/notes').then(r => r.json()).then(data => {
+          setNotes([...notes, ...data.data])
         }
+      ).catch((e) => {
+        console.log(e)
       })
-      
-      if (exist && modified) {
-        notes.forEach(n => {
-          if (n.id == new_n.id) {
-            n.title = new_n.title;
-            n.body = new_n.body;
-            n.date_edit = new Date();
-            n.category = new_n.category;
-            console.log("Nota aggiornata")
-          }
-        })
-      }
-      else if (!exist) {
-        console.log("pre push");
-        console.log(notes);
-        notes.push(new_n);
-        console.log("post push");
-      }
-
-      console.log(notes);
     }
-    else
-      console.log("Nessuna nota");
+  })
 
-    //console.log(note);
-    switch (order) {
+
+  function changeOrder(e: React.ChangeEvent<HTMLSelectElement>) {
+    const orderedNotes = [...notes]
+    switch (e.target.value) {
       case "Alfabetico":
-        notes.sort((a, b) => a.title.localeCompare(b.title));
+        setNotes(orderedNotes.sort((a, b) => a.title.localeCompare(b.title)));
         break;
       case "Lunghezza":
-        notes.sort((a, b) => a.body.length - b.body.length);
+        setNotes(orderedNotes.sort((a, b) => a.body.length - b.body.length));
         break;
       case "Modifica":
-        notes.sort((a, b) => b.date_edit.getTime() - a.date_edit.getTime());
+        setNotes(orderedNotes.sort((a, b) => new Date(b.date_edit) - new Date(a.date_edit)));
         break;
       default:
         break;
     }
-    return notes.map((note) => <NoteItem note={note} key={note.id} />);
-  }
-
-  function changeOrder(e: React.ChangeEvent<HTMLSelectElement>) {
     setOrder(e.target.value);
   }
 
@@ -93,7 +52,7 @@ export default function Note() {
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Note</h1>
       
       <div className="notes-container mx-2 mt-4 grid grid-cols-5 gap-4">
-        {noteItems()}
+        {notes.map((note) => <NoteItem note={note} key={note.id} />)}
       </div>
 
       <div className="my-4 mx-auto flex gap-2 items-center">
