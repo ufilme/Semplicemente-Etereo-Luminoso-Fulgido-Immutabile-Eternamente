@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db";
 import userModel from "@/models/User";
 import noteModel from "@/models/Note";
+import eventModel from "@/models/Event";
 import { NextResponse } from 'next/server';
 
 export async function POST(req: NextResponse) {
@@ -30,8 +31,13 @@ export async function POST(req: NextResponse) {
             userid: newUser._id
         })
 
+        const newEvent = new eventModel({
+            userid: newUser._id
+        })
+    
         await newUser.save()
         await newNote.save()
+        await newEvent.save()
     
         return NextResponse.json(creds, { status: 200 });
     } catch (error) {

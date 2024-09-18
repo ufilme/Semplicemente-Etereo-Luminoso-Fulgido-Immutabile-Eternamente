@@ -7,7 +7,7 @@ import parse from "date-fns/parse";
 import { startOfWeek, getDay } from "date-fns";
 //import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { it } from "date-fns/locale";
 import EventCreateModal from "@/app/components/EventCreateModal";
 import EventModal from "@/app/components/EventModal"; // Importa il componente del modal
@@ -39,69 +39,69 @@ const messages = {
 };
 
 // Eventi di esempio
-let dummy_events: {
-  title: string;
-  start: Date | null;
-  end: Date | null;
-  allDay: boolean;
-  location: string;
-  id: string;
-  repetitionEvery: number;
-  repetitionCount: number;
-}[];
+// let dummy_events: {
+//   title: string;
+//   start: Date | null;
+//   end: Date | null;
+//   allDay: boolean;
+//   location: string;
+//   id: string;
+//   repetitionEvery: number;
+//   repetitionCount: number;
+// }[];
 
-dummy_events = [
-  {
-    title: "Team Meeting",
-    start: new Date(2024, 7, 30, 10, 0), // 30 Agosto 2024, 10:00
-    end: new Date(2024, 7, 30, 11, 0), // 30 Agosto 2024, 11:00
-    allDay: false,
-    location: "Teams",
-    id: "de8c0c9c-c9ba-4046-9b4f-b8b0e7504af8",
-    repetitionEvery: 7,
-    repetitionCount: 1,
-  },
-  {
-    title: "Project Deadline",
-    start: new Date(2024, 7, 31, 17, 0), // 31 Agosto 2024, 17:00
-    end: new Date(2024, 7, 31, 18, 0), // 31 Agosto 2024, 18:00
-    allDay: false,
-    location: "",
-    id: "71b29ee7-373f-494d-9081-41d70876a565",
-    repetitionEvery: 7,
-    repetitionCount: 1,
-  },
-  {
-    title: "Client Call",
-    start: new Date(2024, 7, 5, 14, 0), // 5 Agosto 2024, 14:00
-    end: new Date(2024, 7, 6, 15, 0), // 6 Agosto 2024, 15:00
-    allDay: false,
-    location: "",
-    id: "e69e9448-766c-4fbe-b49a-988ff493c025",
-    repetitionEvery: 7,
-    repetitionCount: 1,
-  },
-  {
-    title: "Company Workshop",
-    start: new Date(2024, 7, 2, 9, 0), // 2 Agosto 2024, 09:00
-    end: new Date(2024, 7, 2, 12, 0), // 2 Agosto 2024, 12:00
-    allDay: false,
-    location: "Room 404",
-    id: "f4100c25-c0dd-4d50-8c15-8ff887060edb",
-    repetitionEvery: 7,
-    repetitionCount: 1,
-  },
-  {
-    title: "Holiday",
-    start: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
-    end: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
-    allDay: true,
-    location: "Home",
-    id: "b772b347-e524-4829-85ef-645570a08c96",
-    repetitionEvery: 7,
-    repetitionCount: 1,
-  },
-];
+// dummy_events = [
+//   {
+//     title: "Team Meeting",
+//     start: new Date(2024, 7, 30, 10, 0), // 30 Agosto 2024, 10:00
+//     end: new Date(2024, 7, 30, 11, 0), // 30 Agosto 2024, 11:00
+//     allDay: false,
+//     location: "Teams",
+//     id: "de8c0c9c-c9ba-4046-9b4f-b8b0e7504af8",
+//     repetitionEvery: 7,
+//     repetitionCount: 1,
+//   },
+//   {
+//     title: "Project Deadline",
+//     start: new Date(2024, 7, 31, 17, 0), // 31 Agosto 2024, 17:00
+//     end: new Date(2024, 7, 31, 18, 0), // 31 Agosto 2024, 18:00
+//     allDay: false,
+//     location: "",
+//     id: "71b29ee7-373f-494d-9081-41d70876a565",
+//     repetitionEvery: 7,
+//     repetitionCount: 1,
+//   },
+//   {
+//     title: "Client Call",
+//     start: new Date(2024, 7, 5, 14, 0), // 5 Agosto 2024, 14:00
+//     end: new Date(2024, 7, 6, 15, 0), // 6 Agosto 2024, 15:00
+//     allDay: false,
+//     location: "",
+//     id: "e69e9448-766c-4fbe-b49a-988ff493c025",
+//     repetitionEvery: 7,
+//     repetitionCount: 1,
+//   },
+//   {
+//     title: "Company Workshop",
+//     start: new Date(2024, 7, 2, 9, 0), // 2 Agosto 2024, 09:00
+//     end: new Date(2024, 7, 2, 12, 0), // 2 Agosto 2024, 12:00
+//     allDay: false,
+//     location: "Room 404",
+//     id: "f4100c25-c0dd-4d50-8c15-8ff887060edb",
+//     repetitionEvery: 7,
+//     repetitionCount: 1,
+//   },
+//   {
+//     title: "Holiday",
+//     start: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
+//     end: new Date(2024, 7, 3), // 3 Agosto 2024, tutto il giorno
+//     allDay: true,
+//     location: "Home",
+//     id: "b772b347-e524-4829-85ef-645570a08c96",
+//     repetitionEvery: 7,
+//     repetitionCount: 1,
+//   },
+// ];
 
 export default function MyCalendar() {
   /*const [newEvent, setNewEvent] = useState<{
@@ -111,13 +111,32 @@ export default function MyCalendar() {
     allDay: boolean;
     id: string;
   }>({ title: "", start: new Date(), end: new Date(), allDay: false, id: "" });*/
-  const [events, setEvents] = useState(dummy_events);
+  const [events, setEvents] = useState([]);
+  const [fetched, setFetched] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<{ title: string; start: Date | null; end: Date | null; allDay: boolean; location:string; id: string; repetitionEvery: number; repetitionCount: number; } | null>(null);
   const [eventCreateModalOpen, setEventCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [view, setView] = useState<Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA>(Views.WEEK);
   const [date, setDate] = useState(new Date());
+
+  const addEvent = async (event) => {
+    try {
+      const response = await fetch(
+        '/api/data/events',
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(event),
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
+  }
 
   function handleAddEvent(newEvent:
     { title: string;
@@ -133,7 +152,8 @@ export default function MyCalendar() {
     const eventsToAdd = [];
 
     // Aggiungi l'evento iniziale
-    eventsToAdd.push(newEvent);
+    // eventsToAdd.push(newEvent);
+    addEvent(newEvent)
 
     // Se l'evento si ripete più di una volta
     if (newEvent.repetitionCount > 1) {
@@ -149,15 +169,22 @@ export default function MyCalendar() {
         repeatedEndDate.setDate(repeatedEndDate.getDate() + i * newEvent.repetitionEvery);
 
         // Aggiungi l'evento ripetuto
-        eventsToAdd.push({
+        // eventsToAdd.push({
+        //   ...newEvent,
+        //   start: repeatedStartDate,
+        //   end: repeatedEndDate,
+        // });
+        addEvent({
           ...newEvent,
           start: repeatedStartDate,
           end: repeatedEndDate,
         });
       }
     }
+
+    setFetched(false)
     
-    setEvents([...events, ...eventsToAdd]);
+    // setEvents([...events, ...eventsToAdd]);
   }
 
   // Funzione per gestire l'apertura del modal
@@ -176,18 +203,75 @@ export default function MyCalendar() {
     setSelectedEvent(null);
   }
 
+  const deleteEvent = async (event) => {
+    try {
+      const response = await fetch(
+        `/api/data/events?id=${event.id}`,
+        {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
+  }
+
   // Funzione per eliminare l'evento selezionato
   function handleDeleteEvent(eventToDelete: { title: string; start: Date | null; end: Date | null; allDay: boolean; id: string }) {
     console.log("Eliminazione in corso");
-    setEvents(events.filter(event => event.id !== eventToDelete.id));
+    // setEvents(events.filter(event => event.id !== eventToDelete.id));
+    deleteEvent(eventToDelete)
+    setFetched(false)
     handleCloseModal();
+  }
+
+  const updateEvent = async (event) => {
+    try {
+      const response = await fetch(
+        '/api/data/events',
+        {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(event),
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
   // Funzione per aggiornare un evento esistente
   function handleUpdateEvent(updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number }) {
-    setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
+    // setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
+    updateEvent(updatedEvent)
+    setFetched(false)
     handleCloseModal();
   }
+
+  useEffect(() => {
+    if (!fetched){
+      setFetched(true)
+      fetch('/api/data/events').then(r => r.json()).then(data => {
+          setEvents([...data.data.map((d) => {
+            return {
+              ...d,
+              start: new Date(d.start),
+              end: new Date(d.end)
+            }
+          })])
+        }
+      ).catch((e) => {
+        console.log(e)
+      })
+    }
+  }, [fetched])
 
   return (
     <div className="min-h-[96vh] bg-amber-600">
