@@ -3,7 +3,8 @@ import { notes } from "@/app/note/notes";
 import { IconContext } from "react-icons";
 import { FaRegCopy } from "react-icons/fa";
 
-export default function NoteItem(props: { note:  {
+export default function NoteItem(props: { onDuplicate: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date }) => Promise<void>,
+                                          note:  {
                                             id: string,
                                             title: string
                                             body: string
@@ -26,7 +27,7 @@ export default function NoteItem(props: { note:  {
     let minutes = String(date.getMinutes()).padStart(2, "0");;
     let formattedDate = year + "/" + month + "/" + day + ", " + hours + ":" + minutes;
     return formattedDate;
-  }  
+  }
 
   return (
     <div className="notes-item relative rounded-xl bg-lime-500 p-2">
@@ -44,6 +45,7 @@ export default function NoteItem(props: { note:  {
       <p className="text-sm mb-8 text-slate-700">{"Creazione: " + formatDate(date_create)}</p>
       <div className="absolute bottom-0 flex gap-1">
         <Link href={"/note/" + id} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Modifica</Link>
+        <button onClick={() => props.onDuplicate(props.note)} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Duplica</button>
         <button onClick={() => null} className="text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>
       </div>
     </div>

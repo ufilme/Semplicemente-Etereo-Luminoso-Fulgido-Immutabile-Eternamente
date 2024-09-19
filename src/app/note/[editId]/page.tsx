@@ -67,8 +67,8 @@ export default function ModificaNote({ params }: { params: { editId: string } })
   return (
     <div>
       {fetched && (
-    <div className="flex flex-col items-center h-full bg-lime-800">
-      <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{"Modifica nota " + params.editId}</h1>
+    <div className="flex flex-col items-center min-h-[96vh] bg-lime-800">
+      <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{"Modifica nota"}</h1>
 
       <form className="h-full mt-8 w-3/5 note-edit flex flex-col rounded-xl bg-lime-500 p-2">
         <input type="text" onChange={(e) => changeTitle(e)} className="text-lg font-semibold placeholder-black bg-lime-500" value={note?.title || "Non ci sono note con id " + params.editId}/>

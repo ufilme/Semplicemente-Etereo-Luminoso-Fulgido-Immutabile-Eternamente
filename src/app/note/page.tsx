@@ -21,14 +21,44 @@ export default function Note() {
     if (!fetched){
       setFetched(true)
       fetch('/api/data/notes').then(r => r.json()).then(data => {
-          setNotes([...notes, ...data.data])
+          setNotes(data.data)
         }
       ).catch((e) => {
         console.log(e)
       })
     }
-  })
+  }, [fetched])
 
+  const duplicateNote = async (note:  {
+                                id: string,
+                                title: string
+                                body: string
+                                category: string
+                                date_edit: Date
+                                date_create: Date
+                              }) => {
+    let uuid = crypto.randomUUID();
+
+    try {
+      console.log("Adding to the database");
+      const response = await fetch(
+        '/api/data/notes',
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({...note, id: uuid, date_edit: new Date(), date_create: new Date()}),
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+      else {
+        setFetched(false);
+      }
+    } catch {}
+  }
 
   function changeOrder(e: React.ChangeEvent<HTMLSelectElement>) {
     const orderedNotes = [...notes]
@@ -52,7 +82,7 @@ export default function Note() {
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Note</h1>
       
       <div className="notes-container mx-2 mt-4 grid grid-cols-5 gap-4">
-        {notes.map((note) => <NoteItem note={note} key={note.id} />)}
+        {notes.map((note) => <NoteItem onDuplicate={duplicateNote} note={note} key={note.id} />)}
       </div>
 
       <div className="my-4 mx-auto flex gap-2 items-center">
