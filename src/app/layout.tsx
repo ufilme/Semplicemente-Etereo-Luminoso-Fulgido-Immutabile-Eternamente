@@ -23,8 +23,10 @@ export default function RootLayout({
     <html lang="it" className={inter.className}>
       <body className="h-screen bg-sky-950">
         {/* Layout UI */}
-        <TimeMachine height="h-[4vh]"/>
-        <main className="">{children}</main>
+        <main className="">
+          <TimeMachine />
+          {children}
+          </main>
       </body>
     </html>
   );

@@ -3,9 +3,7 @@
 import TMClock from "@/public/Clock";
 import { useState } from "react";
 
-import PropTypes from "prop-types";
-
-export function TimeMachine({ height = "h-[4vh]" }) {
+export function TimeMachine() {
   const [state, setState] = useState("tm-disabled");
 
   function activateTimeMachine() {
@@ -14,17 +12,9 @@ export function TimeMachine({ height = "h-[4vh]" }) {
   }
 
   return (
-    <div
-      className={
-        state +
-        " " +
-        height +
-        " bg-gray-200 flex justify-between items-center p-2"
-      }
-      id="tm"
-    >
-      <h3 id="tm-header">Time Machine</h3>
+    <div className={`${state} h-[4vh] bg-gray-200 flex justify-between items-center p-2`} >
       <div className="flex justify-around items-center">
+        <h3>Time Machine</h3>
         <input className="mr-2" type="date" title="tm-calendar" />
         <div onClick={activateTimeMachine}>
           <TMClock />
@@ -33,7 +23,3 @@ export function TimeMachine({ height = "h-[4vh]" }) {
     </div>
   );
 }
-
-TimeMachine.propTypes = {
-  height: PropTypes.string
-};
