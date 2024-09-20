@@ -31,5 +31,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/',
+  matcher: [
+		'/((?!api|_next/static|_next/image|auth|public|scripts|images|favicon.ico).*)',
+		'/'
+	]
 }
