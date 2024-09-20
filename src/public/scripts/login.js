@@ -1,4 +1,4 @@
-let username, password;
+let usernameLogin, passwordLogin;
 
 function createCookie(name, value, days) {
     console.log(document.cookie)
@@ -21,7 +21,7 @@ function handleFormSubmit(event){
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({"username": username, "password": password}),
+            body: JSON.stringify({"username": usernameLogin, "password": passwordLogin}),
         };
     
         console.log("caca")
@@ -42,14 +42,14 @@ function handleFormSubmit(event){
     }
 }
 
-function handleUsername(e) {
-    username = e.target.value;
+function handleUsernameLogin(e) {
+    usernameLogin = e.target.value;
 };
 
-function handlePassword(e) {
-    password = e.target.value;
+function handlePasswordLogin(e) {
+    passwordLogin = e.target.value;
 };
 
 document.getElementById('loginForm').addEventListener('submit', handleFormSubmit);
-document.getElementById('input-username').addEventListener('change', handleUsername);
-document.getElementById('input-password').addEventListener('change', handlePassword);
+document.getElementById('input-username').addEventListener('change', handleUsernameLogin);
+document.getElementById('input-password').addEventListener('change', handlePasswordLogin);

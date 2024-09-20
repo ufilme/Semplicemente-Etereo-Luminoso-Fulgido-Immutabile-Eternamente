@@ -1,4 +1,4 @@
-let username, password;
+let usernameRegister, passwordRegister;
 
 async function handleFormSubmit(event){
     event.preventDefault()
@@ -10,7 +10,7 @@ async function handleFormSubmit(event){
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({"username": username, "password": password}),
+            body: JSON.stringify({"username": usernameRegister, "password": passwordRegister}),
         };
     
         fetch(apiUrl, requestData).then(
@@ -29,14 +29,14 @@ async function handleFormSubmit(event){
     }
 }
 
-function handleUsername(e) {
-    username = e.target.value;
+function handleUsernameRegister(e) {
+    usernameRegister = e.target.value;
 };
 
-function handlePassword(e) {
-    password = e.target.value;
+function handlePasswordRegister(e) {
+    passwordRegister = e.target.value;
 };
 
 document.getElementById('loginForm').addEventListener('submit', handleFormSubmit);
-document.getElementById('input-username').addEventListener('change', handleUsername);
-document.getElementById('input-password').addEventListener('change', handlePassword);
+document.getElementById('input-username').addEventListener('change', handleUsernameRegister);
+document.getElementById('input-password').addEventListener('change', handlePasswordRegister);
