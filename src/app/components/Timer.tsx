@@ -15,6 +15,7 @@ export default function Timer() {
   const [tStudio, settStudio] = useState(30);
   const [tPausa, settPausa] = useState(5);
   const [nCicli, setnCicli] = useState(5);
+  const [tomatoes, setTomatoes] = useState([])
   const nCicliCompletati = useRef(0);
   const [tTotale, settTotale] = useState(120);
 
@@ -54,6 +55,24 @@ export default function Timer() {
   useEffect(() => {
     generatePomodoro();
   }, [tTotale]);
+
+  const addTomato = async (tomato) => {
+    try {
+      const response = await fetch(
+        '/api/data/tomatoes',
+        {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tomato),
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
+  }
 
   function changeTStudio () {
     if (!isRunning && !started.current) {
@@ -149,6 +168,9 @@ export default function Timer() {
     console.log("tStudio: " + tStudio);
     console.log("tPausa: " + tPausa);
     console.log("nCicli: " + nCicli);
+    let tomato = {tStudio: tStudio, tPausa: tPausa, nCicli: nCicli}
+    setTomatoes([...tomatoes, tomato])
+    addTomato(tomato)
     startTimeRef.current = Date.now() - elapsedTime;
   }
 
