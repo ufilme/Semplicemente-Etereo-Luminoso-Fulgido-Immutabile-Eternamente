@@ -9,7 +9,8 @@ const Note = new mongoose.Schema(
       body: String,
       category: String,
       date_edit: Date,
-      date_create: Date
+      date_create: Date,
+      marked: Boolean
     }]
   },
   {

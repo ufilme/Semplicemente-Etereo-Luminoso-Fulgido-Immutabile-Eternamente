@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notes } from "@/app/note/notes";
 import { IconContext } from "react-icons";
 import { FaRegCopy } from "react-icons/fa";
+import { marked } from 'marked';
+import "@/app/notemarkdown.css";
 
-export default function NoteItem(props: { onDuplicate: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date }) => Promise<void>,
+export default function NoteItem(props: { onDuplicate: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date, marked: boolean }) => Promise<void>,
                                           note:  {
                                             id: string,
                                             title: string
@@ -11,6 +13,7 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
                                             category: string
                                             date_edit: Date
                                             date_create: Date
+                                            marked: boolean
                                           }}) {
 
   let title = props.note.title;
@@ -29,6 +32,17 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
     return formattedDate;
   }
 
+  function markdown () {
+    console.log(props.note);
+    if (props.note.marked) {
+      body = marked.parse(body);
+      return <div className="text-base note-markdown" dangerouslySetInnerHTML={{ __html: body }}></div>
+    }
+    else {
+      return <p className="text-base" >{body.length > 60 ? body.substring(0, 60) + "..." : body}</p>
+    }
+  }
+
   return (
     <div className="notes-item relative rounded-xl bg-lime-500 p-2">
       <div className="flex flex-row justify-between mb-2">
@@ -40,7 +54,7 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
         </button>
       </div>
       <h4 className="text-lg font-semibold">{title.length > 25 ? title.substring(0, 25) + "..." : title}</h4>
-      <p className="text-base">{body.length > 60 ? body.substring(0, 60) + "..." : body}</p>
+      {markdown()}
       <p className="text-sm mt-1 text-slate-700">{"Modifica: " + formatDate(date_edit)}</p>
       <p className="text-sm mb-8 text-slate-700">{"Creazione: " + formatDate(date_create)}</p>
       <div className="absolute bottom-0 flex gap-1">

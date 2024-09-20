@@ -10,9 +10,10 @@ export default function CreaNote() {
   const [body, setBody] = useState("");
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [category, setCategory] = useState(categories[0].name);
+  const [marked, setMarked] = useState(false);
 
   let uuid = crypto.randomUUID();
-  let new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category};
+  let new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category, marked: marked};
   
   function changeTitle () {
     let t = titleRef.current?.value;
@@ -30,10 +31,14 @@ export default function CreaNote() {
     setCategory(e.target.value);
   }
 
+  function toggleMarked() {
+    setMarked(!marked);
+  }
+
   const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (title && body){
       //let uuid = crypto.randomUUID();
-      new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category};
+      new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category, marked: marked};
       // console.log(new_nota);
       addNote(new_nota)
     }
@@ -66,7 +71,7 @@ export default function CreaNote() {
 
       <form className="h-full mt-8 w-3/5 note-edit flex flex-col rounded-xl bg-lime-500 p-2">
         <input type="text" onChange={changeTitle} ref={titleRef} placeholder="Titolo" className="text-lg font-semibold placeholder-black bg-lime-500" value={title}/>
-        <textarea onChange={changeBody} ref={bodyRef} placeholder="Scrivi qualcosa..." className="h-full text-base placeholder-black bg-lime-500" value={body}></textarea>
+        <textarea onChange={changeBody} ref={bodyRef} placeholder="Scrivi qualcosa..." className="min-h-64 h-full text-base placeholder-black bg-lime-500" value={body}></textarea>
         <label htmlFor="category">Categoria:</label>
         <select
           id="category"
@@ -80,6 +85,15 @@ export default function CreaNote() {
             </option>
           ))}
         </select>
+        <label className="mt-2">
+          <input
+            type="checkbox"
+            checked={marked}
+            onChange={toggleMarked}
+            className="mr-2"
+          />
+          Markdown
+        </label>
       </form>
 
       <Link href={{ pathname: "/note" }} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>

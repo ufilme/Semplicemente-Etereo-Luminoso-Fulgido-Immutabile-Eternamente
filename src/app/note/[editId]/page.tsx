@@ -8,18 +8,23 @@ import { categories } from "@/app/note/notes"
 export default function ModificaNote({ params }: { params: { editId: string } }) {
   const [fetched, setFetched] = useState(false)
   const [note, setNote] = useState({})
+  const [marked, setMarked] = useState(false);
 
   useEffect(() => {
     if (!fetched){
       fetch('/api/data/notes').then(r => r.json()).then(data => {
-          setNote(data.data.find(n => n.id == params.editId))
-          setFetched(true)
+        const fetchedNote = data.data.find((n) => n.id == params.editId);
+        if (fetchedNote) {
+          setNote(fetchedNote);
+          setMarked(fetchedNote.marked || false);
         }
+        setFetched(true);
+      }
       ).catch((e) => {
         console.log(e)
       })
     }
-  })
+  },  [fetched, params.editId])
 
   function changeTitle (e) {
     setNote({
@@ -42,8 +47,12 @@ export default function ModificaNote({ params }: { params: { editId: string } })
     })
   }
 
+  function toggleMarked() {
+    setMarked(!marked);
+  }
+
   function handleSubmit(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-      updateNote({...note, date_edit: new Date()})
+      updateNote({...note, date_edit: new Date(), marked: marked})
   }
 
   const updateNote = async (note) => {
@@ -72,7 +81,7 @@ export default function ModificaNote({ params }: { params: { editId: string } })
 
       <form className="h-full mt-8 w-3/5 note-edit flex flex-col rounded-xl bg-lime-500 p-2">
         <input type="text" onChange={(e) => changeTitle(e)} className="text-lg font-semibold placeholder-black bg-lime-500" value={note?.title || "Non ci sono note con id " + params.editId}/>
-        <textarea onChange={(e) => changeBody(e)} className="h-full text-base placeholder-black bg-lime-500" value={note?.body || "Nota non trovata"}></textarea>
+        <textarea onChange={(e) => changeBody(e)} className="min-h-64 h-full text-base placeholder-black bg-lime-500" value={note?.body || "Nota non trovata"}></textarea>
         <label htmlFor="category">Categoria:</label>
         <select
           id="category"
@@ -86,6 +95,15 @@ export default function ModificaNote({ params }: { params: { editId: string } })
             </option>
           ))}
         </select>
+        <label className="mt-2">
+          <input
+            type="checkbox"
+            checked={marked}
+            onChange={toggleMarked}
+            className="mr-2"
+          />
+          Markdown
+        </label>
       </form>
 
       <Link href={{ pathname: "/note"}} onClick={handleSubmit} className="mt-2 mb-12 rounded-lg text-white bg-sky-600 hover:bg-sky-900 p-1">Salva</Link>
