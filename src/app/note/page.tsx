@@ -119,7 +119,7 @@ export default function Note() {
     setOrder(e.target.value);
   }
 
-  return <div className="flex flex-col min-h-[96vh] bg-lime-800">
+  return <div className="flex flex-col min-h-[92vh] bg-lime-800">
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Note</h1>
       
       <div className="notes-container mx-2 mt-4 grid grid-cols-5 gap-4">

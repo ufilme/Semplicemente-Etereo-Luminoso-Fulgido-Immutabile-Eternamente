@@ -155,7 +155,7 @@ export default function Attivita() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 min-h-[96vh] bg-amber-600">
+    <div className="flex flex-col items-center gap-4 min-h-[92vh] bg-amber-600">
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Attività</h1>
       
       <div className="activities-container mx-2 mt-4 flex flex-row gap-2 justify-items-center">

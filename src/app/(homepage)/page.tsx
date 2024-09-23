@@ -118,7 +118,7 @@ export default function Home() {
   }
 
   return (
-    <div className="h-[96vh]">
+    <div className="h-[92vh]">
       <h1 className="h-1/4 flex items-center justify-center text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>
