@@ -87,7 +87,15 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
           type="date"
           name="start"
           value={formatDate(editableEvent.start)}
-          onChange={(e) => setEditableEvent({ ...editableEvent, start: new Date(e.target.value) })}
+          onChange={(e) => {
+            const timePart = editableEvent["start"];
+
+            const newStart = new Date(e.target.value);
+            newStart.setHours(timePart!.getHours());
+            newStart.setMinutes(timePart!.getMinutes());
+
+            setEditableEvent({ ...editableEvent, start: newStart })
+          }}
           className="border rounded mb-2 p-1 w-full"
         />
         {!editableEvent.allDay && (
@@ -101,6 +109,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
                 const newStart = new Date(editableEvent.start!);
                 newStart.setHours(hours);
                 newStart.setMinutes(minutes);
+    
                 setEditableEvent({ ...editableEvent, start: newStart });
               }}
               className="border rounded mb-2 p-1 w-full"
@@ -109,7 +118,15 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
               type="date"
               name="end"
               value={formatDate(editableEvent.end)}
-              onChange={(e) => setEditableEvent({ ...editableEvent, end: new Date(e.target.value) })}
+              onChange={(e) => {
+                const timePart = editableEvent["end"];
+    
+                const newEnd = new Date(e.target.value);
+                newEnd.setHours(timePart!.getHours());
+                newEnd.setMinutes(timePart!.getMinutes());
+    
+                setEditableEvent({ ...editableEvent, end: newEnd })
+              }}
               className="border rounded mb-2 p-1 w-full"
             />
             <input
@@ -121,6 +138,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
                 const newEnd = new Date(editableEvent.end!);
                 newEnd.setHours(hours);
                 newEnd.setMinutes(minutes);
+    
                 setEditableEvent({ ...editableEvent, end: newEnd });
               }}
               className="border rounded mb-2 p-1 w-full"
