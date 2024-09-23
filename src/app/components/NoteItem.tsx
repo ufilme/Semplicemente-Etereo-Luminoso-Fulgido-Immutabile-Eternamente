@@ -6,6 +6,7 @@ import { marked } from 'marked';
 import "@/app/notemarkdown.css";
 
 export default function NoteItem(props: { onDuplicate: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date, marked: boolean }) => Promise<void>,
+                                          onDelete: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date, marked: boolean }) => Promise<void>,
                                           note:  {
                                             id: string,
                                             title: string
@@ -39,7 +40,7 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
       return <div className="text-base note-markdown" dangerouslySetInnerHTML={{ __html: body }}></div>
     }
     else {
-      return <p className="text-base" >{body.length > 60 ? body.substring(0, 60) + "..." : body}</p>
+      return <p className="text-base" >{body.length > 80 ? body.substring(0, 80) + "..." : body}</p>
     }
   }
 
@@ -60,7 +61,7 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
       <div className="absolute bottom-0 flex gap-1">
         <Link href={"/note/" + id} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Modifica</Link>
         <button onClick={() => props.onDuplicate(props.note)} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Duplica</button>
-        <button onClick={() => null} className="text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>
+        <button onClick={() => props.onDelete(props.note)} className="text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>
       </div>
     </div>
   )

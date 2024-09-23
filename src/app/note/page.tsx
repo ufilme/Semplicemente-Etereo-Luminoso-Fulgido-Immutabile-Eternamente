@@ -61,6 +61,46 @@ export default function Note() {
     } catch {}
   }
 
+  function handleDeleteNote (note:  {
+                              id: string,
+                              title: string
+                              body: string
+                              category: string
+                              date_edit: Date
+                              date_create: Date
+                              marked: boolean
+                            }) {
+    deleteNote(note);
+    setFetched(false);
+
+  }
+
+  const deleteNote = async (note:  {
+                              id: string,
+                              title: string
+                              body: string
+                              category: string
+                              date_edit: Date
+                              date_create: Date
+                              marked: boolean
+                            }) => {
+
+    try {
+      const response = await fetch(
+        `/api/data/notes?id=${note.id}`,
+        {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
+  }
+
   function changeOrder(e: React.ChangeEvent<HTMLSelectElement>) {
     const orderedNotes = [...notes]
     switch (e.target.value) {
@@ -83,7 +123,7 @@ export default function Note() {
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Note</h1>
       
       <div className="notes-container mx-2 mt-4 grid grid-cols-5 gap-4">
-        {notes && notes.map((note) => <NoteItem onDuplicate={duplicateNote} note={note} key={note.id} />)}
+        {notes && notes.map((note) => <NoteItem onDuplicate={duplicateNote} onDelete={handleDeleteNote} note={note} key={note.id} />)}
       </div>
 
       <div className="my-4 mx-auto flex gap-2 items-center">
