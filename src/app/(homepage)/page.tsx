@@ -11,6 +11,17 @@ export default function Home() {
   const [newestNote, setNewestNote] = useState("Loading...")
   const [latestTomatoes, setLatestTomatoes] = useState(false)
   const [weekEvents, setWeekEvents] = useState(false)
+  const [timeMachine, setTimeMachine] = useState(() => {
+    const timeMachine = localStorage.getItem("timeMachine");
+    return timeMachine ? JSON.parse(timeMachine) : null;
+});
+  const [date, setDate] = useState(timeMachine.date ? new Date(timeMachine.date) : new Date())
+
+addEventListener('storage', () => {
+  const tm = JSON.parse(localStorage.getItem("timeMachine"))
+  setFetched(false)
+  setDate(new Date(tm.date))
+})
 
   useEffect(() => {
     if (!fetched){
@@ -46,7 +57,7 @@ export default function Home() {
         console.log(e)
       })
     }
-  }, [fetched])
+  }, [fetched, date])
 
   useEffect(() => {
     if (fetched){
@@ -55,7 +66,7 @@ export default function Home() {
       getEventsThisWeek()
       setWeekEvents(true)
     }
-  }, [fetched])
+  }, [fetched, date])
 
   function getNewestNote() {
     let note: {
@@ -91,7 +102,8 @@ export default function Home() {
 
   function getEventsThisWeek(){
     const getStartOfWeek = () => {
-      const now = new Date();
+      const now = new Date(date);
+      console.log(now)
       const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
       const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when day is Sunday
       const startOfWeek = new Date(now.setDate(diff));

@@ -7,13 +7,15 @@ import parse from "date-fns/parse";
 import { startOfWeek, getDay } from "date-fns";
 //import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { it } from "date-fns/locale";
 import EventCreateModal from "@/app/components/EventCreateModal";
 import ActivityCreateModal from "@/app/components/ActivityCreateModal";
 import EventModal from "@/app/components/EventModal";
 import ActivityEventModal from "@/app/components/ActivityEventModal";
 import Link from "next/link";
+import EventModal from "@/app/components/EventModal"; // Importa il componente del modal
+
 
 // Configurazione delle lingue
 const locales = {
@@ -49,9 +51,19 @@ export default function MyCalendar() {
   const [activityCreateModalOpen, setActivityCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [timeMachine, setTimeMachine] = useState(() => {
+    const timeMachine = localStorage.getItem("timeMachine");
+    return timeMachine ? JSON.parse(timeMachine) : null;
+});
 
   const [view, setView] = useState<Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA>(Views.WEEK);
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(timeMachine.date))
+
+  addEventListener('storage', () => {
+    const tm = JSON.parse(localStorage.getItem("timeMachine"))
+    setDate(new Date(tm.date))
+  })
 
   const [evts, setEvts] = useState([]);
   const [acts, setActs] = useState([]);
@@ -307,6 +319,19 @@ export default function MyCalendar() {
     }
   }, [fetched])
 
+  const [todayDate, setTodayDate] = useState(new Date());
+
+  // Example events (you can load your events here)
+  const eventi = [
+    {
+      title: "Meeting",
+      start: new Date(),
+      end: new Date(),
+    },
+  ];
+
+  const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
+
   return (
     <div className="min-h-[92vh] bg-amber-600">
       <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
@@ -341,11 +366,10 @@ export default function MyCalendar() {
         defaultView={view}
         view={view}
         date={date}
+        getNow={() => date}
         scrollToTime={new Date()}
         onView={(view: Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA ) => setView(view)}
-        onNavigate={(date: Date) => {
-          setDate(new Date(date));
-        }}
+        onNavigate={onNavigate}
         onSelectEvent={handleEventClick} // Gestore del clic per gli eventi
         startAccessor="start"
         endAccessor="end"
