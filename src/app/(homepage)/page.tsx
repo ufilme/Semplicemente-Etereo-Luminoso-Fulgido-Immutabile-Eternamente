@@ -11,17 +11,20 @@ export default function Home() {
   const [newestNote, setNewestNote] = useState("Loading...")
   const [latestTomatoes, setLatestTomatoes] = useState(false)
   const [weekEvents, setWeekEvents] = useState(false)
+  const [weekEventsData, setWeekEventsData] = useState([])
   const [timeMachine, setTimeMachine] = useState(() => {
     const timeMachine = localStorage.getItem("timeMachine");
     return timeMachine ? JSON.parse(timeMachine) : null;
 });
-  const [date, setDate] = useState(timeMachine.date ? new Date(timeMachine.date) : new Date())
+  const [date, setDate] = useState(new Date())
 
 addEventListener('storage', () => {
   const tm = JSON.parse(localStorage.getItem("timeMachine"))
   setFetched(false)
   setDate(new Date(tm.date))
 })
+
+console.log(date)
 
   useEffect(() => {
     if (!fetched){
@@ -57,7 +60,7 @@ addEventListener('storage', () => {
         console.log(e)
       })
     }
-  }, [fetched, date])
+  }, [fetched])
 
   useEffect(() => {
     if (fetched){
@@ -66,7 +69,7 @@ addEventListener('storage', () => {
       getEventsThisWeek()
       setWeekEvents(true)
     }
-  }, [fetched, date])
+  }, [fetched])
 
   function getNewestNote() {
     let note: {
@@ -108,6 +111,7 @@ addEventListener('storage', () => {
       const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when day is Sunday
       const startOfWeek = new Date(now.setDate(diff));
       startOfWeek.setHours(0, 0, 0, 0);
+      console.log("start", startOfWeek)
       return startOfWeek;
     };
     
@@ -116,6 +120,7 @@ addEventListener('storage', () => {
       const endOfWeek = new Date(startOfWeek);
       endOfWeek.setDate(startOfWeek.getDate() + 6); // Add 6 days to get the end of the week
       endOfWeek.setHours(23, 59, 59, 999);
+      console.log("end", endOfWeek)
       return endOfWeek;
     };
 
@@ -123,8 +128,9 @@ addEventListener('storage', () => {
     const endOfWeek = getEndOfWeek();
 
     // Filter events for the current week
-    setEvents(events.filter(e => {
+    setWeekEventsData(events.filter(e => {
       const eventDate = new Date(e.start);
+      console.log(eventDate, eventDate >= startOfWeek && eventDate <= endOfWeek)
       return eventDate >= startOfWeek && eventDate <= endOfWeek;
     }));
   }
@@ -139,10 +145,10 @@ addEventListener('storage', () => {
           <div className="bg-amber-500 hover:bg-amber-600 home-view w-full h-full mb-6 flex flex-col justify-center items-center text-center rounded-3xl">
           <h2 className="text-3xl font-bold">Calendario</h2>
           {!weekEvents && ( <p className="text-lg font-medium">Loading...</p>)}
-          {weekEvents && events.length == 0 && (
+          {weekEvents && weekEventsData.length == 0 && (
             <p className="text-lg font-medium">Nessun evento questa settimana</p>
           )}
-          {events.map((e, index) => (
+          {weekEvents && weekEventsData.map((e, index) => (
             <p key={index} className="text-lg font-medium">{e.title} on {e.start.toLocaleDateString()}</p>
           ))}
         </div>

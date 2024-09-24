@@ -9,6 +9,7 @@ export function TimeMachine() {
     const newTimeMachine = {active: false, date: new Date()}
     if (timeMachine == null){
       localStorage.setItem("timeMachine", JSON.stringify(newTimeMachine));
+      dispatchEvent(new Event("storage"));
     }
     return timeMachine ? JSON.parse(timeMachine) : newTimeMachine;
 });
