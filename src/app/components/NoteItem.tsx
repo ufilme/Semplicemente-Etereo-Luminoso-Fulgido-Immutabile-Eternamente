@@ -35,34 +35,59 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
 
   function markdown () {
     console.log(props.note);
+    body = body.length > 80 ? body.substring(0, 80) + "..." : body;
     if (props.note.marked) {
       body = marked.parse(body);
       return <div className="text-base note-markdown" dangerouslySetInnerHTML={{ __html: body }}></div>
     }
     else {
-      return <p className="text-base" >{body.length > 80 ? body.substring(0, 80) + "..." : body}</p>
+      return <p className="text-base" >{body}</p>
     }
   }
 
   return (
     <div className="notes-item relative rounded-xl bg-lime-500 p-2">
       <div className="flex flex-row justify-between mb-2">
-        <h5 className="text-sm text-white rounded px-1 bg-slate-900 w-fit">{props.note.category}</h5>
-        <button onClick={() => {navigator.clipboard.writeText(body)}}>
-        <IconContext.Provider value={{  }}>
+        <h5 className="text-xs sm:text-sm text-white rounded px-1 bg-slate-900 w-fit">
+          {props.note.category}
+        </h5>
+        <button onClick={() => { navigator.clipboard.writeText(body) }}>
+          <IconContext.Provider value={{}}>
             <FaRegCopy />
           </IconContext.Provider>
         </button>
       </div>
-      <h4 className="text-lg font-semibold">{title.length > 25 ? title.substring(0, 25) + "..." : title}</h4>
+      <h4 className="text-base sm:text-lg font-semibold">
+        {title.length > 20 ? title.substring(0, 20) + "..." : title}
+      </h4>
       {markdown()}
-      <p className="text-sm mt-1 text-slate-700">{"Modifica: " + formatDate(date_edit)}</p>
-      <p className="text-sm mb-8 text-slate-700">{"Creazione: " + formatDate(date_create)}</p>
+      <p className="text-xs sm:text-sm mt-1 text-slate-700">
+        {"Modifica: " + formatDate(date_edit)}
+      </p>
+      <p className="text-xs sm:text-sm mb-8 text-slate-700">
+        {"Creazione: " + formatDate(date_create)}
+      </p>
       <div className="absolute bottom-0 flex gap-1">
-        <Link href={"/note/" + id} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Modifica</Link>
-        <button onClick={() => props.onDuplicate(props.note)} className="text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700" >Duplica</button>
-        <button onClick={() => props.onDelete(props.note)} className="text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>
+        <Link
+          href={"/note/" + id}
+          className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700"
+        >
+          Modifica
+        </Link>
+        <button
+          onClick={() => props.onDuplicate(props.note)}
+          className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700"
+        >
+          Duplica
+        </button>
+        <button
+          onClick={() => props.onDelete(props.note)}
+          className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900"
+        >
+          Elimina
+        </button>
       </div>
     </div>
-  )
+  );
+  
 }
