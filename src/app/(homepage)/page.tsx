@@ -2,12 +2,15 @@
 import { ViewPreview } from "@/app/components/ViewPreview";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { checkDeadlines } from "@/app/components/Notifications";
 
 export default function Home() {
   const [fetched, setFetched] = useState(false)
   const [tomatoes, setTomatoes] = useState([])
   const [notes, setNotes] = useState([])
   const [events, setEvents] = useState([])
+  const [activities, setActivities] = useState([])
   const [newestNote, setNewestNote] = useState("Loading...")
   const [latestTomatoes, setLatestTomatoes] = useState(false)
   const [weekEvents, setWeekEvents] = useState(false)
@@ -15,8 +18,47 @@ export default function Home() {
   const [timeMachine, setTimeMachine] = useState(() => {
     const timeMachine = localStorage.getItem("timeMachine");
     return timeMachine ? JSON.parse(timeMachine) : null;
-});
-  const [date, setDate] = useState(new Date())
+  });
+
+const [date, setDate] = useState(new Date())
+
+function myToast (message, notifyLevel) {
+  let bgcolor: string;
+  switch (notifyLevel) {
+    case 1:
+      bgcolor = "bg-yellow-300";
+      break;
+    case 2:
+      bgcolor = "bg-orange-400";
+      break;
+    case 3:
+      bgcolor = "bg-red-600";
+      break;
+    default:
+      bgcolor = "bg-white";
+      break;
+  }
+
+  toast((t) => (
+    <span className={bgcolor + " flex gap-2 p-1"}>
+      {message}
+      <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
+    </span>
+  ), { duration: 10000 });
+}
+
+useEffect(() => {
+  let evts = events;
+  let acts = activities;
+  const interval = setInterval(() => {
+    console.log("###################################");
+    const now = new Date(date);
+    checkDeadlines(evts, acts, now, myToast);
+    setFetched(false);
+  }, 2000);
+
+  return () => clearInterval(interval);
+}, [fetched])
 
 addEventListener('storage', () => {
   const tm = JSON.parse(localStorage.getItem("timeMachine"))
@@ -24,10 +66,11 @@ addEventListener('storage', () => {
   setDate(new Date(tm.date))
 })
 
-console.log(date)
+//console.log(date)
 
   useEffect(() => {
     if (!fetched){
+      console.log("Fetching...");
       fetch('/api/data/tomatoes').then(r => r.json()).then(data => {
           setTomatoes(data.data.splice(-3))
         }
@@ -46,6 +89,18 @@ console.log(date)
       ).catch((e) => {
         console.log(e)
       })
+      fetch('/api/data/activities').then(r => r.json()).then(data => {
+        setActivities(data.data.map((d) => {
+          return {
+            ...d,
+            start: new Date(d.start),
+            end: new Date(d.end)
+          }
+        }))
+        }
+      ).catch((e) => {
+        console.log(e)
+      })
       fetch('/api/data/events').then(r => r.json()).then(data => {
         setEvents(data.data.map((d) => {
           return {
@@ -55,7 +110,10 @@ console.log(date)
           }
         }))
         setFetched(true)
-        }
+        
+        console.log("Fetched, activities:");
+        console.log(activities);
+      }
       ).catch((e) => {
         console.log(e)
       })
@@ -106,12 +164,12 @@ console.log(date)
   function getEventsThisWeek(){
     const getStartOfWeek = () => {
       const now = new Date(date);
-      console.log(now)
+      //console.log(now)
       const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
       const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when day is Sunday
       const startOfWeek = new Date(now.setDate(diff));
       startOfWeek.setHours(0, 0, 0, 0);
-      console.log("start", startOfWeek)
+      //console.log("start", startOfWeek)
       return startOfWeek;
     };
     
@@ -120,7 +178,7 @@ console.log(date)
       const endOfWeek = new Date(startOfWeek);
       endOfWeek.setDate(startOfWeek.getDate() + 6); // Add 6 days to get the end of the week
       endOfWeek.setHours(23, 59, 59, 999);
-      console.log("end", endOfWeek)
+      //console.log("end", endOfWeek)
       return endOfWeek;
     };
 
@@ -130,13 +188,14 @@ console.log(date)
     // Filter events for the current week
     setWeekEventsData(events.filter(e => {
       const eventDate = new Date(e.start);
-      console.log(eventDate, eventDate >= startOfWeek && eventDate <= endOfWeek)
+      //console.log(eventDate, eventDate >= startOfWeek && eventDate <= endOfWeek)
       return eventDate >= startOfWeek && eventDate <= endOfWeek;
     }));
   }
 
   return (
     <div className="h-[92vh]">
+      <div><Toaster/></div>
       <h1 className="h-1/4 flex items-center justify-center text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>

@@ -11,6 +11,8 @@ interface EventCreateModalProps {
 const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
   const now = new Date();
   const later = new Date();
+  now.setSeconds(0);
+  later.setSeconds(0);
   later.setHours(later.getHours() + 1);
 
   const [newEvent, setNewEvent] = useState({
@@ -22,6 +24,8 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
     id: "",
     repetitionEvery: 7,
     repetitionCount: 1,
+    advanceTime: 5,
+    advanceRepCount: 0,
   });
 
   const [repeatEvent, setRepeatEvent] = useState(false); // Stato per controllare la ripetizione
@@ -30,6 +34,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
   const [repeatUntilDate, setRepeatUntilDate] = useState<Date | null>(null); // Data di fine ripetizione
   const [repeatOccurrences, setRepeatOccurrences] = useState<number>(1); // Numero di ripetizioni
   const [useOccurrences, setUseOccurrences] = useState(true); // Stato per scegliere tra numero di ripetizioni o data
+  const [useNotify, setUseNotify] = useState(false);
 
   if (!isOpen) return null;
 
@@ -138,6 +143,8 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
       id: "",
       repetitionEvery: 7,
       repetitionCount: 1,
+      advanceTime: 5,
+      advanceRepCount: 0,
     });
 
     // Resetta la ripetizione
@@ -296,6 +303,51 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                   className="border rounded mb-2 p-1 ml-4"
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mb-4">
+          <label className="mr-2">Notifiche:</label>
+          <input
+            type="checkbox"
+            checked={useNotify}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setNewEvent({ ...newEvent, advanceRepCount: 1})
+              }
+              else {
+                setNewEvent({ ...newEvent, advanceRepCount: 0})
+              }
+              setUseNotify(e.target.checked)
+            }}
+          />
+        </div>
+
+        {useNotify && (
+          <div>
+            <div className="mb-4">
+              <label className="block mb-2">Anticipo della notifica: </label>
+              <input
+                type="number"
+                min="0"
+                value={newEvent.advanceTime}
+                onChange={(e) => setNewEvent({ ...newEvent, advanceTime: Number(e.target.value) })}
+                className="border rounded p-1 w-full"
+                placeholder="Minuti di anticipo"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2">Numero notifiche: </label>
+              <input
+                type="number"
+                min="0"
+                value={newEvent.advanceRepCount}
+                onChange={(e) => setNewEvent({ ...newEvent, advanceRepCount: Number(e.target.value) })}
+                className="border rounded p-1 w-full"
+                placeholder="Numero di notifiche"
+              />
             </div>
           </div>
         )}

@@ -12,13 +12,16 @@ const Event = new mongoose.Schema(
       id: String,
       repetitionEvery: Number,
       repetitionCount: Number,
+      advanceTime: Number,
+      advanceRepCount: Number,
     }],
     activities: [{
       title: String,
       start: Date,
       end: Date,
       id: String,
-      completed: Boolean
+      completed: Boolean,
+      notifyState: Number
     }]
   },
   {

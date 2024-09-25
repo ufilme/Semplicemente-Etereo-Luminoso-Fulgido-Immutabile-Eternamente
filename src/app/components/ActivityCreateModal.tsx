@@ -5,12 +5,14 @@ import { FaLocationDot } from "react-icons/fa6";
 interface ActivityCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (activity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) => void;
+  onAdd: (activity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean; notifyState: number }) => void;
 }
 
 const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
   const now = new Date();
   const later = new Date();
+  now.setSeconds(0);
+  later.setSeconds(0);
   later.setHours(later.getHours() + 1);
 
   const [newActivity, setNewActivity] = useState({
@@ -19,6 +21,7 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
     end: later,
     id: "",
     completed: false,
+    notifyState: -1,
   });
 
   if (!isOpen) return null;
@@ -83,6 +86,7 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
       end: later,
       id: "",
       completed: false,
+      notifyState: -1,
     });
   };
 

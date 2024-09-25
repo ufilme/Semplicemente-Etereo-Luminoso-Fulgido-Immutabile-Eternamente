@@ -14,7 +14,6 @@ import ActivityCreateModal from "@/app/components/ActivityCreateModal";
 import EventModal from "@/app/components/EventModal";
 import ActivityEventModal from "@/app/components/ActivityEventModal";
 import Link from "next/link";
-import EventModal from "@/app/components/EventModal"; // Importa il componente del modal
 
 
 // Configurazione delle lingue
@@ -233,6 +232,7 @@ export default function MyCalendar() {
     deleteEvent(eventToDelete)
     setFetched(false)
     handleCloseModal();
+    handleActivityCloseModal();
   }
 
   const updateEvent = async (event) => {
