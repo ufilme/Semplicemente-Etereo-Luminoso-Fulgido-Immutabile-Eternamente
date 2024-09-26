@@ -1,4 +1,7 @@
-export async function checkDeadlines(events, activities, date, myToast) {
+import { useEffect, useState } from "react"
+import toast, { Toaster } from "react-hot-toast";
+
+async function checkDeadlines(activities, events, date, myToast){
   console.log("checkDeadlines - " + new Date(date));
   
   const nowDate = new Date(date);
@@ -65,6 +68,83 @@ export async function checkDeadlines(events, activities, date, myToast) {
       }
     }
   });
+  
+}
+
+export function Notifications({date}) {
+  const [events, setEvents] = useState([])
+  const [activities, setActivities] = useState([])
+  const [fetched, setFetched] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  function myToast (message, notifyLevel) {
+    let bgcolor: string;
+    switch (notifyLevel) {
+      case 1:
+        bgcolor = "bg-yellow-300";
+        break;
+      case 2:
+        bgcolor = "bg-orange-400";
+        break;
+      case 3:
+        bgcolor = "bg-red-600";
+        break;
+      default:
+        bgcolor = "bg-white";
+        break;
+    }
+  
+    toast((t) => (
+      <span className={bgcolor + " flex gap-2 p-1"}>
+        {message}
+        <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
+      </span>
+    ), { duration: 10000 });
+  }
+
+  useEffect(() => {
+    let evts = events;
+    let acts = activities;
+      const interval = setInterval(() => {
+        console.log("Fetching...");
+      fetch('/api/data/activities').then(r => r.json()).then(data => {
+        setActivities(data.data.map((d) => {
+          return {
+            ...d,
+            start: new Date(d.start),
+            end: new Date(d.end)
+          }
+        }))
+        }
+      ).catch((e) => {
+        console.log(e)
+      })
+      fetch('/api/data/events').then(r => r.json()).then(data => {
+        setEvents(data.data.map((d) => {
+          return {
+            ...d,
+            start: new Date(d.start),
+            end: new Date(d.end)
+          }
+        }))
+        setFetched(true)
+        
+        console.log("Fetched, activities:");
+        console.log(activities);
+      }
+      ).catch((e) => {
+        console.log(e)
+      })
+        console.log("###################################");
+        const now = new Date(date);
+        checkDeadlines(activities, events, now, myToast);
+      }, 2000);
+      
+      return () => clearInterval(interval);
+  })
+
+
+  return (<></>);
 }
   
 

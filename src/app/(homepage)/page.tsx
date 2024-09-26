@@ -3,7 +3,7 @@ import { ViewPreview } from "@/app/components/ViewPreview";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { checkDeadlines } from "@/app/components/Notifications";
+import { Notifications } from "@/app/components/Notifications";
 
 export default function Home() {
   const [fetched, setFetched] = useState(false)
@@ -21,44 +21,6 @@ export default function Home() {
   });
 
 const [date, setDate] = useState(new Date())
-
-function myToast (message, notifyLevel) {
-  let bgcolor: string;
-  switch (notifyLevel) {
-    case 1:
-      bgcolor = "bg-yellow-300";
-      break;
-    case 2:
-      bgcolor = "bg-orange-400";
-      break;
-    case 3:
-      bgcolor = "bg-red-600";
-      break;
-    default:
-      bgcolor = "bg-white";
-      break;
-  }
-
-  toast((t) => (
-    <span className={bgcolor + " flex gap-2 p-1"}>
-      {message}
-      <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
-    </span>
-  ), { duration: 10000 });
-}
-
-useEffect(() => {
-  let evts = events;
-  let acts = activities;
-  const interval = setInterval(() => {
-    console.log("###################################");
-    const now = new Date(date);
-    checkDeadlines(evts, acts, now, myToast);
-    setFetched(false);
-  }, 2000);
-
-  return () => clearInterval(interval);
-}, [fetched])
 
 addEventListener('storage', () => {
   const tm = JSON.parse(localStorage.getItem("timeMachine"))
@@ -196,6 +158,7 @@ addEventListener('storage', () => {
   return (
     <div className="h-[92vh]">
       <div><Toaster/></div>
+      <Notifications date={date} />
       <h1 className="h-1/4 flex items-center justify-center text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>
