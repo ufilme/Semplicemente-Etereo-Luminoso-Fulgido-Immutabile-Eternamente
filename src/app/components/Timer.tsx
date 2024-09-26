@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import pomodoro from "@/public/pomodoro.png";
 import zzz from "@/public/sleeping.png";
 import "@/app/pomodoro/animation.css";
@@ -21,11 +22,25 @@ export default function Timer() {
 
   const [manualMode, setManualMode] = useState(true);
 
+  const searchParams = useSearchParams()
+  const tomato = JSON.parse(searchParams.get('query'))
+
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
   const cicliRef = useRef<HTMLInputElement>(null);
   const totaleRef = useRef<HTMLInputElement>(null);
   const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (tomato) {
+      settStudio(tomato.tStudio)
+      settPausa(tomato.tPausa)
+      setnCicli(tomato.nCicli)
+      studioRef.current.value = tomato.tStudio
+      pausaRef.current.value = tomato.tPausa
+      cicliRef.current.value = tomato.nCicli
+    }
+  }, [studioRef])
 
   useEffect(() => {
     let intervalId: undefined | ReturnType<typeof setInterval>;

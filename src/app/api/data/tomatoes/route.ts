@@ -88,3 +88,34 @@ export async function PATCH(req: NextResponse) {
         return NextResponse.json("Internal Server Error", { status: 500 });
     }
 }
+
+export async function DELETE(req: NextResponse) {
+    try {
+        const token = req.cookies.get("token");
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        console.log(id)
+
+        if (!token) {
+          return NextResponse.json("Creds required", { status: 400 });
+        }
+
+        await connectDB();
+        await tomatoModel
+            .findOneAndUpdate({
+                userid: token.value
+            },
+            { 
+                "$pull": {
+                    "tomatoes": {"id": id}
+                }
+            }
+            )
+    
+        return NextResponse.json({ data: id }, { status: 200 });
+    } catch (error) {
+        console.log("Auth", error);
+        return NextResponse.json("Internal Server Error", { status: 500 });
+    }
+}

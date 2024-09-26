@@ -1,3 +1,4 @@
+"use client"
 import "../global.css";
 import Timer from "@/app/components/Timer";
 

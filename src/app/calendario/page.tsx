@@ -11,8 +11,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { it } from "date-fns/locale";
 import EventCreateModal from "@/app/components/EventCreateModal";
 import ActivityCreateModal from "@/app/components/ActivityCreateModal";
+import TomatoCreateModal from "@/app/components/TomatoCreateModal";
 import EventModal from "@/app/components/EventModal";
 import ActivityEventModal from "@/app/components/ActivityEventModal";
+import TomatoEventModal from "@/app/components/TomatoEventModal";
 import Link from "next/link";
 
 
@@ -48,8 +50,10 @@ export default function MyCalendar() {
   const [selectedEvent, setSelectedEvent] = useState<{ title: string; start: Date | null; end: Date | null; allDay: boolean; location:string; id: string; repetitionEvery: number; repetitionCount: number; } | { title: string; start: Date | null; end: Date | null; id: string; completed: boolean; } | null>(null);
   const [eventCreateModalOpen, setEventCreateModalOpen] = useState(false);
   const [activityCreateModalOpen, setActivityCreateModalOpen] = useState(false);
+  const [tomatoCreateModalOpen, setTomatoCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [tomatoModalOpen, setTomatoModalOpen] = useState(false);
   const [timeMachine, setTimeMachine] = useState(() => {
     const timeMachine = localStorage.getItem("timeMachine");
     return timeMachine ? JSON.parse(timeMachine) : null;
@@ -66,9 +70,26 @@ export default function MyCalendar() {
 
   const [evts, setEvts] = useState([]);
   const [acts, setActs] = useState([]);
+  const [toms, setToms] = useState([]);
 
   const addEvent = async (event) => {
-    if (Object.hasOwn(event, 'completed')) {
+    if (Object.hasOwn(event, 'tStudio')) {
+      try {
+        const response = await fetch(
+          '/api/data/tomatoes',
+          {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(event),
+          }
+        );
+        if (!response.ok) {
+          // console.log(await response.json())
+        }
+      } catch {}
+    } else if (Object.hasOwn(event, 'completed')) {
       try {
         const response = await fetch(
           '/api/data/activities',
@@ -115,10 +136,19 @@ export default function MyCalendar() {
       repetitionCount: number;
     } |
     {
-      title: string,
+      title:  string,
       start: Date | null,
       end: Date | null,
       id: string,
+      completed: boolean
+    } | {
+      tStudio: number,
+      tPausa: number,
+      nCicli: number,
+      title: string,
+      id: string,
+      start: Date,
+      end: Date,
       completed: boolean
     }) {
       
@@ -161,10 +191,15 @@ export default function MyCalendar() {
   }
 
   // Funzione per gestire l'apertura del modal
-  function handleEventClick(event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; activity: boolean }) {
+  function handleEventClick(event: { tStudio: number,
+    tPausa: number,
+    nCicli: number, title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; activity: boolean }) {
     setSelectedEvent(event);
+    console.log(event)
     
-    if (Object.hasOwn(event, 'completed')) {
+    if (Object.hasOwn(event, "tStudio")){
+      setTomatoModalOpen(true)
+    } else if (Object.hasOwn(event, 'completed')) {
       setActivityModalOpen(true);
     }
     else {
@@ -176,8 +211,17 @@ export default function MyCalendar() {
     setEventCreateModalOpen(false);
   }
 
+  function handleCloseTomatoCreateModal() {
+    setTomatoCreateModalOpen(false);
+  }
+
   function handleCloseActivityCreateModal() {
     setActivityCreateModalOpen(false);
+  }
+
+  function handleTomatoCloseModal() {
+    setTomatoModalOpen(false);
+    setSelectedEvent(null);
   }
 
   function handleActivityCloseModal() {
@@ -191,7 +235,22 @@ export default function MyCalendar() {
   }
 
   const deleteEvent = async (event) => {
-    if (Object.hasOwn(event, 'completed')) {
+    if (Object.hasOwn(event, 'tStudio')) {
+      try {
+        const response = await fetch(
+          `/api/data/tomatoes?id=${event.id}`,
+          {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          // console.log(await response.json())
+        }
+      } catch {}
+    } else if (Object.hasOwn(event, 'completed')) {
       try {
         const response = await fetch(
           `/api/data/activities?id=${event.id}`,
@@ -233,10 +292,27 @@ export default function MyCalendar() {
     setFetched(false)
     handleCloseModal();
     handleActivityCloseModal();
+    handleTomatoCloseModal();
   }
 
   const updateEvent = async (event) => {
-    if (Object.hasOwn(event, 'completed')) {
+    if (Object.hasOwn(event, 'tStudio')) {
+      try {
+        const response = await fetch(
+          '/api/data/tomatoes',
+          {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(event),
+          }
+        );
+        if (!response.ok) {
+          // console.log(await response.json())
+        }
+      } catch {}
+    } else if (Object.hasOwn(event, 'completed')) {
       try {
         const response = await fetch(
           '/api/data/activities',
@@ -273,12 +349,15 @@ export default function MyCalendar() {
   }
 
   // Funzione per aggiornare un evento esistente
-  function handleUpdateEvent(updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number } | { title: string; start: Date | null; end: Date | null; id: string; completed: string }) {
+  function handleUpdateEvent(updatedEvent: { tStudio: number,
+    tPausa: number,
+    nCicli: number, title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number } | { title: string; start: Date | null; end: Date | null; id: string; completed: string }) {
     // setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
     updateEvent(updatedEvent)
     setFetched(false)
     handleCloseModal();
     handleActivityCloseModal();
+    handleTomatoCloseModal();
   }
 
   useEffect(() => {
@@ -304,18 +383,31 @@ export default function MyCalendar() {
               end: new Date(d.end)
             }
           }))
-          setFetched(true);
         }
       ).catch((e) => {
         console.log(e)
       })      
+      fetch('/api/data/tomatoes').then(r => r.json()).then(data => {
+        setToms(data.data.map((d) => {
+          return {
+            ...d,
+            start: new Date(d.start),
+            end: new Date(d.end)
+          }
+        }))
+        setFetched(true);
+      }
+    ).catch((e) => {
+      console.log(e)
+    })      
     }
   }, [fetched])
 
   useEffect(() => {
     if (fetched){
       const evt_act = evts.concat(acts);
-      setEvents(evt_act);
+      const evt_act_tom = evt_act.concat(toms)
+      setEvents(evt_act_tom);
     }
   }, [fetched])
 
@@ -351,11 +443,20 @@ export default function MyCalendar() {
         >
           Aggiungi Attività
         </button>
+        <button
+          className="bg-[rgb(0,204,61)] hover:bg-[rgb(0,153,45)] text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
+          onClick={() => setTomatoCreateModalOpen(true)}
+        >
+          Aggiungi Tomato
+        </button>
       </div>
 
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-4 gap-2">
         <Link href="/calendario/attivita" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">
           Lista attività
+        </Link>
+        <Link href="/calendario/tomato" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">
+          Lista tomatoes
         </Link>
       </div>
 
@@ -390,6 +491,12 @@ export default function MyCalendar() {
         onClose={handleCloseActivityCreateModal}
         onAdd={handleAddEvent}
       />
+
+      <TomatoCreateModal
+        isOpen={tomatoCreateModalOpen}
+        onClose={handleCloseTomatoCreateModal}
+        onAdd={handleAddEvent}
+      />
   
       <ActivityEventModal
         isOpen={activityModalOpen}
@@ -403,6 +510,14 @@ export default function MyCalendar() {
         isOpen={modalOpen}
         event={selectedEvent}
         onClose={handleCloseModal}
+        onDelete={handleDeleteEvent}
+        onUpdate={handleUpdateEvent}
+      />
+
+      <TomatoEventModal
+        isOpen={tomatoModalOpen}
+        Tomato={selectedEvent}
+        onClose={handleTomatoCloseModal}
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdateEvent}
       />

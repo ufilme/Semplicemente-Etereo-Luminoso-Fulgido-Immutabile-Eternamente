@@ -6,7 +6,13 @@ const Tomato = new mongoose.Schema(
     tomatoes: [{
       tStudio: Number,
       tPausa: Number,
-      nCicli: Number
+      nCicli: Number,
+      title: String,
+      start: Date,
+      end: Date,
+      id: String,
+      completed: Boolean,
+      notifyState: Number
     }]
   },
   {
