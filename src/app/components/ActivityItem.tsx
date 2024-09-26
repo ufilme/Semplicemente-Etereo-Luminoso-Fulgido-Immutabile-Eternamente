@@ -56,17 +56,43 @@ export default function NoteItem(props: { onUpdate: (act:  { id: string, title: 
   }
 
   return (
-    <div className="activity-item max-w-fit relative rounded-xl bg-blue-200 p-2">
-      <div className="flex flex-row justify-between">
-        <h4 className="text-lg font-semibold">{title.length > 25 ? title.substring(0, 25) + "..." : title}</h4>
-        <div className="text-sm mt-1">{completed ? <IconContext.Provider value={{ color: "green" }}><BsClipboard2CheckFill /></IconContext.Provider> : <IconContext.Provider value={{ color: "red" }}><BsClipboard2XFill /></IconContext.Provider> }</div>
+    <div className="activity-item w-full sm:w-60 md:w-60 lg:w-60 xl:w-72 relative rounded-xl bg-blue-200 p-4 shadow-lg">
+      <div className="flex flex-row justify-between items-center">
+        <h4 className="text-lg font-semibold">
+          {title.length > 25 ? title.substring(0, 25) + "..." : title}
+        </h4>
+        <div className="text-sm">
+          {completed ? (
+            <IconContext.Provider value={{ color: "green" }}>
+              <BsClipboard2CheckFill />
+            </IconContext.Provider>
+          ) : (
+            <IconContext.Provider value={{ color: "red" }}>
+              <BsClipboard2XFill />
+            </IconContext.Provider>
+          )}
+        </div>
       </div>
-      <p className="text-sm mb-1 text-slate-700">{"Scadenza: " + formatDate(end)}</p>
+  
+      <p className="text-sm mb-2 text-slate-700">
+        {"Scadenza: " + formatDate(end)}
+      </p>
+  
       <div className="flex gap-1">
-        <button onClick={() => setActivityModalOpen(true)} className="text-sm text-white rounded px-1 bg-slate-500 hover:bg-slate-700" >Modifica</button>
-        <button onClick={() => handleDeleteActivity(props.activity)} className="text-sm text-white rounded px-1 bg-red-700 hover:bg-red-900" >Elimina</button>
+        <button
+          onClick={() => setActivityModalOpen(true)}
+          className="text-sm text-white rounded px-1 bg-slate-500 hover:bg-slate-700"
+        >
+          Modifica
+        </button>
+        <button
+          onClick={() => handleDeleteActivity(props.activity)}
+          className="text-sm text-white rounded px-1 bg-red-700 hover:bg-red-900"
+        >
+          Elimina
+        </button>
       </div>
-
+  
       <ActivityEventModal
         isOpen={activityModalOpen}
         activity={props.activity}
@@ -75,5 +101,5 @@ export default function NoteItem(props: { onUpdate: (act:  { id: string, title: 
         onUpdate={handleUpdateActivity}
       />
     </div>
-    )
+  );   
 }

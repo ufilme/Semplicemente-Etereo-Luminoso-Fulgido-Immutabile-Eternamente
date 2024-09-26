@@ -172,7 +172,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg">
+      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-auto">
         <h2 className="text-2xl font-bold mb-4">Crea Nuovo Evento</h2>
         <input
           type="text"
@@ -352,9 +352,9 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           </div>
         )}
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-4 space-x-2">
           <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleSave}
           >
             Salva

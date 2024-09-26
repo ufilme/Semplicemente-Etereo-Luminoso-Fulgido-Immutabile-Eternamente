@@ -38,14 +38,23 @@ export function TimeMachine() {
   }
 
   return (
-    <div className={`${timeMachine.active ? "tm-enabled" : "tm-disabled"} h-[4vh] bg-gray-200 flex justify-between items-center p-2`} >
-      <div className="flex justify-around items-center">
-        <h3>Time Machine</h3>
-        <input onChange={(e) => setSelectedDate(e.target.value)} value={new Date(selectedDate).toISOString().split('T')[0]} className="mr-2" type="date" title="tm-calendar" />
-        <button onClick={(e) => activateTimeMachine()}>
+    <div className={`${timeMachine.active ? "tm-enabled" : "tm-disabled"} h-[4vh] bg-gray-200 flex flex-row justify-start items-center px-2 py-2 box-border`} >
+      <div className="flex flex-row justify-start gap-2 items-center w-full h-full">
+        <h3 className="text-sm sm:text-base md:text-lg">Time Machine</h3>
+        <input 
+          onChange={(e) => setSelectedDate(e.target.value)} 
+          value={new Date(selectedDate).toISOString().split('T')[0]} 
+          className="p-0.5 text-xs sm:text-sm" 
+          type="date" 
+          title="tm-calendar" 
+        />
+        <button 
+          onClick={(e) => activateTimeMachine()} 
+          className="text-xs sm:text-sm hover:bg-gray-300 rounded"
+        >
           <TMClock />
         </button>
       </div>
     </div>
-  );
+  );  
 }

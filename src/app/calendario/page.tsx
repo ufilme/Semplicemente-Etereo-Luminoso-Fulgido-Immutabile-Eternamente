@@ -334,30 +334,33 @@ export default function MyCalendar() {
 
   return (
     <div className="min-h-[92vh] bg-amber-600">
-      <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+      <h1 className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] mb-4">
         Calendario
       </h1>
 
-      <div className="text-center mt-4 mb-2 flex gap-2 justify-center">
+      <div className="text-center mt-4 mb-2 flex flex-col sm:flex-row gap-2 justify-center items-center">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
           onClick={() => setEventCreateModalOpen(true)}
         >
           Aggiungi Evento
         </button>
         <button
-          className="bg-[rgb(0,204,61)] hover:bg-[rgb(0,153,45)] text-white font-bold py-2 px-4 rounded"
+          className="bg-[rgb(0,204,61)] hover:bg-[rgb(0,153,45)] text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
           onClick={() => setActivityCreateModalOpen(true)}
         >
           Aggiungi Attività
         </button>
       </div>
-      <div className="flex flex-row justify-center">
-        <Link href="/calendario/attivita" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">Lista attività</Link>
+
+      <div className="flex justify-center mb-4">
+        <Link href="/calendario/attivita" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">
+          Lista attività
+        </Link>
       </div>
 
       <Calendar
-        className="m-8 p-6 bg-white"
+        className="m-4 sm:m-8 mb-0 p-4 sm:p-6 bg-white rounded-lg shadow-lg"
         localizer={localizer}
         culture="it"
         messages={messages}
@@ -368,12 +371,12 @@ export default function MyCalendar() {
         date={date}
         getNow={() => date}
         scrollToTime={new Date()}
-        onView={(view: Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA ) => setView(view)}
+        onView={(view: Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA) => setView(view)}
         onNavigate={onNavigate}
-        onSelectEvent={handleEventClick} // Gestore del clic per gli eventi
+        onSelectEvent={handleEventClick}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "70vh" }}
+        style={{ height: "60vh", maxHeight: "80vh" }}
       />
 
       <EventCreateModal
@@ -381,13 +384,13 @@ export default function MyCalendar() {
         onClose={handleCloseEventCreateModal}
         onAdd={handleAddEvent}
       />
-
+  
       <ActivityCreateModal
         isOpen={activityCreateModalOpen}
         onClose={handleCloseActivityCreateModal}
         onAdd={handleAddEvent}
       />
-
+  
       <ActivityEventModal
         isOpen={activityModalOpen}
         activity={selectedEvent}
@@ -395,7 +398,7 @@ export default function MyCalendar() {
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdateEvent}
       />
-
+  
       <EventModal
         isOpen={modalOpen}
         event={selectedEvent}
@@ -404,5 +407,5 @@ export default function MyCalendar() {
         onUpdate={handleUpdateEvent}
       />
     </div>
-  );
+  );  
 }

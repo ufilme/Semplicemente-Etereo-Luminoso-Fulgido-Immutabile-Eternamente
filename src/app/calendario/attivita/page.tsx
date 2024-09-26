@@ -156,19 +156,34 @@ export default function Attivita() {
 
   return (
     <div className="flex flex-col items-center gap-4 min-h-[92vh] bg-amber-600">
-      <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Attività</h1>
-      
-      <div className="activities-container mx-2 mt-4 flex flex-row gap-2 justify-items-center">
-        {activities && activities.map((activity) => <ActivityItem activity={activity} key={activity.id} onDelete={handleDeleteActivity} onUpdate={handleUpdateActivity} />)}
+      <h1 className="pt-6 text-center text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+        Attività
+      </h1>
+
+      <div className="activities-container mx-2 mt-4 grid gap-2 justify-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {activities &&
+          activities.map((activity) => (
+            <ActivityItem
+              activity={activity}
+              key={activity.id}
+              onDelete={handleDeleteActivity}
+              onUpdate={handleUpdateActivity}
+            />
+          ))}
       </div>
 
-      <button onClick={() => setActivityCreateModalOpen(true)} className="text-lg text-white rounded-lg px-2 py-1 bg-blue-500 hover:bg-blue-800">Aggiungi attività</button>
-
+      <button
+        onClick={() => setActivityCreateModalOpen(true)}
+        className="text-lg text-white rounded-lg px-2 py-1 bg-blue-500 hover:bg-blue-800"
+      >
+        Aggiungi attività
+      </button>
+  
       <ActivityCreateModal
         isOpen={activityCreateModalOpen}
         onClose={() => setActivityCreateModalOpen(false)}
         onAdd={handleAddActivity}
       />
     </div>
-  )
+  );   
 }

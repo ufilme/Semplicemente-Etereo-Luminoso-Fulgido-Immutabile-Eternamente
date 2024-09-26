@@ -107,7 +107,7 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg">
+      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
         <h2 className="text-2xl font-bold mb-4">Crea Nuova Attività</h2>
         <input
           type="text"
@@ -132,9 +132,9 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
           className="border rounded mb-2 p-1 w-full"
         />
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-4 space-x-2">
           <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleSave}
           >
             Salva

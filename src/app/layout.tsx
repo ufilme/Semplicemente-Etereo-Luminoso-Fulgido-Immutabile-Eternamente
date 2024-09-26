@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="it" className={inter.className}>
       <body className="h-screen bg-sky-950">
         {/* Layout UI */}
-        <main className="">
+        <main className="h-full">
           <TimeMachine />
           {children}
           <div className="h-[4vh] flex justify-center items-center bg-gray-200">

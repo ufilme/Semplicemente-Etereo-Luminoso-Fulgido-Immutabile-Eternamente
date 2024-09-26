@@ -73,7 +73,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg">
+      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-auto">
         <h2 className="text-2xl font-bold mb-4">Modifica Evento</h2>
         <input
           type="text"
@@ -165,15 +165,15 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-4 space-x-2">
           <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleSave}
           >
             Salva
           </button>
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => onDelete(editableEvent)}
           >
             Elimina

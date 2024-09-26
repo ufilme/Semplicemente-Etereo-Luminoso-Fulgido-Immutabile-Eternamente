@@ -349,34 +349,79 @@ export default function Timer() {
     }
   }
 
-  return ( <div className="timer-container mx-auto items-center">
-    <div className="timer w-[50vw] rounded-3xl bg-red-400 p-6 flex flex-col gap-6 items-center shadow-xl shadow-black">
+  return (
+    <div className="timer-container mx-auto items-center">
+      <div className="timer w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] rounded-3xl bg-red-400 p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 items-center shadow-xl shadow-black">
         <div className="flex flex-col">
-          <div className="flex justify-center items-center gap-2">
-            <h3 ref={periodoHeadingRef} className="text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg grow-0 px-2">Inizia lo studio!</h3>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
+            <h3
+              ref={periodoHeadingRef}
+              className="text-lg sm:text-2xl text-center text-white bg-[color:rgba(0,0,0,0.5)] rounded-lg px-2"
+            >
+              Inizia lo studio!
+            </h3>
             {pomodoroAnimation()}
           </div>
-          <div className="timer-display font-mono text-8xl font-bold text-white text-center">{handleTime()}</div>
+          <div className="timer-display font-mono text-5xl sm:text-6xl md:text-8xl font-bold text-white text-center">
+            {handleTime()}
+          </div>
         </div>
-
+  
         {timerInput()}
-
-        <div className="controls flex gap-4 text-3xl font-semibold">
-            <button onClick={start} className="start-btn bg-green-600 hover:bg-green-800 text-white p-2 rounded-xl">Start</button>
-            <button onClick={stop} className="stop-btn bg-red-700 hover:bg-red-900 text-white p-2 rounded-xl">Stop</button>
-            <button onClick={reset} className="reset-btn bg-sky-500 hover:bg-sky-700 text-white p-2 rounded-xl">Reset</button>
+  
+        <div className="controls flex flex-wrap gap-2 sm:gap-4 text-xl sm:text-2xl font-semibold">
+          <button
+            onClick={start}
+            className="start-btn bg-green-600 hover:bg-green-800 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+          >
+            Start
+          </button>
+          <button
+            onClick={stop}
+            className="stop-btn bg-red-700 hover:bg-red-900 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+          >
+            Stop
+          </button>
+          <button
+            onClick={reset}
+            className="reset-btn bg-sky-500 hover:bg-sky-700 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+          >
+            Reset
+          </button>
         </div>
-        <div className="controls-period flex flex-col gap-2 font-semibold text-white">
-          <button onClick={skipPeriod} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Salta periodo</button>
-          <button onClick={restartCycle} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Ricomincia ciclo</button>
-          <button onClick={endCycle} className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1">Fine ciclo</button>
+  
+        <div className="controls-period flex flex-col gap-2 font-semibold text-white mt-4">
+          <button
+            onClick={skipPeriod}
+            className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+          >
+            Salta periodo
+          </button>
+          <button
+            onClick={restartCycle}
+            className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+          >
+            Ricomincia ciclo
+          </button>
+          <button
+            onClick={endCycle}
+            className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+          >
+            Fine ciclo
+          </button>
         </div>
+      </div>
+  
+      <div className="mx-auto w-fit mt-4 sm:mt-8">
+        <h3 className="flex flex-col gap-3 items-center text-center text-lg sm:text-xl font-semibold text-gray-200">
+          <button
+            onClick={toggleManualMode}
+            className="rounded-xl bg-[rgba(0,60,100,0.7)] hover:bg-[rgba(0,30,49,0.7)] px-4 py-2"
+          >
+            Modalità {manualMode ? "manuale" : "automatica"}
+          </button>
+        </h3>
+      </div>
     </div>
-    <div className="mx-auto w-fit">
-      <h3 className="flex flex-col gap-3 items-center text-center text-xl font-semibold text-gray-200 mt-10">
-        <button onClick={toggleManualMode} className="rounded-xl bg-[rgba(0,60,100,0.7)] hover:bg-[rgba(0,30,49,0.7)] px-4 py-2">Modalità {manualMode ? "manuale" : "automatica"}</button>
-      </h3>
-    </div>
-</div>
-  );
+  );  
 }
