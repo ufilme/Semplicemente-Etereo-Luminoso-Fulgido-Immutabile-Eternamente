@@ -5,7 +5,7 @@ dev:
 	npm run dev
 
 build:
-	docker compose up -d
+	docker compose up -d --build
 
 clean:
 	docker compose -f ${DEVCOMPOSEFILE} down
