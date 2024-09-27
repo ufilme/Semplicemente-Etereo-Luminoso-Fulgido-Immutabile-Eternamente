@@ -26,11 +26,11 @@ export default function NoteItem(props: { onDuplicate: (note:  NoteState) => voi
     return formattedDate;
   }
 
-  async function markdown () {
+  function markdown () {
     console.log(props.note);
     body = body.length > 80 ? body.substring(0, 80) + "..." : body;
     if (props.note.marked) {
-      body = await marked.parse(body);
+      body = marked.parse(body) as string;
       return <div className="text-base note-markdown" dangerouslySetInnerHTML={{ __html: body }}></div>
     }
     else {
