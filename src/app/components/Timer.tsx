@@ -14,6 +14,17 @@ export default function Timer() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const startTimeRef = useRef(0);
 
+  const [tomato, setTomato] = useState<TomatoState>({
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    tStudio: 0,
+    tPausa: 0,
+    nCicli: 0,
+    id: crypto.randomUUID(),
+    completed: false,
+    notifyState: -1,
+  })
   const [tStudio, settStudio] = useState(30);
   const [tPausa, settPausa] = useState(5);
   const [nCicli, setnCicli] = useState(5);
@@ -24,7 +35,6 @@ export default function Timer() {
   const [manualMode, setManualMode] = useState(true);
 
   const searchParams = useSearchParams()
-  const tomato = JSON.parse(searchParams.get('query') || "")
 
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
@@ -33,17 +43,19 @@ export default function Timer() {
   const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (tomato != "") {
-      settStudio(tomato.tStudio)
-      settPausa(tomato.tPausa)
-      setnCicli(tomato.nCicli)
-      if (studioRef.current && pausaRef.current && cicliRef.current){
-        studioRef.current.value = tomato.tStudio
-        pausaRef.current.value = tomato.tPausa
-        cicliRef.current.value = tomato.nCicli
-      }
+    let t = null
+    if (searchParams.get('query') != null){
+      t = JSON.parse(searchParams.get('query') || "")
+      if (tStudio != t.tStudio) settStudio(t.tStudio)
+      if (tPausa != t.tPausa) settPausa(t.tPausa)
+      if (nCicli != t.nCicli) setnCicli(t.nCicli)
     }
-  }, [studioRef])
+    if (studioRef.current && pausaRef.current && cicliRef.current){
+      studioRef.current.value = t.tStudio
+      pausaRef.current.value = t.tPausa
+      cicliRef.current.value = t.nCicli
+    }
+  }, [])
 
   useEffect(() => {
     let intervalId: undefined | ReturnType<typeof setInterval>;
