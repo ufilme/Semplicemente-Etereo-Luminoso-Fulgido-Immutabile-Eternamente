@@ -74,7 +74,7 @@ async function checkDeadlines(activities: ActivityState[], events: EventState[],
   
 }
 
-export function Notifications(date: Date) {
+export function Notifications({date}:{date: Date}) {
   const [events, setEvents] = useState<EventState[]>([])
   const [activities, setActivities] = useState<ActivityState[]>([])
   const [fetched, setFetched] = useState(false)
