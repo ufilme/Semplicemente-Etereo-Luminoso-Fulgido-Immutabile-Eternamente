@@ -170,31 +170,37 @@ useEffect(() => {
 
   return (
     <div className="min-h-[92vh] flex flex-col">
-      <div>
-        <Toaster />
-      </div>
-
+      <div><Toaster /></div>
+      <Notifications date={date} />
+  
       <h1 className="h-1/4 my-6 flex items-center justify-center text-2xl sm:text-3xl md:text-4xl text-center font-bold text-gray-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
         Semplicemente Etereo Luminoso Fulgido Immutabile Eternamente
       </h1>
   
       <div className="home grid grid-cols-1 sm:grid-cols-2 gap-4 pb-8 mx-4 sm:mx-8 h-full">
-        <Link href="/calendario">
+        <Link href="/calendario" aria-label="Visualizza il calendario">
           <div className="bg-amber-500 hover:bg-amber-600 home-view w-full h-40 sm:h-72 md:h-[38vh] flex flex-col justify-center items-center text-center rounded-3xl p-4">
             <h2 className="text-2xl sm:text-3xl font-bold">Calendario</h2>
-            {!weekEvents && <p className="text-base sm:text-lg font-medium">Loading...</p>}
-            {weekEvents && weekEventsData.length === 0 && (
-              <p className="text-base sm:text-lg font-medium">Nessun evento questa settimana</p>
-            )}
-            {weekEvents && weekEventsData.map((e, index) => (
-              <p key={index} className="text-base sm:text-lg font-medium">
-                {e.title} on {e.start.toLocaleDateString()}
+            {!weekEvents && (
+              <p className="text-base sm:text-lg font-medium" role="status">
+                Loading...
               </p>
-            ))}
+            )}
+            {weekEvents && weekEventsData.length === 0 && (
+              <p className="text-base sm:text-lg font-medium" role="status">
+                Nessun evento questa settimana
+              </p>
+            )}
+            {weekEvents &&
+              weekEventsData.map((e, index) => (
+                <p key={index} className="text-base sm:text-lg font-medium">
+                  {e.title} il {e.start.toLocaleDateString()}
+                </p>
+              ))}
           </div>
         </Link>
 
-        <Link href="/note">
+        <Link href="/note" aria-label="Visualizza le note">
           <ViewPreview
             viewbg="bg-lime-500"
             hoverbg="hover:bg-lime-600"
@@ -204,22 +210,28 @@ useEffect(() => {
           />
         </Link>
 
-        <Link href="/pomodoro">
+        <Link href="/pomodoro" aria-label="Visualizza la sessione Pomodoro">
           <div className="bg-red-600 hover:bg-red-700 home-view w-full h-40 sm:h-72 md:h-[38vh] flex flex-col justify-center items-center text-center rounded-3xl p-4">
             <h2 className="text-2xl sm:text-3xl font-bold">Pomodoro</h2>
-            {!latestTomatoes && <p className="text-base sm:text-lg font-medium">Loading...</p>}
+            {!latestTomatoes && (
+              <p className="text-base sm:text-lg font-medium" role="status">
+                Loading...
+              </p>
+            )}
             {latestTomatoes && tomatoes.length === 0 && (
-              <p className="text-base sm:text-lg font-medium">Nessuna sessione recente</p>
+              <p className="text-base sm:text-lg font-medium" role="status">
+                Nessuna sessione recente
+              </p>
             )}
             {tomatoes.map((t, index) => (
               <p key={index} className="text-base sm:text-lg font-medium">
-                Studio: {t.tStudio} Pausa: {t.tPausa} Cicli: {t.nCicli}
+                Studio: {t.tStudio}, Pausa: {t.tPausa}, Cicli: {t.nCicli}
               </p>
             ))}
           </div>
         </Link>
 
-        <Link href="/progetti">
+        <Link href="/progetti" aria-label="Gestisci i progetti">
           <ViewPreview
             viewbg="bg-teal-500"
             hoverbg="hover:bg-teal-600"

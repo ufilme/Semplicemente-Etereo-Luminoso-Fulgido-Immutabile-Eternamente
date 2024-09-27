@@ -57,115 +57,159 @@ const TomatoModal: React.FC<TomatoModalProps> = ({ isOpen, Tomato, onClose, onDe
       alert("Inserire scadenza!");
       return;
     }
-    onUpdate(TomatoToSave); // Chiama la funzione di aggiornamento con l'attività modificata
+    onUpdate(TomatoToSave);
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
-          <h2 className="text-2xl font-bold mb-4">Modifica Tomato</h2>
-        <input
-          type="text"
-          name="title"
-          value={editableTomato.title}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="date"
-          name="end"
-          value={formatDate(editableTomato.end)}
-          onChange={(e) => {
-            const timePart = editableTomato["end"];
-
-            const newEnd = new Date(e.target.value);
-            newEnd.setHours(timePart!.getHours());
-            newEnd.setMinutes(timePart!.getMinutes());
-
-            const start = new Date(newEnd);
-            start.setHours(start!.getHours() - 1);
-            start.setMinutes(start!.getMinutes());
-
-            setEditableTomato({ ...editableTomato, end: newEnd, start: start })
-          }}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="time"
-          name="endTime"
-          value={formatTime(editableTomato.end)}
-          onChange={(e) => {
-            const [hours, minutes] = e.target.value.split(":").map(Number);
-            const newEnd = new Date(editableTomato.end!);
-            newEnd.setHours(hours);
-            newEnd.setMinutes(minutes);
-
-            const start = new Date(newEnd);
-            start.setHours(start.getHours() - 1);
-            start.setMinutes(start.getMinutes());
-
-            setEditableTomato({ ...editableTomato, end: newEnd, start: start });
-          }}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="number"
-          name="tStudio"
-          value={editableTomato.tStudio}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="number"
-          name="tPausa"
-          value={editableTomato.tPausa}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="number"
-          name="nCicli"
-          value={editableTomato.nCicli}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <div className="mb-4">
-          <label className="mr-2">Completata:</label>
+    isOpen && (
+      <div
+        className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tomato-modal-title"
+        tabIndex={-1}
+      >
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
+          <h2 id="tomato-modal-title" className="text-2xl font-bold mb-4">
+            Modifica Tomato
+          </h2>
+  
+          <label htmlFor="tomato-title" className="sr-only">
+            Titolo
+          </label>
           <input
-            type="checkbox"
-            name="completed"
-            checked={editableTomato.completed}
+            id="tomato-title"
+            type="text"
+            name="title"
+            value={editableTomato.title}
             onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Titolo"
           />
-        </div>
-
-        <div className="flex justify-end mt-4 space-x-2">
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleSave}
-          >
-            Salva
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => onDelete(editableTomato)}
-          >
-            Elimina
-          </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Chiudi
-          </button>
+  
+          <label htmlFor="tomato-end-date" className="sr-only">
+            Data di Fine
+          </label>
+          <input
+            id="tomato-end-date"
+            type="date"
+            name="end"
+            value={formatDate(editableTomato.end)}
+            onChange={(e) => {
+              const timePart = editableTomato["end"];
+              const newEnd = new Date(e.target.value);
+              newEnd.setHours(timePart!.getHours());
+              newEnd.setMinutes(timePart!.getMinutes());
+  
+              const start = new Date(newEnd);
+              start.setHours(start!.getHours() - 1);
+              start.setMinutes(start!.getMinutes());
+  
+              setEditableTomato({ ...editableTomato, end: newEnd, start: start });
+            }}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-end-time" className="sr-only">
+            Ora di Fine
+          </label>
+          <input
+            id="tomato-end-time"
+            type="time"
+            name="endTime"
+            value={formatTime(editableTomato.end)}
+            onChange={(e) => {
+              const [hours, minutes] = e.target.value.split(":").map(Number);
+              const newEnd = new Date(editableTomato.end!);
+              newEnd.setHours(hours);
+              newEnd.setMinutes(minutes);
+  
+              const start = new Date(newEnd);
+              start.setHours(start.getHours() - 1);
+              start.setMinutes(start.getMinutes());
+  
+              setEditableTomato({ ...editableTomato, end: newEnd, start: start });
+            }}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-studio" className="sr-only">
+            Tempo di Studio
+          </label>
+          <input
+            id="tomato-studio"
+            type="number"
+            name="tStudio"
+            value={editableTomato.tStudio}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Tempo di Studio"
+          />
+  
+          <label htmlFor="tomato-pausa" className="sr-only">
+            Tempo di Pausa
+          </label>
+          <input
+            id="tomato-pausa"
+            type="number"
+            name="tPausa"
+            value={editableTomato.tPausa}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Tempo di Pausa"
+          />
+  
+          <label htmlFor="tomato-cicli" className="sr-only">
+            Numero di Cicli
+          </label>
+          <input
+            id="tomato-cicli"
+            type="number"
+            name="nCicli"
+            value={editableTomato.nCicli}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Numero di Cicli"
+          />
+  
+          <div className="mb-4">
+            <label htmlFor="tomato-completed" className="mr-2">
+              Completata:
+            </label>
+            <input
+              id="tomato-completed"
+              type="checkbox"
+              name="completed"
+              checked={editableTomato.completed}
+              onChange={handleInputChange}
+              aria-checked={editableTomato.completed}
+            />
+          </div>
+  
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSave}
+            >
+              Salva
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => onDelete(editableTomato)}
+            >
+              Elimina
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    )
+  );  
 };
 
 export default TomatoModal;

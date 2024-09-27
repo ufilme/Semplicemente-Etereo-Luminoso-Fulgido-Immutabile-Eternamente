@@ -39,21 +39,31 @@ export default function NoteItem(props: { onDuplicate: (note:  NoteState) => voi
   }
 
   return (
-    <div className="notes-item relative rounded-xl bg-lime-500 p-2">
+    <div
+      className="notes-item relative rounded-xl bg-lime-500 p-2"
+      role="article"
+      aria-labelledby={`note-${id}-title`}
+      aria-describedby={`note-${id}-description`}
+    >
       <div className="flex flex-row justify-between mb-2">
         <h5 className="text-xs sm:text-sm text-white rounded px-1 bg-slate-900 w-fit">
           {props.note.category}
         </h5>
-        <button onClick={() => { navigator.clipboard.writeText(body) }}>
+        <button 
+          onClick={() => { navigator.clipboard.writeText(body) }}
+          aria-label="Copia il contenuto della nota"
+        >
           <IconContext.Provider value={{}}>
             <FaRegCopy />
           </IconContext.Provider>
         </button>
       </div>
-      <h4 className="text-base sm:text-lg font-semibold">
+      <h4 id={`note-${id}-title`} className="text-base sm:text-lg font-semibold">
         {title.length > 20 ? title.substring(0, 20) + "..." : title}
       </h4>
-      {markdown()}
+      <div id={`note-${id}-description`}>
+        {markdown()}
+      </div>
       <p className="text-xs sm:text-sm mt-1 text-slate-700">
         {"Modifica: " + formatDate(date_edit)}
       </p>
@@ -64,23 +74,25 @@ export default function NoteItem(props: { onDuplicate: (note:  NoteState) => voi
         <Link
           href={"/note/" + id}
           className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700"
+          aria-label={`Modifica ${title}`}
         >
           Modifica
         </Link>
         <button
           onClick={() => props.onDuplicate(props.note)}
           className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-slate-500 hover:bg-slate-700"
+          aria-label={`Duplica ${title}`}
         >
           Duplica
         </button>
         <button
           onClick={() => props.onDelete(props.note)}
           className="text-xs sm:text-sm text-white mb-2 rounded px-1 bg-red-700 hover:bg-red-900"
+          aria-label={`Elimina ${title}`}
         >
           Elimina
         </button>
       </div>
     </div>
   );
-  
 }

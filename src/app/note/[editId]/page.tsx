@@ -78,32 +78,51 @@ export default function ModificaNote({ params }: { params: { editId: string } })
     <div>
       {fetched && (
         <div className="flex flex-col items-center min-h-[92vh] bg-lime-800">
-          <h1 className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
-            {"Modifica nota"}
+          <h1
+            className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+            id="edit-note-header"
+          >
+            Modifica nota
           </h1>
   
-          <form className="h-full mt-8 w-11/12 sm:w-4/5 md:w-3/5 flex flex-col rounded-xl bg-lime-500 p-4">
+          <form
+            className="h-full mt-8 w-11/12 sm:w-4/5 md:w-3/5 flex flex-col rounded-xl bg-lime-500 p-4"
+            aria-labelledby="edit-note-header"
+          >
+            <label htmlFor="note-title" className="sr-only">
+              Titolo
+            </label>
             <input
               type="text"
-              onChange={(e) => changeTitle(e)}
+              onChange={changeTitle}
               className="text-base sm:text-lg font-semibold placeholder-black bg-lime-500 mb-4 p-2"
               value={note?.title || "Non ci sono note con id " + params.editId}
+              id="note-title"
+              required
+              aria-required="true"
             />
-
+  
+            <label htmlFor="note-body" className="sr-only">
+              Scrivi qualcosa...
+            </label>
             <textarea
-              onChange={(e) => changeBody(e)}
+              onChange={changeBody}
               className="min-h-64 h-full text-sm sm:text-base placeholder-black bg-lime-500 p-2 mb-4"
               value={note?.body || "Nota non trovata"}
+              id="note-body"
+              required
+              aria-required="true"
             ></textarea>
-
+  
             <label htmlFor="category" className="text-sm sm:text-base">
               Categoria:
             </label>
             <select
               id="category"
               value={note?.category || ""}
-              onChange={(e) => changeCategory(e)}
+              onChange={changeCategory}
               className="mt-1 bg-white p-2 rounded-md text-sm sm:text-base mb-4"
+              aria-label="Seleziona una categoria"
             >
               {categories.map((cat) => (
                 <option key={cat.name} value={cat.name}>
@@ -111,25 +130,31 @@ export default function ModificaNote({ params }: { params: { editId: string } })
                 </option>
               ))}
             </select>
-
+  
             <label className="mt-2 flex items-center text-sm sm:text-base">
               <input
                 type="checkbox"
                 checked={marked}
                 onChange={toggleMarked}
                 className="mr-2"
+                aria-checked={marked}
               />
               Markdown
             </label>
-          </form>
 
-          <Link
+            <Link
             href={{ pathname: "/note" }}
             onClick={handleSubmit}
-            className="mt-4 mb-12 text-sm sm:text-base rounded-lg text-white bg-sky-600 hover:bg-sky-900 px-4 py-2"
-          >
-            Salva
-          </Link>
+            className="mt-4 mb-12 text-center text-sm sm:text-base rounded-lg text-white bg-sky-600 hover:bg-sky-900 px-4 py-2"
+            >
+              <button
+                type="submit"
+                aria-label="Salva la nota"
+              >
+                Salva
+              </button>
+            </Link>
+          </form>
         </div>
       )}
     </div>

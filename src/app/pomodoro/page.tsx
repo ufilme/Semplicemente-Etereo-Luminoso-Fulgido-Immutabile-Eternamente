@@ -10,9 +10,9 @@ export default function Pomodoro() {
         Applicazione Pomodoro
       </h1>
       <div className="my-auto flex flex-col justify-center px-4 sm:px-8 md:px-16">
-      <Suspense>
-        <Timer />
-      </Suspense>
+        <Suspense fallback={<div className="text-white">Caricamento...</div>}>
+          <Timer />
+        </Suspense>
       </div>
     </div>
   );  

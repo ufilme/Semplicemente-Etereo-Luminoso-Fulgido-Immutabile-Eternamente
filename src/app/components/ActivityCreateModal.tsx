@@ -107,48 +107,81 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
-        <h2 className="text-2xl font-bold mb-4">Crea Nuova Attività</h2>
-        <input
-          type="text"
-          name="title"
-          value={newActivity.title}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="date"
-          name="end"
-          value={formatDate(newActivity.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="time"
-          name="endTime"
-          value={formatTime(newActivity.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
+    isOpen && (
+      <div
+        className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="activity-modal-title"
+        tabIndex={-1}
+      >
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
+          <h2
+            id="activity-modal-title"
+            className="text-2xl font-bold mb-4"
+          >
+            Crea Nuova Attività
+          </h2>
 
-        <div className="flex justify-end mt-4 space-x-2">
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleSave}
-          >
-            Salva
-          </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Chiudi
-          </button>
+          <label htmlFor="activity-title" className="sr-only">
+            Titolo
+          </label>
+          <input
+            id="activity-title"
+            type="text"
+            name="title"
+            value={newActivity.title}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Titolo"
+            aria-label="Titolo attività"
+          />
+
+          <label htmlFor="activity-end-date" className="sr-only">
+            Data di fine
+          </label>
+          <input
+            id="activity-end-date"
+            type="date"
+            name="end"
+            value={formatDate(newActivity.end)}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            aria-label="Data di fine attività"
+          />
+
+          <label htmlFor="activity-end-time" className="sr-only">
+            Orario di fine
+          </label>
+          <input
+            id="activity-end-time"
+            type="time"
+            name="endTime"
+            value={formatTime(newActivity.end)}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            aria-label="Orario di fine attività"
+          />
+
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSave}
+              aria-label="Salva attività"
+            >
+              Salva
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+              aria-label="Chiudi"
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

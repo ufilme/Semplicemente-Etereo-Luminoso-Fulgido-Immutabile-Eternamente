@@ -413,18 +413,21 @@ export default function Timer() {
           <button
             onClick={start}
             className="start-btn bg-green-600 hover:bg-green-800 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+            aria-label="Avvia timer"
           >
             Start
           </button>
           <button
             onClick={stop}
             className="stop-btn bg-red-700 hover:bg-red-900 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+            aria-label="Ferma timer"
           >
             Stop
           </button>
           <button
             onClick={reset}
             className="reset-btn bg-sky-500 hover:bg-sky-700 text-white p-2 sm:p-3 rounded-xl w-24 sm:w-28"
+            aria-label="Ripristina timer"
           >
             Reset
           </button>
@@ -434,18 +437,21 @@ export default function Timer() {
           <button
             onClick={skipPeriod}
             className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+            aria-label="Salta il periodo attuale"
           >
             Salta periodo
           </button>
           <button
             onClick={restartCycle}
             className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+            aria-label="Ricomincia il ciclo di studio"
           >
             Ricomincia ciclo
           </button>
           <button
             onClick={endCycle}
             className="rounded-xl bg-gray-800 hover:bg-black px-2 py-1 sm:px-3 sm:py-2"
+            aria-label="Termina il ciclo di studio"
           >
             Fine ciclo
           </button>
@@ -457,11 +463,13 @@ export default function Timer() {
           <button
             onClick={toggleManualMode}
             className="rounded-xl bg-[rgba(0,60,100,0.7)] hover:bg-[rgba(0,30,49,0.7)] px-4 py-2"
+            aria-label={`Passa a modalità ${manualMode ? "automatica" : "manuale"}`}
           >
             Modalità {manualMode ? "manuale" : "automatica"}
           </button>
         </h3>
       </div>
     </div>
-  );  
+  );
+  
 }

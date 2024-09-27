@@ -113,69 +113,109 @@ const TomatoCreateModal: React.FC<TomatoCreateModalProps> = ({ isOpen, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
-        <h2 className="text-2xl font-bold mb-4">Crea Nuovo Tomato</h2>
-        <input
-          type="text"
-          name="title"
-          value={newTomato.title}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="date"
-          name="end"
-          value={formatDate(newTomato.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="time"
-          name="endTime"
-          value={formatTime(newTomato.end)}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="number"
-          name="tStudio"
-          value={newTomato.tStudio}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="number"
-          name="tPausa"
-          value={newTomato.tPausa}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        <input
-          type="number"
-          name="nCicli"
-          value={newTomato.nCicli}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-        />
-
-        <div className="flex justify-end mt-4 space-x-2">
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleSave}
-          >
-            Salva
-          </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Chiudi
-          </button>
+    isOpen && (
+      <div
+        className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tomato-modal-title"
+        tabIndex={-1}
+      >
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl">
+          <h2 id="tomato-modal-title" className="text-2xl font-bold mb-4">
+            Crea Nuovo Tomato
+          </h2>
+  
+          <label htmlFor="tomato-title" className="sr-only">
+            Titolo
+          </label>
+          <input
+            id="tomato-title"
+            type="text"
+            name="title"
+            value={newTomato.title}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Titolo"
+          />
+  
+          <label htmlFor="tomato-end-date" className="sr-only">
+            Data fine
+          </label>
+          <input
+            id="tomato-end-date"
+            type="date"
+            name="end"
+            value={formatDate(newTomato.end)}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-end-time" className="sr-only">
+            Ora fine
+          </label>
+          <input
+            id="tomato-end-time"
+            type="time"
+            name="endTime"
+            value={formatTime(newTomato.end)}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-tStudio" className="sr-only">
+            Tempo studio
+          </label>
+          <input
+            id="tomato-tStudio"
+            type="number"
+            name="tStudio"
+            value={newTomato.tStudio}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-tPausa" className="sr-only">
+            Tempo pausa
+          </label>
+          <input
+            id="tomato-tPausa"
+            type="number"
+            name="tPausa"
+            value={newTomato.tPausa}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <label htmlFor="tomato-nCicli" className="sr-only">
+            Numero di cicli
+          </label>
+          <input
+            id="tomato-nCicli"
+            type="number"
+            name="nCicli"
+            value={newTomato.nCicli}
+            onChange={handleInputChange}
+            className="border rounded mb-2 p-1 w-full"
+          />
+  
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSave}
+            >
+              Salva
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

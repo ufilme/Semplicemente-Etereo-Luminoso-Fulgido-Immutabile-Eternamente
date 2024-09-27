@@ -421,40 +421,54 @@ useEffect(() => {
 
   return (
     <div className="min-h-[92vh] bg-amber-600">
-      <h1 className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] mb-4">
+      <h1
+        className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] mb-4"
+        aria-label="Calendario"
+      >
         Calendario
       </h1>
-
+  
       <div className="text-center mt-4 mb-2 flex flex-col sm:flex-row gap-2 justify-center items-center">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
           onClick={() => setEventCreateModalOpen(true)}
+          aria-label="Aggiungi evento"
         >
           Aggiungi Evento
         </button>
         <button
           className="bg-[rgb(0,204,61)] hover:bg-[rgb(0,153,45)] text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
           onClick={() => setActivityCreateModalOpen(true)}
+          aria-label="Aggiungi attività"
         >
           Aggiungi Attività
         </button>
         <button
-          className="bg-[rgb(0,204,61)] hover:bg-[rgb(0,153,45)] text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
+          className="bg-[rgb(214,21,0)] hover:bg-[rgb(178,17,0)] text-white font-bold py-2 px-4 rounded w-3/4 sm:w-auto"
           onClick={() => setTomatoCreateModalOpen(true)}
+          aria-label="Aggiungi tomato"
         >
           Aggiungi Tomato
         </button>
       </div>
-
+  
       <div className="flex justify-center mb-4 gap-2">
-        <Link href="/calendario/attivita" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">
+        <Link
+          href="/calendario/attivita"
+          className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded"
+          aria-label="Vai alla lista attività"
+        >
           Lista attività
         </Link>
-        <Link href="/calendario/tomato" className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded">
+        <Link
+          href="/calendario/tomato"
+          className="text-center text-white bg-slate-500 hover:bg-slate-600 text-sm py-1 px-2 rounded"
+          aria-label="Vai alla lista tomatoes"
+        >
           Lista tomatoes
         </Link>
       </div>
-
+  
       <Calendar
         className="m-4 sm:m-8 mb-0 p-4 sm:p-6 bg-white rounded-lg shadow-lg"
         localizer={localizer}
@@ -473,6 +487,7 @@ useEffect(() => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: "60vh", maxHeight: "80vh" }}
+        aria-label="Calendario eventi"
       />
 
       <EventCreateModal
@@ -480,7 +495,7 @@ useEffect(() => {
         onClose={handleCloseEventCreateModal}
         onAdd={handleAddEvent}
       />
-  
+
       <ActivityCreateModal
         isOpen={activityCreateModalOpen}
         onClose={handleCloseActivityCreateModal}
@@ -492,7 +507,7 @@ useEffect(() => {
         onClose={handleCloseTomatoCreateModal}
         onAdd={handleAddEvent}
       />
-  
+
       <ActivityEventModal
         isOpen={activityModalOpen}
         activity={selectedActivity}
@@ -500,7 +515,7 @@ useEffect(() => {
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdateEvent}
       />
-  
+
       <EventModal
         isOpen={modalOpen}
         event={selectedEvent}

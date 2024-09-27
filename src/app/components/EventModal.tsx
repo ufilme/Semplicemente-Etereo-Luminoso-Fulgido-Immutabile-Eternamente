@@ -74,122 +74,166 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelet
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-auto">
-        <h2 className="text-2xl font-bold mb-4">Modifica Evento</h2>
-        <input
-          type="text"
-          name="title"
-          value={editableEvent.title}
-          onChange={handleInputChange}
-          className="border rounded mb-2 p-1 w-full"
-          placeholder="Titolo"
-        />
-        <input
-          type="date"
-          name="start"
-          value={formatDate(editableEvent.start)}
-          onChange={(e) => {
-            const timePart = editableEvent["start"];
-
-            const newStart = new Date(e.target.value);
-            newStart.setHours(timePart!.getHours());
-            newStart.setMinutes(timePart!.getMinutes());
-
-            setEditableEvent({ ...editableEvent, start: newStart })
-          }}
-          className="border rounded mb-2 p-1 w-full"
-        />
-        {!editableEvent.allDay && (
-          <>
-            <input
-              type="time"
-              name="startTime"
-              value={formatTime(editableEvent.start)}
-              onChange={(e) => {
-                const [hours, minutes] = e.target.value.split(":").map(Number);
-                const newStart = new Date(editableEvent.start!);
-                newStart.setHours(hours);
-                newStart.setMinutes(minutes);
-    
-                setEditableEvent({ ...editableEvent, start: newStart });
-              }}
-              className="border rounded mb-2 p-1 w-full"
-            />
-            <input
-              type="date"
-              name="end"
-              value={formatDate(editableEvent.end)}
-              onChange={(e) => {
-                const timePart = editableEvent["end"];
-    
-                const newEnd = new Date(e.target.value);
-                newEnd.setHours(timePart!.getHours());
-                newEnd.setMinutes(timePart!.getMinutes());
-    
-                setEditableEvent({ ...editableEvent, end: newEnd })
-              }}
-              className="border rounded mb-2 p-1 w-full"
-            />
-            <input
-              type="time"
-              name="endTime"
-              value={formatTime(editableEvent.end)}
-              onChange={(e) => {
-                const [hours, minutes] = e.target.value.split(":").map(Number);
-                const newEnd = new Date(editableEvent.end!);
-                newEnd.setHours(hours);
-                newEnd.setMinutes(minutes);
-    
-                setEditableEvent({ ...editableEvent, end: newEnd });
-              }}
-              className="border rounded mb-2 p-1 w-full"
-            />
-          </>
-        )}
-        <div className="flex items-center gap-2 mb-2">
-          <FaLocationDot className="h-8"/>
+    isOpen && (
+      <div
+        className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="event-modal-title"
+        tabIndex={-1}
+      >
+        <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-auto">
+          <h2 id="event-modal-title" className="text-2xl font-bold mb-4">
+            Modifica Evento
+          </h2>
+  
+          <label htmlFor="event-title" className="sr-only">
+            Titolo
+          </label>
           <input
+            id="event-title"
             type="text"
-            name="location"
-            value={editableEvent.location}
+            name="title"
+            value={editableEvent.title}
             onChange={handleInputChange}
-            className="border rounded p-1 w-full"
-            placeholder="Luogo"
+            className="border rounded mb-2 p-1 w-full"
+            placeholder="Titolo"
           />
-        </div>
-        <div className="mb-4">
-          <label className="mr-2">Tutto il giorno:</label>
+  
+          <label htmlFor="event-start-date" className="sr-only">
+            Data di Inizio
+          </label>
           <input
-            type="checkbox"
-            name="allDay"
-            checked={editableEvent.allDay}
-            onChange={handleInputChange}
+            id="event-start-date"
+            type="date"
+            name="start"
+            value={formatDate(editableEvent.start)}
+            onChange={(e) => {
+              const timePart = editableEvent["start"];
+              const newStart = new Date(e.target.value);
+              newStart.setHours(timePart!.getHours());
+              newStart.setMinutes(timePart!.getMinutes());
+  
+              setEditableEvent({ ...editableEvent, start: newStart });
+            }}
+            className="border rounded mb-2 p-1 w-full"
           />
-        </div>
-        <div className="flex justify-end mt-4 space-x-2">
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleSave}
-          >
-            Salva
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => onDelete(editableEvent)}
-          >
-            Elimina
-          </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Chiudi
-          </button>
+  
+          {!editableEvent.allDay && (
+            <>
+              <label htmlFor="event-start-time" className="sr-only">
+                Ora di Inizio
+              </label>
+              <input
+                id="event-start-time"
+                type="time"
+                name="startTime"
+                value={formatTime(editableEvent.start)}
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":").map(Number);
+                  const newStart = new Date(editableEvent.start!);
+                  newStart.setHours(hours);
+                  newStart.setMinutes(minutes);
+  
+                  setEditableEvent({ ...editableEvent, start: newStart });
+                }}
+                className="border rounded mb-2 p-1 w-full"
+              />
+  
+              <label htmlFor="event-end-date" className="sr-only">
+                Data di Fine
+              </label>
+              <input
+                id="event-end-date"
+                type="date"
+                name="end"
+                value={formatDate(editableEvent.end)}
+                onChange={(e) => {
+                  const timePart = editableEvent["end"];
+                  const newEnd = new Date(e.target.value);
+                  newEnd.setHours(timePart!.getHours());
+                  newEnd.setMinutes(timePart!.getMinutes());
+  
+                  setEditableEvent({ ...editableEvent, end: newEnd });
+                }}
+                className="border rounded mb-2 p-1 w-full"
+              />
+  
+              <label htmlFor="event-end-time" className="sr-only">
+                Ora di Fine
+              </label>
+              <input
+                id="event-end-time"
+                type="time"
+                name="endTime"
+                value={formatTime(editableEvent.end)}
+                onChange={(e) => {
+                  const [hours, minutes] = e.target.value.split(":").map(Number);
+                  const newEnd = new Date(editableEvent.end!);
+                  newEnd.setHours(hours);
+                  newEnd.setMinutes(minutes);
+  
+                  setEditableEvent({ ...editableEvent, end: newEnd });
+                }}
+                className="border rounded mb-2 p-1 w-full"
+              />
+            </>
+          )}
+  
+          <div className="flex items-center gap-2 mb-2">
+            <FaLocationDot className="h-8" aria-hidden="true" />
+            <label htmlFor="event-location" className="sr-only">
+              Luogo
+            </label>
+            <input
+              id="event-location"
+              type="text"
+              name="location"
+              value={editableEvent.location}
+              onChange={handleInputChange}
+              className="border rounded p-1 w-full"
+              placeholder="Luogo"
+            />
+          </div>
+  
+          <div className="mb-4">
+            <label htmlFor="event-all-day" className="mr-2">
+              Tutto il giorno:
+            </label>
+            <input
+              id="event-all-day"
+              type="checkbox"
+              name="allDay"
+              checked={editableEvent.allDay}
+              onChange={handleInputChange}
+              aria-checked={editableEvent.allDay}
+            />
+          </div>
+  
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSave}
+            >
+              Salva
+            </button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={() => onDelete(editableEvent)}
+            >
+              Elimina
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    )
+  );  
 };
 
 export default EventModal;

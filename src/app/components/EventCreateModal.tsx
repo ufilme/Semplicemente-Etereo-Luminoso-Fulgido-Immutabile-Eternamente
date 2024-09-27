@@ -172,9 +172,19 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+      role="dialog"
+      aria-labelledby="event-create-modal-title"
+      aria-modal="true"
+    >
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl max-h-[90vh] overflow-auto">
-        <h2 className="text-2xl font-bold mb-4">Crea Nuovo Evento</h2>
+        <h2
+          id="event-create-modal-title"
+          className="text-2xl font-bold mb-4"
+        >
+          Crea Nuovo Evento
+        </h2>
         <input
           type="text"
           name="title"
@@ -182,6 +192,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           onChange={handleInputChange}
           className="border rounded mb-2 p-1 w-full"
           placeholder="Titolo"
+          aria-label="Titolo evento"
         />
         <input
           type="date"
@@ -189,6 +200,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
           value={formatDate(newEvent.start)}
           onChange={handleInputChange}
           className="border rounded mb-2 p-1 w-full"
+          aria-label="Data di inizio"
         />
         {!newEvent.allDay && (
           <>
@@ -198,6 +210,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
               value={formatTime(newEvent.start)}
               onChange={handleInputChange}
               className="border rounded mb-2 p-1 w-full"
+              aria-label="Ora di inizio"
             />
             <input
               type="date"
@@ -205,6 +218,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
               value={formatDate(newEvent.end)}
               onChange={handleInputChange}
               className="border rounded mb-2 p-1 w-full"
+              aria-label="Data di fine"
             />
             <input
               type="time"
@@ -212,11 +226,12 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
               value={formatTime(newEvent.end)}
               onChange={handleInputChange}
               className="border rounded mb-2 p-1 w-full"
+              aria-label="Ora di fine"
             />
           </>
         )}
         <div className="flex items-center gap-2 mb-2">
-          <FaLocationDot className="h-8"/>
+          <FaLocationDot className="h-8" />
           <input
             type="text"
             name="location"
@@ -224,6 +239,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
             onChange={handleInputChange}
             className="border rounded p-1 w-full"
             placeholder="Luogo"
+            aria-label="Luogo dell'evento"
           />
         </div>
         <div className="mb-2">
@@ -233,16 +249,17 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
             name="allDay"
             checked={newEvent.allDay}
             onChange={(e) => setNewEvent({ ...newEvent, allDay: e.target.checked })}
+            aria-label="Evento per tutto il giorno"
           />
         </div>
 
-        {/* Ripetizione Evento */}
         <div className="mb-4">
           <label className="mr-2">Ripetizione:</label>
           <input
             type="checkbox"
             checked={repeatEvent}
             onChange={(e) => setRepeatEvent(e.target.checked)}
+            aria-label="Ripeti evento"
           />
         </div>
 
@@ -256,11 +273,13 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                 value={repeatEvery}
                 onChange={(e) => setRepeatEvery(Number(e.target.value))}
                 className="border rounded p-1 max-w-16"
+                aria-label="Numero di ripetizioni"
               />
               <select
                 value={repeatUnit}
                 onChange={(e) => setRepeatUnit(e.target.value as "days" | "weeks")}
                 className="border rounded p-1"
+                aria-label="Unità di ripetizione"
               >
                 <option value="days">Giorni</option>
                 <option value="weeks">Settimane</option>
@@ -275,6 +294,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                   name="repeatOption"
                   checked={useOccurrences}
                   onChange={() => setUseOccurrences(true)}
+                  aria-label="Numero di occorrenze"
                 />
                 <label className="ml-2">Numero di occorrenze</label>
                 <input
@@ -285,6 +305,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                   disabled={!useOccurrences}
                   className="border rounded mb-2 p-1 ml-4"
                   style={{ width: "100px" }}
+                  aria-label="Inserisci numero occorrenze"
                 />
               </div>
 
@@ -294,6 +315,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                   name="repeatOption"
                   checked={!useOccurrences}
                   onChange={() => setUseOccurrences(false)}
+                  aria-label="Fino a data specifica"
                 />
                 <label className="ml-2">Fino alla data</label>
                 <input
@@ -302,6 +324,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                   onChange={(e) => setRepeatUntilDate(new Date(e.target.value))}
                   disabled={useOccurrences}
                   className="border rounded mb-2 p-1 ml-4"
+                  aria-label="Data fino a"
                 />
               </div>
             </div>
@@ -315,18 +338,18 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
             checked={useNotify}
             onChange={(e) => {
               if (e.target.checked) {
-                setNewEvent({ ...newEvent, advanceRepCount: 1})
+                setNewEvent({ ...newEvent, advanceRepCount: 1 });
+              } else {
+                setNewEvent({ ...newEvent, advanceRepCount: 0 });
               }
-              else {
-                setNewEvent({ ...newEvent, advanceRepCount: 0})
-              }
-              setUseNotify(e.target.checked)
+              setUseNotify(e.target.checked);
             }}
+            aria-label="Notifiche evento"
           />
         </div>
 
         {useNotify && (
-          <div>
+          <>
             <div className="mb-4">
               <label className="block mb-2">Anticipo della notifica: </label>
               <input
@@ -336,6 +359,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                 onChange={(e) => setNewEvent({ ...newEvent, advanceTime: Number(e.target.value) })}
                 className="border rounded p-1 w-full"
                 placeholder="Minuti di anticipo"
+                aria-label="Minuti di anticipo"
               />
             </div>
 
@@ -348,21 +372,24 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
                 onChange={(e) => setNewEvent({ ...newEvent, advanceRepCount: Number(e.target.value) })}
                 className="border rounded p-1 w-full"
                 placeholder="Numero di notifiche"
+                aria-label="Numero di notifiche"
               />
             </div>
-          </div>
+          </>
         )}
 
         <div className="flex justify-end mt-4 space-x-2">
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleSave}
+            aria-label="Salva evento"
           >
             Salva
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={onClose}
+            aria-label="Chiudi modal"
           >
             Chiudi
           </button>

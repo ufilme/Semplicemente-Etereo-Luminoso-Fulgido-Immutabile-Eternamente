@@ -102,27 +102,46 @@ export default function Note() {
 
   return (
     <div className="flex flex-col min-h-[92vh] bg-lime-800">
-      <h1 className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+      <h1
+        className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+        id="notes-header"
+      >
         Note
       </h1>
-
-      <div className="notes-container mx-4 mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+  
+      <div
+        className="notes-container mx-4 mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+        aria-labelledby="notes-header"
+      >
         {notes && notes.map((note) => (
-          <NoteItem onDuplicate={duplicateNote} onDelete={handleDeleteNote} note={note} key={note.id} />
+          <NoteItem 
+            onDuplicate={duplicateNote} 
+            onDelete={handleDeleteNote} 
+            note={note} 
+            key={note.id} 
+            aria-label={`Nota: ${note.title}`}
+          />
         ))}
       </div>
   
       <div className="my-4 mx-auto flex flex-col sm:flex-row gap-2 items-center">
-        <Link href="/note/new" className="text-base sm:text-lg text-white rounded-lg px-2 py-1 bg-sky-500 hover:bg-sky-800">
+        <Link 
+          href="/note/new" 
+          className="text-base sm:text-lg text-white rounded-lg px-2 py-1 bg-sky-500 hover:bg-sky-800"
+          aria-label="Aggiungi nuova nota"
+        >
           Aggiungi nota
         </Link>
         <div className="flex gap-1 rounded-lg px-2 py-1 bg-indigo-500">
-          <label htmlFor="order" className="text-base sm:text-lg text-white">Ordine:</label>
+          <label htmlFor="order" className="text-base sm:text-lg text-white">
+            Ordine:
+          </label>
           <select
             id="order"
             value={order}
             onChange={changeOrder}
             className="text-base sm:text-lg rounded"
+            aria-label="Seleziona ordine delle note"
           >
             {orders.map((o) => (
               <option key={o} value={o}>

@@ -40,9 +40,14 @@ export default function TomatoItem(props: { onUpdate: (tom:  TomatoState) => voi
   }
 
   return (
-    <div className="Tomato-item w-full sm:w-60 md:w-60 lg:w-60 xl:w-72 relative rounded-xl bg-blue-200 p-4 shadow-lg">
+    <div
+      className="Tomato-item w-full sm:w-60 md:w-60 lg:w-60 xl:w-72 relative rounded-xl bg-blue-200 p-4 shadow-lg"
+      role="article"
+      aria-labelledby={`tomato-${id}-title`}
+      aria-describedby={`tomato-${id}-description`}
+    >
       <div className="flex flex-row justify-between items-center">
-        <h4 className="text-lg font-semibold">
+        <h4 id={`tomato-${id}-title`} className="text-lg font-semibold">
           {title.length > 25 ? title.substring(0, 25) + "..." : title}
         </h4>
         <div className="text-sm">
@@ -58,26 +63,30 @@ export default function TomatoItem(props: { onUpdate: (tom:  TomatoState) => voi
         </div>
       </div>
   
-      <p className="text-sm mb-2 text-slate-700">
+      <p id={`tomato-${props.Tomato.id}-description`} className="text-sm mb-2 text-slate-700">
         {"Scadenza: " + formatDate(end)}
       </p>
   
       <div className="flex gap-1">
         <Link
-          href={{pathname: "/pomodoro", query: {query: JSON.stringify(props.Tomato)}}}
+          href={{ pathname: "/pomodoro", query: { query: JSON.stringify(props.Tomato) } }}
           className="text-sm text-white rounded px-1 bg-green-500 hover:bg-green-700"
+          aria-label={`Studia ${title}`}
         >
           Studia
         </Link>
         <button
           onClick={() => setTomatoModalOpen(true)}
           className="text-sm text-white rounded px-1 bg-slate-500 hover:bg-slate-700"
+          aria-haspopup="dialog"
+          aria-expanded={TomatoModalOpen}
         >
           Modifica
         </button>
         <button
           onClick={() => handleDeleteTomato(props.Tomato)}
           className="text-sm text-white rounded px-1 bg-red-700 hover:bg-red-900"
+          aria-label={`Elimina ${title}`}
         >
           Elimina
         </button>
@@ -91,5 +100,5 @@ export default function TomatoItem(props: { onUpdate: (tom:  TomatoState) => voi
         onUpdate={handleUpdateTomato}
       />
     </div>
-  );   
+  );     
 }
