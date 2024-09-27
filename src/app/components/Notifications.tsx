@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast";
 import { TomatoState, NoteState, EventState, ActivityState } from "../type";
+import notify from 'react-push-notification';
 
 
 async function checkDeadlines(activities: ActivityState[], events: EventState[], date: Date, myToast: (message: string, notifyLevel: number) => void ){
@@ -82,18 +83,29 @@ export function Notifications({date}:{date: Date}) {
 
   function myToast (message: string, notifyLevel: number) {
     let bgcolor: string;
+    let bgtop: string;
+    let bgbot: string;
+
     switch (notifyLevel) {
       case 1:
         bgcolor = "bg-yellow-300";
+        bgtop = "yellow";
+        bgbot = "lightyellow";
         break;
       case 2:
         bgcolor = "bg-orange-400";
+        bgtop = "orange";
+        bgbot = "lightorange";
         break;
       case 3:
         bgcolor = "bg-red-600";
+        bgtop = "darkred";
+        bgbot = "red";
         break;
       default:
         bgcolor = "bg-white";
+        bgtop = "white";
+        bgbot = "lightgray";
         break;
     }
   
@@ -103,6 +115,16 @@ export function Notifications({date}:{date: Date}) {
         <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
       </span>
     ), { duration: 10000 });
+
+    notify({
+      title: 'Notification',
+      message: message,
+      theme: notifyLevel === 3 ? 'red' : notifyLevel === 2 ? 'darkblue' : 'light',
+      backgroundTop: bgtop,
+      backgroundBottom: bgbot,
+      duration: 10000,
+      native: true,
+    });
   }
 
   useEffect(() => {

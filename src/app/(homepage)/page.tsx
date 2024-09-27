@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Notifications } from "@/app/components/Notifications";
 import { TomatoState, NoteState, EventState, ActivityState } from "../type";
+import notify from 'react-push-notification';
 
 export default function Home() {
   const [fetched, setFetched] = useState(false)
@@ -33,6 +34,33 @@ useEffect(() => {
   if (storedTimeMachine) {
     setTimeMachine(JSON.parse(storedTimeMachine));
   }
+}, []);
+
+useEffect(() => {
+  //console.log('Requesting permission for push notifications...');
+
+  Notification.requestPermission().then((permission) => {
+    //console.log('Notification permission status:', permission);
+    
+    if (permission === 'granted') {
+      //console.log('Push notifications permission granted');
+      
+      // Trigger a notification after permission is granted
+      /*notify({
+        title: "Grazie per l'autorizzazione",
+        message: "Da adesso potremo inviarti delle notifiche.",
+        theme: 'darkblue',
+        native: true,
+      });*/
+      
+      //console.log('Notification triggered');
+    } else {
+      //console.log('Push notifications permission denied');
+      alert("Notifiche push non permesse, non potremo inviarti notifiche push");
+    }
+  }).catch((err) => {
+    console.error('Error requesting notification permission:', err);
+  });
 }, []);
 
 useEffect(() => {
