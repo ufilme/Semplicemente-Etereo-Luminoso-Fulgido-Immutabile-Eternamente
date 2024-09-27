@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { categories } from "@/app/note/notes"
+import { NoteState } from "@/app/type";
 
 export default function CreaNote() {
   const [title, setTitle] = useState("");
@@ -48,7 +49,7 @@ export default function CreaNote() {
     }
   }
 
-  const addNote = async (note) => {
+  const addNote = async (note: NoteState) => {
     try {
       const response = await fetch(
         '/api/data/notes',

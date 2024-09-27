@@ -6,9 +6,10 @@ import React from "react";
 import NoteItem from "@/app/components/NoteItem";
 import "../global.css";
 import { useState, useEffect } from "react";
+import { NoteState } from "../type";
 
 export default function Note() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<NoteState[]>([]);
   const [fetched, setFetched] = useState(false)
   const orders = [
     "Alfabetico",
@@ -29,15 +30,7 @@ export default function Note() {
     }
   }, [fetched])
 
-  const duplicateNote = async (note:  {
-                                id: string,
-                                title: string
-                                body: string
-                                category: string
-                                date_edit: Date
-                                date_create: Date
-                                marked: boolean
-                              }) => {
+  const duplicateNote = async (note:  NoteState) => {
     let uuid = crypto.randomUUID();
 
     try {
@@ -61,29 +54,13 @@ export default function Note() {
     } catch {}
   }
 
-  function handleDeleteNote (note:  {
-                              id: string,
-                              title: string
-                              body: string
-                              category: string
-                              date_edit: Date
-                              date_create: Date
-                              marked: boolean
-                            }) {
+  function handleDeleteNote (note: NoteState) {
     deleteNote(note);
     setFetched(false);
 
   }
 
-  const deleteNote = async (note:  {
-                              id: string,
-                              title: string
-                              body: string
-                              category: string
-                              date_edit: Date
-                              date_create: Date
-                              marked: boolean
-                            }) => {
+  const deleteNote = async (note: NoteState) => {
 
     try {
       const response = await fetch(
@@ -111,7 +88,11 @@ export default function Note() {
         setNotes(orderedNotes.sort((a, b) => a.body.length - b.body.length));
         break;
       case "Modifica":
-        setNotes(orderedNotes.sort((a, b) => new Date(b.date_edit) - new Date(a.date_edit)));
+        setNotes(orderedNotes.sort((a, b) => {
+          const dateA = a.date_edit ? new Date(a.date_edit) : new Date(0);
+          const dateB = b.date_edit ? new Date(b.date_edit) : new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        }));
         break;
       default:
         break;

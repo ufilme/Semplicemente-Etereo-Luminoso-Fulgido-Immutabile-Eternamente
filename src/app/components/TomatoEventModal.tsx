@@ -1,19 +1,15 @@
+"use client"
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { TomatoState } from "../type";
 
 interface TomatoModalProps {
   isOpen: boolean;
-  Tomato: { tStudio: number,
-    tPausa: number,
-    nCicli: number, title: string; start: Date | null; end: Date | null; id: string; completed: boolean } | null;
+  Tomato: TomatoState | null;
   onClose: () => void;
-  onDelete: (Tomato: { tStudio: number,
-    tPausa: number,
-    nCicli: number,title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) => void;
-  onUpdate: (updatedTomato: { tStudio: number,
-    tPausa: number,
-    nCicli: number,title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) => void;
+  onDelete: (Tomato: TomatoState) => void;
+  onUpdate: (updatedTomato: TomatoState) => void;
 }
 
 const TomatoModal: React.FC<TomatoModalProps> = ({ isOpen, Tomato, onClose, onDelete, onUpdate }) => {

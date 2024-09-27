@@ -1,12 +1,14 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { EventState } from "../type";
 
 interface EventModalProps {
   isOpen: boolean;
-  event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; } | null;
+  event: EventState | null;
   onClose: () => void;
-  onDelete: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
-  onUpdate: (updatedEvent: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
+  onDelete: (event: EventState) => void;
+  onUpdate: (updatedEvent: EventState) => void;
 }
 
 const EventModal: React.FC<EventModalProps> = ({ isOpen, event, onClose, onDelete, onUpdate }) => {

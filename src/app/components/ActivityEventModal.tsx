@@ -1,12 +1,14 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { ActivityState } from "../type";
 
 interface ActivityModalProps {
   isOpen: boolean;
-  activity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean } | null;
+  activity: ActivityState | null;
   onClose: () => void;
-  onDelete: (activity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) => void;
-  onUpdate: (updatedActivity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) => void;
+  onDelete: (activity: ActivityState) => void;
+  onUpdate: (updatedActivity: ActivityState) => void;
 }
 
 const ActivityModal: React.FC<ActivityModalProps> = ({ isOpen, activity, onClose, onDelete, onUpdate }) => {

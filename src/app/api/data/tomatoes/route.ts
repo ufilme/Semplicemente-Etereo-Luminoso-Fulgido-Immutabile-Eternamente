@@ -1,9 +1,9 @@
 import connectDB from "@/lib/db";
 import userModel from "@/models/User";
 import tomatoModel from "@/models/Tomato";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextResponse) {
+export async function GET(req: NextRequest) {
     try {
         const token = req.cookies.get("token");
 
@@ -33,7 +33,7 @@ export async function GET(req: NextResponse) {
     }
 }
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const reqData = await req.json();
         const token = req.cookies.get("token");
@@ -61,7 +61,7 @@ export async function POST(req: NextResponse) {
     }
 }
 
-export async function PATCH(req: NextResponse) {
+export async function PATCH(req: NextRequest) {
     try {
         const reqData = await req.json();
         const token = req.cookies.get("token");
@@ -89,7 +89,7 @@ export async function PATCH(req: NextResponse) {
     }
 }
 
-export async function DELETE(req: NextResponse) {
+export async function DELETE(req: NextRequest) {
     try {
         const token = req.cookies.get("token");
         const { searchParams } = new URL(req.url);

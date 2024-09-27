@@ -7,9 +7,10 @@ import ActivityCreateModal from "@/app/components/ActivityCreateModal";
 import ActivityItem from "@/app/components/ActivityItem";
 import "@/app/global.css";
 import { useState, useEffect } from "react";
+import { ActivityState } from "@/app/type";
 
 export default function Attivita() {
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<ActivityState[]>([]);
   const [fetched, setFetched] = useState(false)
   
   const [activityCreateModalOpen, setActivityCreateModalOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Attivita() {
     if (!fetched){
       setFetched(true)
       fetch('/api/data/activities').then(r => r.json()).then(data => {
-          setActivities(data.data.map((d) => {
+          setActivities(data.data.map((d: { start: string | number | Date; end: string | number | Date; }) => {
             return {
               ...d,
               start: new Date(d.start),
@@ -32,99 +33,56 @@ export default function Attivita() {
     }
   }, [fetched])
 
-  const deleteEvent = async (event) => {
-    if (Object.hasOwn(event, 'completed')) {
-      try {
-        const response = await fetch(
-          `/api/data/activities?id=${event.id}`,
-          {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
+  const deleteEvent = async (activity: ActivityState) => {
+    try {
+      const response = await fetch(
+        `/api/data/activities?id=${activity.id}`,
+        {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+          },
         }
-      } catch {}
-    }
-    else {
-      try {
-        const response = await fetch(
-          `/api/data/events?id=${event.id}`,
-          {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
-  function handleDeleteActivity(activityToDelete: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) {
+  function handleDeleteActivity(activityToDelete: ActivityState) {
     console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(activityToDelete)
     setFetched(false)
   }
 
-  const updateEvent = async (event) => {
-    if (Object.hasOwn(event, 'completed')) {
-      try {
-        const response = await fetch(
-          '/api/data/activities',
-          {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(event),
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
+  const updateEvent = async (activity: ActivityState) => {
+    try {
+      const response = await fetch(
+        '/api/data/activities',
+        {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(activity),
         }
-      } catch {}
-    }
-    else {
-      try {
-        const response = await fetch(
-          '/api/data/events',
-          {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(event),
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
   // Funzione per aggiornare un evento esistente
-  function handleUpdateActivity(updatedActivity: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number } | { title: string; start: Date | null; end: Date | null; id: string; completed: string }) {
+  function handleUpdateActivity(updatedActivity: ActivityState) {
     // setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
     updateEvent(updatedActivity)
     setFetched(false)
   }
 
-  const addActivity = async (activity : {
-                              title: string,
-                              start: Date | null,
-                              end: Date | null,
-                              id: string,
-                              completed: boolean
-                            }) => {
+  const addActivity = async (activity : ActivityState) => {
     try {
       const response = await fetch(
         '/api/data/activities',
@@ -142,13 +100,7 @@ export default function Attivita() {
     } catch {}
   }
 
-  function handleAddActivity(newActivity : {
-                              title: string,
-                              start: Date | null,
-                              end: Date | null,
-                              id: string,
-                              completed: boolean
-                            }) {
+  function handleAddActivity(newActivity : ActivityState) {
     addActivity(newActivity)
 
     setFetched(false)

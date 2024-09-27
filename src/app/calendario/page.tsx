@@ -1,7 +1,8 @@
 "use client";
 
 import "../global.css";
-import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import format from "date-fns/format";
 import parse from "date-fns/parse";
 import { startOfWeek, getDay } from "date-fns";
@@ -16,6 +17,7 @@ import EventModal from "@/app/components/EventModal";
 import ActivityEventModal from "@/app/components/ActivityEventModal";
 import TomatoEventModal from "@/app/components/TomatoEventModal";
 import Link from "next/link";
+import { ActivityState, EventState, TomatoState } from "../type";
 
 
 // Configurazione delle lingue
@@ -44,35 +46,59 @@ const messages = {
   event: "Evento",
 };
 
+enum Views {
+  MONTH = 'month',
+  WEEK = 'week',
+  WORK_WEEK = 'work_week',
+  DAY = 'day',
+  AGENDA = 'agenda',
+}
+
 export default function MyCalendar() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<(EventState | ActivityState | TomatoState)[]>([]);
   const [fetched, setFetched] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState<{ title: string; start: Date | null; end: Date | null; allDay: boolean; location:string; id: string; repetitionEvery: number; repetitionCount: number; } | { title: string; start: Date | null; end: Date | null; id: string; completed: boolean; } | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventState | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<ActivityState | null>(null);
+  const [selectedTomato, setSelectedTomato] = useState<TomatoState | null>(null);
   const [eventCreateModalOpen, setEventCreateModalOpen] = useState(false);
   const [activityCreateModalOpen, setActivityCreateModalOpen] = useState(false);
   const [tomatoCreateModalOpen, setTomatoCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
   const [tomatoModalOpen, setTomatoModalOpen] = useState(false);
-  const [timeMachine, setTimeMachine] = useState(() => {
-    const timeMachine = localStorage.getItem("timeMachine");
-    return timeMachine ? JSON.parse(timeMachine) : null;
+//   const [timeMachine, setTimeMachine] = useState(() => {
+//     const timeMachine = localStorage.getItem("timeMachine");
+//     return timeMachine ? JSON.parse(timeMachine) : null;
+// });
+
+const [date, setDate] = useState(new Date())
+const [timeMachine, setTimeMachine] = useState({
+  active: false,
+  date: new Date(),
 });
 
-  const [view, setView] = useState<Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA>(Views.WEEK);
-  // const [date, setDate] = useState(new Date());
-  const [date, setDate] = useState(new Date(timeMachine.date))
+useEffect(() => {
+  const storedTimeMachine = localStorage.getItem("timeMachine");
+  if (storedTimeMachine) {
+    setTimeMachine(JSON.parse(storedTimeMachine));
+    setDate(new Date(timeMachine.date))
+  }
+}, []);
 
-  addEventListener('storage', () => {
-    const tm = JSON.parse(localStorage.getItem("timeMachine"))
-    setDate(new Date(tm.date))
-  })
+  const [view, setView] = useState<string>(Views.WEEK);
 
-  const [evts, setEvts] = useState([]);
-  const [acts, setActs] = useState([]);
-  const [toms, setToms] = useState([]);
+  useEffect(() => {
+    addEventListener('storage', () => {
+      const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+      setDate(new Date(tm.date))
+    })
+  }, [])
 
-  const addEvent = async (event) => {
+  const [evts, setEvts] = useState<EventState[]>([]);
+  const [acts, setActs] = useState<ActivityState[]>([]);
+  const [toms, setToms] = useState<TomatoState[]>([]);
+
+  const addEvent = async (event: EventState | ActivityState | TomatoState) => {
     if (Object.hasOwn(event, 'tStudio')) {
       try {
         const response = await fetch(
@@ -125,32 +151,7 @@ export default function MyCalendar() {
     }
   }
 
-  function handleAddEvent(newEvent:
-    { title: string;
-      start: Date | null;
-      end: Date | null;
-      allDay: boolean;
-      location: string;
-      id: string;
-      repetitionEvery: number;
-      repetitionCount: number;
-    } |
-    {
-      title:  string,
-      start: Date | null,
-      end: Date | null,
-      id: string,
-      completed: boolean
-    } | {
-      tStudio: number,
-      tPausa: number,
-      nCicli: number,
-      title: string,
-      id: string,
-      start: Date,
-      end: Date,
-      completed: boolean
-    }) {
+  function handleAddEvent(newEvent: EventState | ActivityState | TomatoState) {
       
     const eventsToAdd = [];
 
@@ -159,7 +160,7 @@ export default function MyCalendar() {
     addEvent(newEvent)
 
     // Se l'evento si ripete più di una volta
-    if (newEvent.repetitionCount > 1) {
+    if ("repetitionCount" in newEvent && newEvent.repetitionCount > 1) {
       const startDate = newEvent.start;
       const endDate = newEvent.end;
 
@@ -191,18 +192,16 @@ export default function MyCalendar() {
   }
 
   // Funzione per gestire l'apertura del modal
-  function handleEventClick(event: { tStudio: number,
-    tPausa: number,
-    nCicli: number, title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; activity: boolean }) {
-    setSelectedEvent(event);
-    console.log(event)
-    
+  function handleEventClick(event: EventState | ActivityState | TomatoState) {
     if (Object.hasOwn(event, "tStudio")){
+      setSelectedTomato(event as TomatoState);
       setTomatoModalOpen(true)
     } else if (Object.hasOwn(event, 'completed')) {
+      setSelectedActivity(event as ActivityState);
       setActivityModalOpen(true);
     }
     else {
+      setSelectedEvent(event as EventState);
       setModalOpen(true);
     }
   }
@@ -221,12 +220,12 @@ export default function MyCalendar() {
 
   function handleTomatoCloseModal() {
     setTomatoModalOpen(false);
-    setSelectedEvent(null);
+    setSelectedTomato(null);
   }
 
   function handleActivityCloseModal() {
     setActivityModalOpen(false);
-    setSelectedEvent(null);
+    setSelectedActivity(null);
   }
 
   function handleCloseModal() {
@@ -234,7 +233,7 @@ export default function MyCalendar() {
     setSelectedEvent(null);
   }
 
-  const deleteEvent = async (event) => {
+  const deleteEvent = async (event: EventState | ActivityState | TomatoState) => {
     if (Object.hasOwn(event, 'tStudio')) {
       try {
         const response = await fetch(
@@ -285,7 +284,7 @@ export default function MyCalendar() {
   }
 
   // Funzione per eliminare l'evento selezionato
-  function handleDeleteEvent(eventToDelete: { title: string; start: Date | null; end: Date | null; id: string }) {
+  function handleDeleteEvent(eventToDelete: EventState | ActivityState | TomatoState) {
     console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(eventToDelete)
@@ -295,7 +294,7 @@ export default function MyCalendar() {
     handleTomatoCloseModal();
   }
 
-  const updateEvent = async (event) => {
+  const updateEvent = async (event: EventState | ActivityState | TomatoState) => {
     if (Object.hasOwn(event, 'tStudio')) {
       try {
         const response = await fetch(
@@ -349,9 +348,7 @@ export default function MyCalendar() {
   }
 
   // Funzione per aggiornare un evento esistente
-  function handleUpdateEvent(updatedEvent: { tStudio: number,
-    tPausa: number,
-    nCicli: number, title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number } | { title: string; start: Date | null; end: Date | null; id: string; completed: string }) {
+  function handleUpdateEvent(updatedEvent: EventState | ActivityState | TomatoState) {
     // setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
     updateEvent(updatedEvent)
     setFetched(false)
@@ -363,7 +360,7 @@ export default function MyCalendar() {
   useEffect(() => {
     if (!fetched){
       fetch('/api/data/events').then(r => r.json()).then(data => {
-          setEvts(data.data.map((d) => {
+          setEvts(data.data.map((d: EventState) => {
             return {
               ...d,
               start: new Date(d.start),
@@ -376,7 +373,7 @@ export default function MyCalendar() {
       })
 
       fetch('/api/data/activities').then(r => r.json()).then(data => {
-          setActs(data.data.map((d) => {
+          setActs(data.data.map((d: ActivityState) => {
             return {
               ...d,
               start: new Date(d.start),
@@ -388,7 +385,7 @@ export default function MyCalendar() {
         console.log(e)
       })      
       fetch('/api/data/tomatoes').then(r => r.json()).then(data => {
-        setToms(data.data.map((d) => {
+        setToms(data.data.map((d: TomatoState) => {
           return {
             ...d,
             start: new Date(d.start),
@@ -405,9 +402,7 @@ export default function MyCalendar() {
 
   useEffect(() => {
     if (fetched){
-      const evt_act = evts.concat(acts);
-      const evt_act_tom = evt_act.concat(toms)
-      setEvents(evt_act_tom);
+      setEvents([...evts, ...acts, ...toms]);
     }
   }, [fetched])
 
@@ -422,7 +417,7 @@ export default function MyCalendar() {
     },
   ];
 
-  const onNavigate = useCallback((newDate) => setDate(newDate), [setDate])
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 
   return (
     <div className="min-h-[92vh] bg-amber-600">
@@ -467,12 +462,12 @@ export default function MyCalendar() {
         messages={messages}
         events={events}
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
-        defaultView={view}
-        view={view}
+        defaultView={view as any}
+        view={view as any}
         date={date}
         getNow={() => date}
         scrollToTime={new Date()}
-        onView={(view: Views.DAY | Views.WEEK | Views.WORK_WEEK | Views.MONTH | Views.AGENDA) => setView(view)}
+        onView={(newView) => setView(newView)}
         onNavigate={onNavigate}
         onSelectEvent={handleEventClick}
         startAccessor="start"
@@ -500,7 +495,7 @@ export default function MyCalendar() {
   
       <ActivityEventModal
         isOpen={activityModalOpen}
-        activity={selectedEvent}
+        activity={selectedActivity}
         onClose={handleActivityCloseModal}
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdateEvent}
@@ -516,7 +511,7 @@ export default function MyCalendar() {
 
       <TomatoEventModal
         isOpen={tomatoModalOpen}
-        Tomato={selectedEvent}
+        Tomato={selectedTomato}
         onClose={handleTomatoCloseModal}
         onDelete={handleDeleteEvent}
         onUpdate={handleUpdateEvent}

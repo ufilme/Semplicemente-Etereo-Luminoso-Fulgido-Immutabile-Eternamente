@@ -7,9 +7,10 @@ import TomatoCreateModal from "@/app/components/TomatoCreateModal";
 import TomatoItem from "@/app/components/TomatoItem";
 import "@/app/global.css";
 import { useState, useEffect } from "react";
+import { TomatoState } from "@/app/type";
 
 export default function Attivita() {
-  const [tomato, setTomato] = useState([]);
+  const [tomato, setTomato] = useState<TomatoState[]>([]);
   const [fetched, setFetched] = useState(false)
   
   const [tomatoCreateModalOpen, setTomatoCreateModalOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Attivita() {
     if (!fetched){
       setFetched(true)
       fetch('/api/data/tomatoes').then(r => r.json()).then(data => {
-          setTomato(data.data.map((d) => {
+          setTomato(data.data.map((d: TomatoState) => {
             return {
               ...d,
               start: new Date(d.start),
@@ -32,133 +33,56 @@ export default function Attivita() {
     }
   }, [fetched])
 
-  const deleteEvent = async (event) => {
-    if (Object.hasOwn(event, 'tStudio')) {
-      try {
-        const response = await fetch(
-          `/api/data/tomatoes?id=${event.id}`,
-          {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
+  const deleteEvent = async (tomato: TomatoState) => {
+    try {
+      const response = await fetch(
+        `/api/data/tomatoes?id=${tomato.id}`,
+        {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+          },
         }
-      } catch {}
-    } else if (Object.hasOwn(event, 'completed')) {
-      try {
-        const response = await fetch(
-          `/api/data/activity?id=${event.id}`,
-          {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
-    else {
-      try {
-        const response = await fetch(
-          `/api/data/events?id=${event.id}`,
-          {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
-  function handleDeleteTomato(tomatoToDelete: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean }) {
+  function handleDeleteTomato(tomatoToDelete: TomatoState) {
     console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(tomatoToDelete)
     setFetched(false)
   }
 
-  const updateTomato = async (tomato) => {
-    if (Object.hasOwn(tomato, 'tStudio')) {
-      try {
-        const response = await fetch(
-          '/api/data/tomatoes',
-          {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(tomato),
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
+  const updateTomato = async (tomato: TomatoState) => {
+    try {
+      const response = await fetch(
+        '/api/data/tomatoes',
+        {
+          method: "PATCH",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tomato),
         }
-      } catch {}
-    } else if (Object.hasOwn(tomato, 'completed')) {
-      try {
-        const response = await fetch(
-          '/api/data/activity',
-          {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(tomato),
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
-    else {
-      try {
-        const response = await fetch(
-          '/api/data/events',
-          {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(tomato),
-          }
-        );
-        if (!response.ok) {
-          // console.log(await response.json())
-        }
-      } catch {}
-    }
+      );
+      if (!response.ok) {
+        // console.log(await response.json())
+      }
+    } catch {}
   }
 
   // Funzione per aggiornare un evento esistente
-  function handleUpdateTomato(updatedTomato: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number } | { title: string; start: Date | null; end: Date | null; id: string; completed: string }) {
+  function handleUpdateTomato(updatedTomato: TomatoState) {
     // setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
     updateTomato(updatedTomato)
     setFetched(false)
   }
 
-  const addTomato= async (tomato : {
-    tStudio: Number,
-                                            tPausa: Number,
-                                            nCicli: Number,
-                              title: string,
-                              start: Date | null,
-                              end: Date | null,
-                              id: string,
-                              completed: boolean
-                            }) => {
+  const addTomato= async (tomato : TomatoState) => {
     try {
       const response = await fetch(
         '/api/data/tomatoes',
@@ -176,16 +100,7 @@ export default function Attivita() {
     } catch {}
   }
 
-  function handleAddTomato(newTomato : {
-    tStudio: Number,
-                                            tPausa: Number,
-                                            nCicli: Number,
-                              title: string,
-                              start: Date | null,
-                              end: Date | null,
-                              id: string,
-                              completed: boolean
-                            }) {
+  function handleAddTomato(newTomato : TomatoState) {
     addTomato(newTomato)
 
     setFetched(false)

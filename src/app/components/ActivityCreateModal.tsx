@@ -1,11 +1,12 @@
+"use client"
 import React, { useState } from "react";
-import { render } from "react-dom";
 import { FaLocationDot } from "react-icons/fa6";
+import { ActivityState } from "../type";
 
 interface ActivityCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (activity: { title: string; start: Date | null; end: Date | null; id: string; completed: boolean; notifyState: number }) => void;
+  onAdd: (activity: ActivityState) => void;
 }
 
 const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClose, onAdd }) => {

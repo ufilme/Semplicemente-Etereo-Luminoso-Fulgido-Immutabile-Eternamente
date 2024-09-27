@@ -1,26 +1,15 @@
+"use client"
 import Link from "next/link";
 import { BsClipboard2CheckFill } from "react-icons/bs";
 import { BsClipboard2XFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import TomatoEventModal from "@/app/components/TomatoEventModal";
 import { useState } from "react";
+import { TomatoState } from "../type";
 
-export default function TomatoItem(props: { onUpdate: (tom:  { tStudio: number,
-  tPausa: number,
-  nCicli: number, id: string, title: string, start: Date | null, end: Date | null, completed: boolean }) => Promise<void>,
-                                          onDelete: (tom:  { tStudio: number,
-                                            tPausa: number,
-                                            nCicli: number, id: string, title: string, start: Date | null, end: Date | null, completed: boolean }) => Promise<void>,
-                                          Tomato:  {
-                                            tStudio: number,
-                                            tPausa: number,
-                                            nCicli: number,
-                                            title: string,
-                                            id: string,
-                                            start: Date,
-                                            end: Date,
-                                            completed: boolean
-                                          }}) {
+export default function TomatoItem(props: { onUpdate: (tom:  TomatoState) => void,
+                                          onDelete: (tom:  TomatoState) => void,
+                                          Tomato:  TomatoState}) {
 
   const [TomatoModalOpen, setTomatoModalOpen] = useState(false);
 
@@ -40,30 +29,12 @@ export default function TomatoItem(props: { onUpdate: (tom:  { tStudio: number,
     return formattedDate;
   }
 
-  function handleDeleteTomato (tomToDelete: {
-    tStudio: number,
-                                            tPausa: number,
-                                            nCicli: number,
-                                  title: string;
-                                  start: Date | null;
-                                  end: Date | null;
-                                  id: string;
-                                  completed: boolean;
-                                }) {
+  function handleDeleteTomato (tomToDelete: TomatoState) {
     props.onDelete(tomToDelete);
     setTomatoModalOpen(false);
   }
 
-  function handleUpdateTomato (tomToUpdate: {
-    tStudio: number,
-                                            tPausa: number,
-                                            nCicli: number,
-                                  title: string;
-                                  start: Date | null;
-                                  end: Date | null;
-                                  id: string;
-                                  completed: boolean;
-                                }) {
+  function handleUpdateTomato (tomToUpdate: TomatoState) {
     props.onUpdate(tomToUpdate);
     setTomatoModalOpen(false);
   }

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import pomodoro from "@/public/pomodoro.png";
 import zzz from "@/public/sleeping.png";
 import "@/app/pomodoro/animation.css";
+import { TomatoState } from "../type";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
@@ -16,14 +17,14 @@ export default function Timer() {
   const [tStudio, settStudio] = useState(30);
   const [tPausa, settPausa] = useState(5);
   const [nCicli, setnCicli] = useState(5);
-  const [tomatoes, setTomatoes] = useState([])
+  const [tomatoes, setTomatoes] = useState<TomatoState[]>([])
   const nCicliCompletati = useRef(0);
   const [tTotale, settTotale] = useState(120);
 
   const [manualMode, setManualMode] = useState(true);
 
   const searchParams = useSearchParams()
-  const tomato = JSON.parse(searchParams.get('query'))
+  const tomato = JSON.parse(searchParams.get('query') || "")
 
   const studioRef = useRef<HTMLInputElement>(null);
   const pausaRef = useRef<HTMLInputElement>(null);
@@ -32,13 +33,15 @@ export default function Timer() {
   const periodoHeadingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (tomato) {
+    if (tomato != "") {
       settStudio(tomato.tStudio)
       settPausa(tomato.tPausa)
       setnCicli(tomato.nCicli)
-      studioRef.current.value = tomato.tStudio
-      pausaRef.current.value = tomato.tPausa
-      cicliRef.current.value = tomato.nCicli
+      if (studioRef.current && pausaRef.current && cicliRef.current){
+        studioRef.current.value = tomato.tStudio
+        pausaRef.current.value = tomato.tPausa
+        cicliRef.current.value = tomato.nCicli
+      }
     }
   }, [studioRef])
 
@@ -71,7 +74,7 @@ export default function Timer() {
     generatePomodoro();
   }, [tTotale]);
 
-  const addTomato = async (tomato) => {
+  const addTomato = async (tomato: TomatoState) => {
     try {
       const response = await fetch(
         '/api/data/tomatoes',
@@ -183,7 +186,17 @@ export default function Timer() {
     console.log("tStudio: " + tStudio);
     console.log("tPausa: " + tPausa);
     console.log("nCicli: " + nCicli);
-    let tomato = {tStudio: tStudio, tPausa: tPausa, nCicli: nCicli}
+    let tomato = {
+      title: "",
+      start: new Date(),
+      end: new Date(),
+      tStudio: 0,
+      tPausa: 0,
+      nCicli: 0,
+      id: crypto.randomUUID(),
+      completed: false,
+      notifyState: -1,
+    }
     setTomatoes([...tomatoes, tomato])
     addTomato(tomato)
     startTimeRef.current = Date.now() - elapsedTime;

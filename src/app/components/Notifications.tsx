@@ -1,7 +1,10 @@
+"use client"
 import { useEffect, useState } from "react"
 import toast, { Toaster } from "react-hot-toast";
+import { TomatoState, NoteState, EventState, ActivityState } from "../type";
 
-async function checkDeadlines(activities, events, date, myToast){
+
+async function checkDeadlines(activities: ActivityState[], events: EventState[], date: Date, myToast: (message: string, notifyLevel: number) => void ){
   console.log("checkDeadlines - " + new Date(date));
   
   const nowDate = new Date(date);
@@ -71,13 +74,13 @@ async function checkDeadlines(activities, events, date, myToast){
   
 }
 
-export function Notifications({date}) {
-  const [events, setEvents] = useState([])
-  const [activities, setActivities] = useState([])
+export function Notifications(date: Date) {
+  const [events, setEvents] = useState<EventState[]>([])
+  const [activities, setActivities] = useState<ActivityState[]>([])
   const [fetched, setFetched] = useState(false)
   const [checked, setChecked] = useState(false)
 
-  function myToast (message, notifyLevel) {
+  function myToast (message: string, notifyLevel: number) {
     let bgcolor: string;
     switch (notifyLevel) {
       case 1:
@@ -108,7 +111,7 @@ export function Notifications({date}) {
       const interval = setInterval(() => {
         console.log("Fetching...");
       fetch('/api/data/activities').then(r => r.json()).then(data => {
-        setActivities(data.data.map((d) => {
+        setActivities(data.data.map((d: ActivityState) => {
           return {
             ...d,
             start: new Date(d.start),
@@ -120,7 +123,7 @@ export function Notifications({date}) {
         console.log(e)
       })
       fetch('/api/data/events').then(r => r.json()).then(data => {
-        setEvents(data.data.map((d) => {
+        setEvents(data.data.map((d: EventState) => {
           return {
             ...d,
             start: new Date(d.start),
@@ -139,7 +142,7 @@ export function Notifications({date}) {
         const now = new Date(date);
         checkDeadlines(activities, events, now, myToast);
       }, 2000);
-      
+
       return () => clearInterval(interval);
   })
 

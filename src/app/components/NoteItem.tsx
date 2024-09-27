@@ -1,21 +1,14 @@
+"use client"
 import Link from "next/link";
-import { notes } from "@/app/note/notes";
 import { IconContext } from "react-icons";
 import { FaRegCopy } from "react-icons/fa";
 import { marked } from 'marked';
 import "@/app/notemarkdown.css";
+import { NoteState } from "../type";
 
-export default function NoteItem(props: { onDuplicate: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date, marked: boolean }) => Promise<void>,
-                                          onDelete: (note:  { id: string, title: string, body: string, category: string, date_edit: Date, date_create: Date, marked: boolean }) => Promise<void>,
-                                          note:  {
-                                            id: string,
-                                            title: string
-                                            body: string
-                                            category: string
-                                            date_edit: Date
-                                            date_create: Date
-                                            marked: boolean
-                                          }}) {
+export default function NoteItem(props: { onDuplicate: (note:  NoteState) => void,
+                                          onDelete: (note:  NoteState) => void,
+                                          note:  NoteState}) {
 
   let title = props.note.title;
   let body = props.note.body;
@@ -33,11 +26,11 @@ export default function NoteItem(props: { onDuplicate: (note:  { id: string, tit
     return formattedDate;
   }
 
-  function markdown () {
+  async function markdown () {
     console.log(props.note);
     body = body.length > 80 ? body.substring(0, 80) + "..." : body;
     if (props.note.marked) {
-      body = marked.parse(body);
+      body = await marked.parse(body);
       return <div className="text-base note-markdown" dangerouslySetInnerHTML={{ __html: body }}></div>
     }
     else {

@@ -1,19 +1,20 @@
 "use client";
 
-import { useState,  useEffect, useRef } from "react";
+import { useState,  useEffect, useRef, ChangeEvent } from "react";
 import Link from "next/link";
 
 import { categories } from "@/app/note/notes"
+import { NoteState } from "@/app/type";
 
 export default function ModificaNote({ params }: { params: { editId: string } }) {
   const [fetched, setFetched] = useState(false)
-  const [note, setNote] = useState({})
+  const [note, setNote] = useState<NoteState>()
   const [marked, setMarked] = useState(false);
 
   useEffect(() => {
     if (!fetched){
       fetch('/api/data/notes').then(r => r.json()).then(data => {
-        const fetchedNote = data.data.find((n) => n.id == params.editId);
+        const fetchedNote = data.data.find((n: NoteState) => n.id == params.editId);
         if (fetchedNote) {
           setNote(fetchedNote);
           setMarked(fetchedNote.marked || false);
@@ -26,25 +27,25 @@ export default function ModificaNote({ params }: { params: { editId: string } })
     }
   },  [fetched, params.editId])
 
-  function changeTitle (e) {
+  function changeTitle (e: ChangeEvent<HTMLInputElement>) {
     setNote({
       ...note,
       title: e.target.value
-    })
+    } as NoteState)
   }
 
-  function changeBody (e) {
+  function changeBody (e: ChangeEvent<HTMLTextAreaElement>) {
     setNote({
       ...note,
       body: e.target.value
-    })
+    } as NoteState)
   }
 
   function changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
     setNote({
       ...note,
       category: e.target.value
-    })
+    } as NoteState)
   }
 
   function toggleMarked() {
@@ -52,10 +53,10 @@ export default function ModificaNote({ params }: { params: { editId: string } })
   }
 
   function handleSubmit(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-      updateNote({...note, date_edit: new Date(), marked: marked})
+      updateNote({...note, date_edit: new Date(), marked: marked} as NoteState)
   }
 
-  const updateNote = async (note) => {
+  const updateNote = async (note: NoteState) => {
     try {
       const response = await fetch(
         '/api/data/notes',

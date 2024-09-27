@@ -4,20 +4,41 @@ import TMClock from "@/public/Clock";
 import { useState, useEffect } from "react";
 
 export function TimeMachine() {
-  const [timeMachine, setTimeMachine] = useState(() => {
-    const timeMachine = localStorage.getItem("timeMachine");
-    const newTimeMachine = {active: false, date: new Date()}
-    if (timeMachine == null){
-      localStorage.setItem("timeMachine", JSON.stringify(newTimeMachine));
-      dispatchEvent(new Event("storage"));
-    }
-    return timeMachine ? JSON.parse(timeMachine) : newTimeMachine;
-});
+  const [timeMachine, setTimeMachine] = useState({
+    active: false,
+    date: new Date(),
+  });
   const [selectedDate, setSelectedDate] = useState(timeMachine.date.toString())
+  const [fetched, setFetched] = useState(false)
 
   useEffect(() => {
-    localStorage.setItem("timeMachine", JSON.stringify(timeMachine));
-    dispatchEvent(new Event("storage"));
+    const storedTimeMachine = localStorage.getItem("timeMachine");
+    if (storedTimeMachine) {
+      console.log("updating")
+      setTimeMachine(JSON.parse(storedTimeMachine));
+      setSelectedDate(JSON.parse(storedTimeMachine).date.toString())
+    }
+    setFetched(true)
+  }, []);
+
+  // useEffect(() => {
+  //   const [timeMachine, setTimeMachine] = useState(() => {
+  //     const timeMachine = localStorage.getItem("timeMachine");
+  //     const newTimeMachine = {active: false, date: new Date()}
+  //     if (timeMachine == null){
+  //       localStorage.setItem("timeMachine", JSON.stringify(newTimeMachine));
+  //       dispatchEvent(new Event("storage"));
+  //     }
+  //     return timeMachine ? JSON.parse(timeMachine) : newTimeMachine;
+  // });
+  //   const [selectedDate, setSelectedDate] = useState(timeMachine.date.toString())
+  // }, [])
+
+  useEffect(() => {
+    if (fetched){
+      localStorage.setItem("timeMachine", JSON.stringify(timeMachine));
+      dispatchEvent(new Event("storage"));
+    }
   }, [timeMachine]);
 
   function activateTimeMachine() {

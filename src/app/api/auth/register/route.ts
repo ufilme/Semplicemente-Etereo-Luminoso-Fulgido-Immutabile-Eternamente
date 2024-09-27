@@ -3,9 +3,9 @@ import userModel from "@/models/User";
 import noteModel from "@/models/Note";
 import eventModel from "@/models/Event";
 import tomatoModel from "@/models/Tomato";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const creds = await req.json();
 

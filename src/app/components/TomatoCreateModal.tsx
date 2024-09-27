@@ -1,13 +1,12 @@
+"use client"
 import React, { useState } from "react";
-import { render } from "react-dom";
 import { FaLocationDot } from "react-icons/fa6";
+import { TomatoState } from "../type";
 
 interface TomatoCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (Tomato: { tStudio: Number,
-    tPausa: Number,
-    nCicli: Number, title: string; start: Date | null; end: Date | null; id: string; completed: boolean; notifyState: number }) => void;
+  onAdd: (Tomato: TomatoState) => void;
 }
 
 const TomatoCreateModal: React.FC<TomatoCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
@@ -22,8 +21,8 @@ const TomatoCreateModal: React.FC<TomatoCreateModalProps> = ({ isOpen, onClose, 
     start: now,
     end: later,
     tStudio: 0,
-                                            tPausa: 0,
-                                            nCicli: 0,
+    tPausa: 0,
+    nCicli: 0,
     id: "",
     completed: false,
     notifyState: -1,

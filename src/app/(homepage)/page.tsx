@@ -4,31 +4,44 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Notifications } from "@/app/components/Notifications";
+import { TomatoState, NoteState, EventState, ActivityState } from "../type";
 
 export default function Home() {
   const [fetched, setFetched] = useState(false)
-  const [tomatoes, setTomatoes] = useState([])
-  const [notes, setNotes] = useState([])
-  const [events, setEvents] = useState([])
-  const [activities, setActivities] = useState([])
+  const [tomatoes, setTomatoes] = useState<TomatoState[]>([])
+  const [notes, setNotes] = useState<NoteState[]>([])
+  const [events, setEvents] = useState<EventState[]>([])
+  const [activities, setActivities] = useState<ActivityState[]>([])
   const [newestNote, setNewestNote] = useState("Loading...")
   const [latestTomatoes, setLatestTomatoes] = useState(false)
   const [weekEvents, setWeekEvents] = useState(false)
-  const [weekEventsData, setWeekEventsData] = useState([])
-  const [timeMachine, setTimeMachine] = useState(() => {
-    const timeMachine = localStorage.getItem("timeMachine");
-    return timeMachine ? JSON.parse(timeMachine) : null;
-  });
+  const [weekEventsData, setWeekEventsData] = useState<EventState[]>([])
+  // const [timeMachine, setTimeMachine] = useState(() => {
+  //   const timeMachine = localStorage.getItem("timeMachine");
+  //   return timeMachine ? JSON.parse(timeMachine) : null;
+  // });
 
 const [date, setDate] = useState(new Date())
 
-addEventListener('storage', () => {
-  const tm = JSON.parse(localStorage.getItem("timeMachine"))
-  setFetched(false)
-  setDate(new Date(tm.date))
-})
+const [timeMachine, setTimeMachine] = useState({
+  active: false,
+  date: new Date(),
+});
 
-//console.log(date)
+useEffect(() => {
+  const storedTimeMachine = localStorage.getItem("timeMachine");
+  if (storedTimeMachine) {
+    setTimeMachine(JSON.parse(storedTimeMachine));
+  }
+}, []);
+
+useEffect(() => {
+  addEventListener('storage', () => {
+    const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+    setFetched(false)
+    setDate(new Date(tm.date))
+  })
+}, [])
 
   useEffect(() => {
     if (!fetched){
@@ -40,7 +53,7 @@ addEventListener('storage', () => {
         console.log(e)
       })
       fetch('/api/data/notes').then(r => r.json()).then(data => {
-        setNotes(data.data.map((n) => {
+        setNotes(data.data.map((n: NoteState) => {
           return {
             ...n,
             date_edit: new Date(n.date_edit),
@@ -52,7 +65,7 @@ addEventListener('storage', () => {
         console.log(e)
       })
       fetch('/api/data/activities').then(r => r.json()).then(data => {
-        setActivities(data.data.map((d) => {
+        setActivities(data.data.map((d: ActivityState) => {
           return {
             ...d,
             start: new Date(d.start),
@@ -64,7 +77,7 @@ addEventListener('storage', () => {
         console.log(e)
       })
       fetch('/api/data/events').then(r => r.json()).then(data => {
-        setEvents(data.data.map((d) => {
+        setEvents(data.data.map((d: EventState) => {
           return {
             ...d,
             start: new Date(d.start),

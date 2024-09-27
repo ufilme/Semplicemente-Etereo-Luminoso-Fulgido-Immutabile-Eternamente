@@ -1,19 +1,15 @@
+"use client"
 import Link from "next/link";
 import { BsClipboard2CheckFill } from "react-icons/bs";
 import { BsClipboard2XFill } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import ActivityEventModal from "@/app/components/ActivityEventModal";
 import { useState } from "react";
+import { ActivityState } from "../type";
 
-export default function NoteItem(props: { onUpdate: (act:  { id: string, title: string, start: Date | null, end: Date | null, completed: boolean }) => Promise<void>,
-                                          onDelete: (act:  { id: string, title: string, start: Date | null, end: Date | null, completed: boolean }) => Promise<void>,
-                                          activity:  {
-                                            title: string,
-                                            id: string,
-                                            start: Date,
-                                            end: Date,
-                                            completed: boolean
-                                          }}) {
+export default function ActivityItem(props: { onUpdate: (act:  ActivityState) => void,
+                                          onDelete: (act:  ActivityState) => void,
+                                          activity:  ActivityState}) {
 
   const [activityModalOpen, setActivityModalOpen] = useState(false);
 
@@ -33,24 +29,12 @@ export default function NoteItem(props: { onUpdate: (act:  { id: string, title: 
     return formattedDate;
   }
 
-  function handleDeleteActivity (actToDelete: {
-                                  title: string;
-                                  start: Date | null;
-                                  end: Date | null;
-                                  id: string;
-                                  completed: boolean;
-                                }) {
+  function handleDeleteActivity (actToDelete: ActivityState) {
     props.onDelete(actToDelete);
     setActivityModalOpen(false);
   }
 
-  function handleUpdateActivity (actToUpdate: {
-                                  title: string;
-                                  start: Date | null;
-                                  end: Date | null;
-                                  id: string;
-                                  completed: boolean;
-                                }) {
+  function handleUpdateActivity (actToUpdate: ActivityState) {
     props.onUpdate(actToUpdate);
     setActivityModalOpen(false);
   }

@@ -1,4 +1,5 @@
 "use client"
+import { Suspense } from "react";
 import "../global.css";
 import Timer from "@/app/components/Timer";
 
@@ -9,7 +10,9 @@ export default function Pomodoro() {
         Applicazione Pomodoro
       </h1>
       <div className="my-auto flex flex-col justify-center px-4 sm:px-8 md:px-16">
+      <Suspense>
         <Timer />
+      </Suspense>
       </div>
     </div>
   );  

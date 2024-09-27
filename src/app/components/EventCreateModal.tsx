@@ -1,11 +1,12 @@
+"use client"
 import React, { useState } from "react";
-import { render } from "react-dom";
 import { FaLocationDot } from "react-icons/fa6";
+import { EventState } from "../type";
 
 interface EventCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (event: { title: string; start: Date | null; end: Date | null; allDay: boolean; location: string; id: string; repetitionEvery: number; repetitionCount: number; }) => void;
+  onAdd: (event: EventState) => void;
 }
 
 const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, onAdd }) => {
@@ -15,7 +16,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
   later.setSeconds(0);
   later.setHours(later.getHours() + 1);
 
-  const [newEvent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState<EventState>({
     title: "",
     start: now,
     end: later,
