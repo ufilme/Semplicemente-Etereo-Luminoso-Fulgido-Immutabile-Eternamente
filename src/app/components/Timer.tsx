@@ -49,11 +49,11 @@ export default function Timer() {
       if (tStudio != t.tStudio) settStudio(t.tStudio)
       if (tPausa != t.tPausa) settPausa(t.tPausa)
       if (nCicli != t.nCicli) setnCicli(t.nCicli)
-    }
-    if (studioRef.current && pausaRef.current && cicliRef.current){
-      studioRef.current.value = t.tStudio
-      pausaRef.current.value = t.tPausa
-      cicliRef.current.value = t.nCicli
+      if (studioRef.current && pausaRef.current && cicliRef.current){
+        studioRef.current.value = t.tStudio
+        pausaRef.current.value = t.tPausa
+        cicliRef.current.value = t.nCicli
+      }
     }
   }, [])
 
