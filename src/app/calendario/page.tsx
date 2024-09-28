@@ -402,6 +402,7 @@ useEffect(() => {
     fetch('/api/data/user')
     .then(r => r.json())
     .then(data => {
+      console.log("fetch", data.notifications)
       setPushNotify(data.notifications);
       setFetched(true);
     })
@@ -417,8 +418,7 @@ useEffect(() => {
     }
   }, [fetched])
 
-  useEffect(() => {
-    const updatePushNotify = async () => {
+    const updatePushNotify = async (notifyOption: string) => {
       try {
         const response = await fetch(
           '/api/data/user',
@@ -427,22 +427,19 @@ useEffect(() => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ notifications: pushNotify})
+            body: JSON.stringify({ notifications: notifyOption})
           }
         );
 
         if (!response.ok) {
           console.error('Failed to update notifications', await response.json());
+        } else {
+          setPushNotify(notifyOption)
         }
       } catch (e) {
         console.error('Error updating notifications:', e);
       }
     };
-
-    if (pushNotify !== null) {
-      updatePushNotify();
-    }
-  }, [pushNotify])
   
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
@@ -484,8 +481,8 @@ useEffect(() => {
         <label>Notifiche push:</label>
         <input
           type="checkbox"
-          defaultChecked={pushNotify == "native"}
-          onChange={(e) => {setPushNotify(e.target.checked ? "native" : "in-app");}}
+          checked={pushNotify == "native"}
+          onChange={(e) => {updatePushNotify(e.target.checked ? "native" : "in-app");}}
           aria-label="Tipo di notifiche"
           />
       </div>
