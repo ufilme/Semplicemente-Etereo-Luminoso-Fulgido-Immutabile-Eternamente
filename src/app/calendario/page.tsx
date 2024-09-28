@@ -66,10 +66,13 @@ export default function MyCalendar() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
   const [tomatoModalOpen, setTomatoModalOpen] = useState(false);
+  const [pushNotify, setPushNotify] = useState("");
 //   const [timeMachine, setTimeMachine] = useState(() => {
 //     const timeMachine = localStorage.getItem("timeMachine");
 //     return timeMachine ? JSON.parse(timeMachine) : null;
 // });
+
+console.log("pushNotify:", pushNotify);
 
 const [date, setDate] = useState(new Date())
 const [timeMachine, setTimeMachine] = useState({
@@ -392,11 +395,19 @@ useEffect(() => {
             end: new Date(d.end)
           }
         }))
-        setFetched(true);
       }
     ).catch((e) => {
       console.log(e)
     })      
+    fetch('/api/data/user')
+    .then(r => r.json())
+    .then(data => {
+      setPushNotify(data.notifications);
+      setFetched(true);
+    })
+    .catch((e) => {
+      console.error('Error fetching notifications:', e);
+    });  
     }
   }, [fetched])
 
@@ -406,16 +417,33 @@ useEffect(() => {
     }
   }, [fetched])
 
-  const [todayDate, setTodayDate] = useState(new Date());
+  useEffect(() => {
+    const updatePushNotify = async () => {
+      try {
+        const response = await fetch(
+          '/api/data/user',
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ notifications: pushNotify})
+          }
+        );
 
-  // Example events (you can load your events here)
-  const eventi = [
-    {
-      title: "Meeting",
-      start: new Date(),
-      end: new Date(),
-    },
-  ];
+        if (!response.ok) {
+          console.error('Failed to update notifications', await response.json());
+        }
+      } catch (e) {
+        console.error('Error updating notifications:', e);
+      }
+    };
+
+    if (pushNotify !== null) {
+      updatePushNotify();
+    }
+  }, [pushNotify])
+  
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
 
@@ -450,6 +478,16 @@ useEffect(() => {
         >
           Aggiungi Tomato
         </button>
+      </div>
+
+      <div className="mb-2">
+        <label>Notifiche push:</label>
+        <input
+          type="checkbox"
+          defaultChecked={pushNotify == "native"}
+          onChange={(e) => {setPushNotify(e.target.checked ? "native" : "in-app");}}
+          aria-label="Tipo di notifiche"
+          />
       </div>
   
       <div className="flex justify-center mb-4 gap-2">
@@ -532,5 +570,5 @@ useEffect(() => {
         onUpdate={handleUpdateEvent}
       />
     </div>
-  );  
+  );
 }

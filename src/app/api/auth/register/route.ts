@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
 
         const newUser = new userModel({
             username: creds.username,
-            password: creds.password
+            password: creds.password,
+            notifications: "in-app"
         })
 
         const newNote = new noteModel({

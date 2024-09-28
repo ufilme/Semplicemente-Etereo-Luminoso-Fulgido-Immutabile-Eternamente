@@ -86,6 +86,18 @@ export function Notifications({date}:{date: Date}) {
     let bgtop: string;
     let bgbot: string;
 
+    let notifyType;
+
+    fetch('/api/data/user')
+    .then(r => r.json())
+    .then(data => {
+      notifyType = data.notifications;
+      setFetched(true);
+    })
+    .catch((e) => {
+      console.error('Error fetching notifications:', e);
+    }); 
+
     switch (notifyLevel) {
       case 1:
         bgcolor = "bg-yellow-300";
@@ -109,22 +121,25 @@ export function Notifications({date}:{date: Date}) {
         break;
     }
   
-    toast((t) => (
-      <span className={bgcolor + " flex gap-2 p-1"}>
-        {message}
-        <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
-      </span>
-    ), { duration: 10000 });
-
-    notify({
-      title: 'Notification',
-      message: message,
-      theme: notifyLevel === 3 ? 'red' : notifyLevel === 2 ? 'darkblue' : 'light',
-      backgroundTop: bgtop,
-      backgroundBottom: bgbot,
-      duration: 10000,
-      native: true,
-    });
+    if (notifyType == "in-app") {
+      toast((t) => (
+        <span className={bgcolor + " flex gap-2 p-1"}>
+          {message}
+          <button className="bg-slate-200 hover:bg-slate-400 rounded px-1" onClick={() => toast.dismiss(t.id)}>Chiudi</button>
+        </span>
+      ), { duration: 10000 });
+    }
+    else {
+      notify({
+        title: 'Notification',
+        message: message,
+        theme: notifyLevel === 3 ? 'red' : notifyLevel === 2 ? 'darkblue' : 'light',
+        backgroundTop: bgtop,
+        backgroundBottom: bgbot,
+        duration: 10000,
+        native: true,
+      });
+    }
   }
 
   useEffect(() => {
