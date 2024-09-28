@@ -26,6 +26,15 @@ function handleFormSubmit(event){
             (promise) => promise.json().then(
                 (response) => {
                     if (!promise.ok) {
+                        document.body.style.backgroundSize = "500px"
+                        if (document.body.style.backgroundImage != ""){
+                            document.body.style.backgroundImage = "url('https://ideogram.ai/assets/image/lossless/response/VpAOgmRzRhi20wg_ErsN1A')"
+                        } else {
+                            document.body.style.backgroundImage = "url('https://ideogram.ai/assets/image/lossless/response/w15c4iNnTHK5mCh9CZiF3A')"
+                        }
+                        setTimeout(() => {
+                            document.body.style.backgroundImage = ""
+                        }, 5000)
                     } else {
                         createCookie("token", response, 365)
                         window.location.href = "/";

@@ -17,6 +17,15 @@ async function handleFormSubmit(event){
             (promise) => promise.json().then(
                 (response) => {
                     if (!promise.ok) {
+                        document.body.style.backgroundSize = "500px"
+                        if (document.body.style.backgroundImage != ""){
+                            document.body.style.backgroundImage = "url('https://ideogram.ai/assets/image/lossless/response/7EyJ7arVRhycc4UgFeb1ww')"
+                        } else {
+                            document.body.style.backgroundImage = "url('https://ideogram.ai/assets/image/lossless/response/3zxK9R6HSHm9ZP8gcHTu7g')"
+                        }
+                        setTimeout(() => {
+                            document.body.style.backgroundImage = ""
+                        }, 5000)
                     } else {
                         window.location.href = "/auth/login";
                     }
