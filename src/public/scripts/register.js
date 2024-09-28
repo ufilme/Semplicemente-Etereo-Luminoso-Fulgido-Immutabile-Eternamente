@@ -17,7 +17,6 @@ async function handleFormSubmit(event){
             (promise) => promise.json().then(
                 (response) => {
                     if (!promise.ok) {
-                        console.log(promise)
                     } else {
                         window.location.href = "/auth/login";
                     }
