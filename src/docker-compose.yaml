@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  server:
+    image: selfie/server
+    build: .
+    container_name: selfie_server
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+
+  database:
+    image: mongo
+    container_name: selfie_database
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
