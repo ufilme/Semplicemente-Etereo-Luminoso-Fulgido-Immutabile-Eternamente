@@ -1,6 +1,7 @@
 "use client";
 
 import TMClock from "@/public/Clock";
+import { time } from "console";
 import { useState, useEffect } from "react";
 
 export function TimeMachine() {
@@ -52,12 +53,21 @@ export function TimeMachine() {
       if (selectedDate != ""){
         setTimeMachine({
           active: true,
-          date: new Date(selectedDate)
+          date: new Date(
+            new Date(
+              new Date(selectedDate).setHours(
+                (new Date()).getHours()
+              )).setMinutes(
+                (new Date()).getMinutes()
+              )
+            )
         })
       }
     }
   }
 
+  console.log(timeMachine.date)
+  
   return (
     <div className={`${timeMachine.active ? "tm-enabled" : "tm-disabled"} h-[4vh] bg-gray-200 flex flex-row justify-start items-center px-2 py-2 box-border`} >
       <div className="flex flex-row justify-start gap-2 items-center w-full h-full">

@@ -88,6 +88,19 @@ useEffect(() => {
   }
 }, []);
 
+useEffect(() => {
+  const int = setInterval(() => {
+    if (timeMachine.active){
+      setDate(new Date(timeMachine.date))
+    } else {
+      setDate(new Date())
+    }
+  }, 2000)
+
+  return () => clearInterval(int)
+})
+
+
   const [view, setView] = useState<string>(Views.WEEK);
 
   useEffect(() => {

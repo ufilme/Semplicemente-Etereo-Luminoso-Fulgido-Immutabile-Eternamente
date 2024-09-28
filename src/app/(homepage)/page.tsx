@@ -66,10 +66,27 @@ useEffect(() => {
 useEffect(() => {
   addEventListener('storage', () => {
     const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+    setTimeMachine(tm)
     setFetched(false)
-    setDate(new Date(tm.date))
+    if (tm.active){
+      setDate(new Date(tm.date))
+    } else {
+      setDate(new Date())
+    }
   })
 }, [])
+
+useEffect(() => {
+  const int = setInterval(() => {
+    if (timeMachine.active){
+      setDate(new Date(timeMachine.date))
+    } else {
+      setDate(new Date())
+    }
+  }, 2000)
+
+  return () => clearInterval(int)
+})
 
   useEffect(() => {
     if (!fetched){

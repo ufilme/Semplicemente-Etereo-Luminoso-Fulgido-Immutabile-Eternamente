@@ -17,6 +17,32 @@ export default function Note() {
     "Modifica"
   ]
   const [order, setOrder] = useState(orders[0]);
+  const [date, setDate] = useState(new Date())
+  const [timeMachine, setTimeMachine] = useState({
+    active: false,
+    date: new Date(),
+  });
+
+  useEffect(() => {
+    const storedTimeMachine = localStorage.getItem("timeMachine");
+    if (storedTimeMachine) {
+      setTimeMachine(JSON.parse(storedTimeMachine));
+      setDate(new Date(timeMachine.date))
+    }
+  }, []);
+
+  useEffect(() => {
+    const int = setInterval(() => {
+      if (timeMachine.active){
+        setDate(new Date(timeMachine.date))
+      } else {
+        setDate(new Date())
+      }
+    }, 2000)
+  
+    return () => clearInterval(int)
+  })
+  
 
   useEffect(() => {
     if (!fetched){
@@ -42,7 +68,7 @@ export default function Note() {
           headers: {
               "Content-Type": "application/json",
           },
-          body: JSON.stringify({...note, id: uuid, date_edit: new Date(), date_create: new Date()}),
+          body: JSON.stringify({...note, id: uuid, date_edit: date, date_create: date}),
         }
       );
       if (!response.ok) {
