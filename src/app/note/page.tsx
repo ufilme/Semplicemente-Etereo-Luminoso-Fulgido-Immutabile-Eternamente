@@ -7,6 +7,8 @@ import NoteItem from "@/app/components/NoteItem";
 import "../global.css";
 import { useState, useEffect } from "react";
 import { NoteState } from "../type";
+import { Notifications } from "@/app/components/Notifications";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Note() {
   const [notes, setNotes] = useState<NoteState[]>([]);
@@ -128,6 +130,9 @@ export default function Note() {
 
   return (
     <div className="flex flex-col min-h-[92vh] bg-lime-800">
+      <div><Toaster /></div>
+      <Notifications date={date} />
+
       <h1
         className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
         id="notes-header"

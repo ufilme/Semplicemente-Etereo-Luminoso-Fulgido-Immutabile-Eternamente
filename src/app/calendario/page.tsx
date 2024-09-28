@@ -18,6 +18,8 @@ import ActivityEventModal from "@/app/components/ActivityEventModal";
 import TomatoEventModal from "@/app/components/TomatoEventModal";
 import Link from "next/link";
 import { ActivityState, EventState, TomatoState } from "../type";
+import { Notifications } from "@/app/components/Notifications";
+import toast, { Toaster } from "react-hot-toast";
 
 
 // Configurazione delle lingue
@@ -459,6 +461,9 @@ useEffect(() => {
 
   return (
     <div className="min-h-[92vh] bg-amber-600">
+      <div><Toaster /></div>
+      <Notifications date={date} />
+
       <h1
         className="pt-6 text-center text-3xl sm:text-4xl font-bold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] mb-4"
         aria-label="Calendario"
