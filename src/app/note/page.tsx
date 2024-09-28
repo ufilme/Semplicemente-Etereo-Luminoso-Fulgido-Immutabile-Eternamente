@@ -62,7 +62,7 @@ export default function Note() {
     let uuid = crypto.randomUUID();
 
     try {
-      console.log("Adding to the database");
+      //console.log("Adding to the database");
       const response = await fetch(
         '/api/data/notes',
         {

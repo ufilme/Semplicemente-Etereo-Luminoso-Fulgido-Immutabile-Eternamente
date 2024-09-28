@@ -51,7 +51,7 @@ export default function Attivita() {
   }
 
   function handleDeleteActivity(activityToDelete: ActivityState) {
-    console.log("Eliminazione in corso");
+    //console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(activityToDelete)
     setFetched(false)

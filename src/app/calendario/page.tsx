@@ -74,7 +74,7 @@ export default function MyCalendar() {
 //     return timeMachine ? JSON.parse(timeMachine) : null;
 // });
 
-console.log("pushNotify:", pushNotify);
+//console.log("pushNotify:", pushNotify);
 
 const [date, setDate] = useState(new Date())
 const [timeMachine, setTimeMachine] = useState({
@@ -303,7 +303,7 @@ useEffect(() => {
 
   // Funzione per eliminare l'evento selezionato
   function handleDeleteEvent(eventToDelete: EventState | ActivityState | TomatoState) {
-    console.log("Eliminazione in corso");
+    //console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(eventToDelete)
     setFetched(false)
@@ -417,7 +417,7 @@ useEffect(() => {
     fetch('/api/data/user')
     .then(r => r.json())
     .then(data => {
-      console.log("fetch", data.notifications)
+      //console.log("fetch", data.notifications)
       setPushNotify(data.notifications);
       setFetched(true);
     })

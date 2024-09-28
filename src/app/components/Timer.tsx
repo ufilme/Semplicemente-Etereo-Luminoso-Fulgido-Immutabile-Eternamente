@@ -152,10 +152,10 @@ export default function Timer() {
   function generatePomodoro() {
     if (!manualMode){
       let t = tTotale;
-      console.log(t)
+      //console.log(t)
       t = Math.floor((t + 2) / 5) * 5;
       t = t == 0 ? 5 : t;
-      console.log(t)
+      //console.log(t)
       
       const cycleDurations = [60, 30, 20, 10, 5];
       const studyPeriods = [50, 25, 16, 8, 4];
@@ -165,23 +165,23 @@ export default function Timer() {
       }
       let maxDivisor = cycleDurations.length - 1;
       
-      console.log(cycleDurations);
-      console.log(studyPeriods);
-      console.log(pausePeriods);
+      //console.log(cycleDurations);
+      //console.log(studyPeriods);
+      //console.log(pausePeriods);
       
-      console.log(cycleDurations.length);
+      //console.log(cycleDurations.length);
       for (var i in cycleDurations) {
         if (t % cycleDurations[i] == 0 && t >= (2 * cycleDurations[i])) {
-          console.log("Key: " + i + ", value: " + cycleDurations[i]);
+          //console.log("Key: " + i + ", value: " + cycleDurations[i]);
           maxDivisor = parseInt(i);
           break;
         }
       }
       
-      console.log();
-      console.log("Numero di cicli: " + t / cycleDurations[maxDivisor]);
-      console.log("Tempo di studio: " + studyPeriods[maxDivisor]);
-      console.log("Tempo di pausa: " + pausePeriods[maxDivisor]);
+      //console.log();
+      //console.log("Numero di cicli: " + t / cycleDurations[maxDivisor]);
+      //console.log("Tempo di studio: " + studyPeriods[maxDivisor]);
+      //console.log("Tempo di pausa: " + pausePeriods[maxDivisor]);
 
       settStudio(studyPeriods[maxDivisor]);
       settPausa(pausePeriods[maxDivisor]);
@@ -195,9 +195,9 @@ export default function Timer() {
     /*if (periodoHeadingRef.current) {
       periodoHeadingRef.current.innerHTML = "Periodo di studio";
     }*/
-    console.log("tStudio: " + tStudio);
-    console.log("tPausa: " + tPausa);
-    console.log("nCicli: " + nCicli);
+    //console.log("tStudio: " + tStudio);
+    //console.log("tPausa: " + tPausa);
+    //console.log("nCicli: " + nCicli);
     let tomato = {
       title: "",
       start: new Date(),
@@ -271,7 +271,7 @@ export default function Timer() {
       if (!periodoStudio.current) {
         //eravamo in periodo di pausa ed è finito, quindi abbiamo completato un ciclo
         nCicliCompletati.current++;
-        console.log("Cicli completati: " + nCicliCompletati.current);
+        //console.log("Cicli completati: " + nCicliCompletati.current);
       }
 
       periodoStudio.current = !periodoStudio.current;
@@ -281,7 +281,7 @@ export default function Timer() {
 
       if (nCicliCompletati.current == nCicli){
         //tutti i cicli completati, reset
-        console.log("FINE");
+        //console.log("FINE");
         reset();
       }
       else {

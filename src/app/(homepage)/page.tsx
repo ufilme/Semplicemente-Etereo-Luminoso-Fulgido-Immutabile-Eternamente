@@ -90,7 +90,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (!fetched){
-      console.log("Fetching...");
+      //console.log("Fetching...");
       fetch('/api/data/tomatoes').then(r => r.json()).then(data => {
           setTomatoes(data.data.splice(-3))
         }
@@ -131,8 +131,8 @@ useEffect(() => {
         }))
         setFetched(true)
         
-        console.log("Fetched, activities:");
-        console.log(activities);
+        //console.log("Fetched, activities:");
+        //console.log(activities);
       }
       ).catch((e) => {
         console.log(e)

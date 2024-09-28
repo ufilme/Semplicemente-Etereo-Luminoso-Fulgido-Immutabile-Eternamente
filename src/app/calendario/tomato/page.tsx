@@ -51,7 +51,7 @@ export default function Attivita() {
   }
 
   function handleDeleteTomato(tomatoToDelete: TomatoState) {
-    console.log("Eliminazione in corso");
+    //console.log("Eliminazione in corso");
     // setEvents(events.filter(event => event.id !== eventToDelete.id));
     deleteEvent(tomatoToDelete)
     setFetched(false)

@@ -6,7 +6,7 @@ import notify from 'react-push-notification';
 
 
 async function checkDeadlines(activities: ActivityState[], events: EventState[], date: Date, myToast: (message: string, notifyLevel: number) => void ){
-  console.log("checkDeadlines - " + new Date(date));
+  //console.log("checkDeadlines - " + new Date(date));
   
   const nowDate = new Date(date);
   const hourDate = new Date();
@@ -22,8 +22,8 @@ async function checkDeadlines(activities: ActivityState[], events: EventState[],
     return !act.completed && nowDate.getTime() >= actEndDate.getTime();
   });
 
-  console.log("Att. scadute: ");
-  console.log(expiredActivities);
+  //console.log("Att. scadute: ");
+  //console.log(expiredActivities);
   
   for (let eact of expiredActivities) {
     const actEndDate = new Date(eact.end);
@@ -36,7 +36,7 @@ async function checkDeadlines(activities: ActivityState[], events: EventState[],
     }
   
     if (notifyLevel > eact.notifyState) {
-        console.log("Notifica");
+      //console.log("Notifica");
       const message = "Attività scaduta: \"" + eact.title + "\"";
       myToast(message, notifyLevel);
         
@@ -91,7 +91,7 @@ export function Notifications({date}:{date: Date}) {
   .catch((e) => {
     console.error('Error fetching notifications:', e);
   });
-  console.log("notifyType", notifyType);
+  //console.log("notifyType", notifyType);
 
   function myToast (message: string, notifyLevel: number) {
     let bgcolor: string;
@@ -146,7 +146,7 @@ export function Notifications({date}:{date: Date}) {
     let evts = events;
     let acts = activities;
       const interval = setInterval(() => {
-        console.log("Fetching...");
+      //console.log("Fetching...");
       fetch('/api/data/activities').then(r => r.json()).then(data => {
         setActivities(data.data.map((d: ActivityState) => {
           return {
@@ -169,13 +169,13 @@ export function Notifications({date}:{date: Date}) {
         }))
         setFetched(true)
         
-        console.log("Fetched, activities:");
-        console.log(activities);
+        //console.log("Fetched, activities:");
+        //console.log(activities);
       }
       ).catch((e) => {
         console.log(e)
       })
-        console.log("###################################");
+        //console.log("###################################");
         const now = new Date(date);
         checkDeadlines(activities, events, now, myToast);
       }, 2000);

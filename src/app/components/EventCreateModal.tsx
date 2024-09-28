@@ -76,7 +76,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
     // Calcola il numero di ripetizioni come intero
     const repetitions = Math.floor(diffInDays / repeatEvery) + 1;
   
-    console.log("Ripetizioni: " + repetitions);
+    //console.log("Ripetizioni: " + repetitions);
     return repetitions;
   }
 

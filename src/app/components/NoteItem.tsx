@@ -27,7 +27,7 @@ export default function NoteItem(props: { onDuplicate: (note:  NoteState) => voi
   }
 
   function markdown () {
-    console.log(props.note);
+    //console.log(props.note);
     body = body.length > 80 ? body.substring(0, 80) + "..." : body;
     if (props.note.marked) {
       body = marked.parse(body) as string;

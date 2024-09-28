@@ -15,7 +15,7 @@ export function TimeMachine() {
   useEffect(() => {
     const storedTimeMachine = localStorage.getItem("timeMachine");
     if (storedTimeMachine) {
-      console.log("updating")
+      //console.log("updating")
       setTimeMachine(JSON.parse(storedTimeMachine));
       setSelectedDate(JSON.parse(storedTimeMachine).date.toString())
     }
@@ -66,7 +66,7 @@ export function TimeMachine() {
     }
   }
 
-  console.log(timeMachine.date)
+  //console.log(timeMachine.date)
   
   return (
     <div className={`${timeMachine.active ? "tm-enabled" : "tm-disabled"} h-[4vh] bg-gray-200 flex flex-row justify-start items-center px-2 py-2 box-border`} >
