@@ -80,23 +80,23 @@ export function Notifications({date}:{date: Date}) {
   const [activities, setActivities] = useState<ActivityState[]>([])
   const [fetched, setFetched] = useState(false)
   const [checked, setChecked] = useState(false)
+  const [notifyType, setNotifyType] = useState("");
+
+  fetch('/api/data/user')
+  .then(r => r.json())
+  .then(data => {
+    setNotifyType(data.notifications);
+    setFetched(true);
+  })
+  .catch((e) => {
+    console.error('Error fetching notifications:', e);
+  });
+  console.log("notifyType", notifyType);
 
   function myToast (message: string, notifyLevel: number) {
     let bgcolor: string;
     let bgtop: string;
     let bgbot: string;
-
-    let notifyType;
-
-    fetch('/api/data/user')
-    .then(r => r.json())
-    .then(data => {
-      notifyType = data.notifications;
-      setFetched(true);
-    })
-    .catch((e) => {
-      console.error('Error fetching notifications:', e);
-    }); 
 
     switch (notifyLevel) {
       case 1:

@@ -477,8 +477,8 @@ useEffect(() => {
         </button>
       </div>
 
-      <div className="mb-2">
-        <label>Notifiche push:</label>
+      <div className="mb-2 text-center">
+        <label className="mr-2">Notifiche push:</label>
         <input
           type="checkbox"
           checked={pushNotify == "native"}
