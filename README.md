@@ -1,5 +1,3 @@
-Ecco la versione aggiornata del README con l'aggiunta della configurazione del database, ma senza dettagli tecnici:
-
 # 📸 SELFIE - Progetto Tech Web
 
 ## 👥 Membri del gruppo
