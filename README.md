@@ -1,5 +1,3 @@
-Ecco la versione aggiornata del README con l'aggiunta della configurazione del database, ma senza dettagli tecnici:
-
 # 📸 SELFIE - Progetto Tech Web
 
 ## 👥 Membri del gruppo
@@ -106,6 +104,16 @@ Il progetto è stato sviluppato utilizzando **Next.js**, insieme a **React** e *
 - **React**: libreria per la costruzione delle interfacce utente.
 - **TypeScript**: per una tipizzazione più sicura del codice.
 - **Tailwind CSS**: framework per la gestione degli stili.
+
+---
+
+## 💣 How to run
+
+From the src directory
+
+`make build`
+
+This will generate two docker containers. One for the database and one for the server.
 
 ---
 

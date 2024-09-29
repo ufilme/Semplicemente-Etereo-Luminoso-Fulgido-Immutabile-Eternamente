@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redirect } from 'next/navigation'
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
@@ -12,6 +11,7 @@ export async function middleware(request: NextRequest) {
 
   const apiUrl = request.nextUrl.clone()
   apiUrl.pathname = "/api/auth/checkToken";
+  apiUrl.protocol = "http" // bypass self signed certificate
   
   const requestData = {
       method: "POST",

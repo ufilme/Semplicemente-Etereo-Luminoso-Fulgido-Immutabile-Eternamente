@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { ActivityState } from "../type";
+import { v4 as uuidv4 } from "uuid";
 
 interface ActivityCreateModalProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ const ActivityCreateModal: React.FC<ActivityCreateModalProps> = ({ isOpen, onClo
       alert("Inserire scadenza!");
       return;
     }
-    activityToAdd.id = crypto.randomUUID();
+    activityToAdd.id = uuidv4();
 
     onAdd(activityToAdd);
     onClose();

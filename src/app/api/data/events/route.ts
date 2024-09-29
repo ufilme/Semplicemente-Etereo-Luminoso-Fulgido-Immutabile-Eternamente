@@ -95,7 +95,7 @@ export async function DELETE(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
 
-        console.log(id)
+        // console.log(id)
 
         if (!token) {
           return NextResponse.json("Creds required", { status: 400 });

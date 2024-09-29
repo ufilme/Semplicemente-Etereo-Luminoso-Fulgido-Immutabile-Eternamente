@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { categories } from "@/app/note/notes"
 import { NoteState } from "@/app/type";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CreaNote() {
   const [title, setTitle] = useState("");
@@ -13,7 +14,7 @@ export default function CreaNote() {
   const [category, setCategory] = useState(categories[0].name);
   const [marked, setMarked] = useState(false);
 
-  let uuid = crypto.randomUUID();
+  let uuid = uuidv4();
   let new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category, marked: marked};
   
   function changeTitle () {
@@ -38,7 +39,6 @@ export default function CreaNote() {
 
   const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (title && body){
-      //let uuid = crypto.randomUUID();
       new_nota = {id: uuid, title: title, body: body, date_edit: new Date(), date_create: new Date(), category: category, marked: marked};
       // console.log(new_nota);
       addNote(new_nota)

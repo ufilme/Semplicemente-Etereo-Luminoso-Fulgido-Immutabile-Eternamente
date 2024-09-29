@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { EventState } from "../type";
+import { v4 as uuidv4 } from "uuid";
 
 interface EventCreateModalProps {
   isOpen: boolean;
@@ -126,7 +127,7 @@ const EventCreateModal: React.FC<EventCreateModalProps> = ({ isOpen, onClose, on
       //setNewEvent({ ...newEvent, repetitionCount: repeatN });
       //setNewEvent({ ...newEvent, repetitionEvery: frequency });
     }
-    eventToAdd.id = crypto.randomUUID();
+    eventToAdd.id = uuidv4();
 
     onAdd(eventToAdd);
     onClose();

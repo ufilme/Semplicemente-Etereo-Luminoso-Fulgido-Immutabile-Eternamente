@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { NoteState } from "../type";
 import { Notifications } from "@/app/components/Notifications";
 import toast, { Toaster } from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Note() {
   const [notes, setNotes] = useState<NoteState[]>([]);
@@ -24,6 +25,7 @@ export default function Note() {
     active: false,
     date: new Date(),
   });
+  const [eventRegistered, setEventRegisterd] = useState(false)
 
   useEffect(() => {
     const storedTimeMachine = localStorage.getItem("timeMachine");
@@ -45,6 +47,16 @@ export default function Note() {
     return () => clearInterval(int)
   })
   
+  useEffect(() => {
+    if (!eventRegistered){
+      addEventListener('storage', () => {
+        const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+        setTimeMachine(tm)
+        setDate(new Date(tm.date))
+      })
+      setEventRegisterd(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (!fetched){
@@ -59,7 +71,7 @@ export default function Note() {
   }, [fetched])
 
   const duplicateNote = async (note:  NoteState) => {
-    let uuid = crypto.randomUUID();
+    let uuid = uuidv4();
 
     try {
       //console.log("Adding to the database");

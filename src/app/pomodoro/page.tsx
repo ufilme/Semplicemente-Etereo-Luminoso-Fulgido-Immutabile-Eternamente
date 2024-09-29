@@ -33,6 +33,19 @@ export default function Pomodoro() {
     return () => clearInterval(int)
   })
 
+  const [eventRegistered, setEventRegisterd] = useState(false)
+
+  useEffect(() => {
+    if (!eventRegistered){
+      addEventListener('storage', () => {
+        const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+        setTimeMachine(tm)
+        setDate(new Date(tm.date))
+      })
+      setEventRegisterd(true)
+    }
+  }, [])
+
   return (
     <div className="flex flex-col min-h-[92vh] bg-red-700">
       <div><Toaster /></div>
