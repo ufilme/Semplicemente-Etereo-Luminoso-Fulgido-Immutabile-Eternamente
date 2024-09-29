@@ -463,8 +463,6 @@ useEffect(() => {
       }
     };
 
-    console.log(timeMachine.active, timeMachine.date)
-
   return (
     <div className="min-h-[92vh] bg-amber-600">
       <div><Toaster /></div>
