@@ -107,6 +107,16 @@ Il progetto è stato sviluppato utilizzando **Next.js**, insieme a **React** e *
 
 ---
 
+## 💣 How to run
+
+From the src directory
+
+`make build`
+
+This will generate two docker containers. One for the database and one for the server.
+
+---
+
 🎉 Grazie per aver consultato il nostro progetto!
 
 ---
