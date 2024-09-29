@@ -82,7 +82,8 @@ export function Notifications({date}:{date: Date}) {
   const [checked, setChecked] = useState(false)
   const [notifyType, setNotifyType] = useState("");
 
-  fetch('/api/data/user')
+  useEffect(() => {
+    fetch('/api/data/user')
   .then(r => r.json())
   .then(data => {
     setNotifyType(data.notifications);
@@ -91,6 +92,7 @@ export function Notifications({date}:{date: Date}) {
   .catch((e) => {
     console.error('Error fetching notifications:', e);
   });
+  })
   //console.log("notifyType", notifyType);
 
   function myToast (message: string, notifyLevel: number) {

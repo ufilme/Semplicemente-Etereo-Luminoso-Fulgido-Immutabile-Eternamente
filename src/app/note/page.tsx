@@ -25,6 +25,7 @@ export default function Note() {
     active: false,
     date: new Date(),
   });
+  const [eventRegistered, setEventRegisterd] = useState(false)
 
   useEffect(() => {
     const storedTimeMachine = localStorage.getItem("timeMachine");
@@ -46,6 +47,16 @@ export default function Note() {
     return () => clearInterval(int)
   })
   
+  useEffect(() => {
+    if (!eventRegistered){
+      addEventListener('storage', () => {
+        const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+        setTimeMachine(tm)
+        setDate(new Date(tm.date))
+      })
+      setEventRegisterd(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (!fetched){

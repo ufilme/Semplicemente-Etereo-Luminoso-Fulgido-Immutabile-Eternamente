@@ -20,6 +20,7 @@ import Link from "next/link";
 import { ActivityState, EventState, TomatoState } from "../type";
 import { Notifications } from "@/app/components/Notifications";
 import toast, { Toaster } from "react-hot-toast";
+import { setTime } from "react-datepicker/dist/date_utils";
 
 
 // Configurazione delle lingue
@@ -69,6 +70,8 @@ export default function MyCalendar() {
   const [activityModalOpen, setActivityModalOpen] = useState(false);
   const [tomatoModalOpen, setTomatoModalOpen] = useState(false);
   const [pushNotify, setPushNotify] = useState("");
+  const [navigateDate, setNavigateDate] = useState(new Date())
+  const [eventRegistered, setEventRegisterd] = useState(false)
 //   const [timeMachine, setTimeMachine] = useState(() => {
 //     const timeMachine = localStorage.getItem("timeMachine");
 //     return timeMachine ? JSON.parse(timeMachine) : null;
@@ -106,10 +109,14 @@ useEffect(() => {
   const [view, setView] = useState<string>(Views.WEEK);
 
   useEffect(() => {
-    addEventListener('storage', () => {
-      const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
-      setDate(new Date(tm.date))
-    })
+    if (!eventRegistered){
+      addEventListener('storage', () => {
+        const tm = JSON.parse(localStorage.getItem("timeMachine") || "")
+        setTimeMachine(tm)
+        setDate(new Date(tm.date))
+      })
+      setEventRegisterd(true)
+    }
   }, [])
 
   const [evts, setEvts] = useState<EventState[]>([]);
@@ -455,9 +462,8 @@ useEffect(() => {
         console.error('Error updating notifications:', e);
       }
     };
-  
 
-  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate])
+    console.log(timeMachine.active, timeMachine.date)
 
   return (
     <div className="min-h-[92vh] bg-amber-600">
@@ -531,11 +537,11 @@ useEffect(() => {
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
         defaultView={view as any}
         view={view as any}
-        date={date}
+        date={navigateDate}
         getNow={() => date}
         scrollToTime={new Date()}
         onView={(newView) => setView(newView)}
-        onNavigate={onNavigate}
+        onNavigate={(newDate: Date) => setNavigateDate(newDate)}
         onSelectEvent={handleEventClick}
         startAccessor="start"
         endAccessor="end"
