@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { TomatoState } from "../type";
+import { v4 as uuidv4 } from "uuid";
 
 interface TomatoCreateModalProps {
   isOpen: boolean;
@@ -75,7 +76,7 @@ const TomatoCreateModal: React.FC<TomatoCreateModalProps> = ({ isOpen, onClose, 
       alert("Inserire scadenza!");
       return;
     }
-    TomatoToAdd.id = crypto.randomUUID();
+    TomatoToAdd.id = uuidv4();
 
     onAdd(TomatoToAdd);
     onClose();

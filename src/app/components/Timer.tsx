@@ -6,6 +6,7 @@ import pomodoro from "@/public/pomodoro.png";
 import zzz from "@/public/sleeping.png";
 import "@/app/pomodoro/animation.css";
 import { TomatoState } from "../type";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
@@ -21,7 +22,7 @@ export default function Timer() {
     tStudio: 0,
     tPausa: 0,
     nCicli: 0,
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     completed: false,
     notifyState: -1,
   })
@@ -205,7 +206,7 @@ export default function Timer() {
       tStudio: 0,
       tPausa: 0,
       nCicli: 0,
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       completed: false,
       notifyState: -1,
     }
